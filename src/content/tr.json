@@ -4,7 +4,8 @@
     "title": "BMMS — Maritime Engineering Knowledge System",
     "description": "BMMS — denizcilik mühendisliği bilgisini kaynaklarıyla ilişkilendiren, izlenebilir ve denetlenebilir bir bilgi sistemi projesi.",
     "ogTitle": "BMMS — Maritime Engineering Knowledge System",
-    "ogDescription": "Her mühendislik sonucu kaynağına kadar izlenebilmeli."
+    "ogDescription": "Her mühendislik sonucu kaynağına kadar izlenebilmeli.",
+    "locale": "tr_TR"
   },
   "brand": {
     "name": "BMMS",
@@ -14,12 +15,31 @@
   "skipLink": "İçeriğe geç",
   "navAria": "Sayfa bölümleri",
   "nav": [
-    { "href": "#problem", "label": "Problem" },
-    { "href": "#yaklasim", "label": "Yaklaşım" },
-    { "href": "#ornek", "label": "Örnek" },
-    { "href": "#ilkeler", "label": "İlkeler" },
-    { "href": "#asama", "label": "Aşama" },
-    { "href": "#iletisim", "label": "İletişim", "keep": true }
+    {
+      "href": "#problem",
+      "label": "Problem"
+    },
+    {
+      "href": "#yaklasim",
+      "label": "Yaklaşım"
+    },
+    {
+      "href": "#ornek",
+      "label": "Örnek"
+    },
+    {
+      "href": "#ilkeler",
+      "label": "İlkeler"
+    },
+    {
+      "href": "#asama",
+      "label": "Aşama"
+    },
+    {
+      "href": "#iletisim",
+      "label": "İletişim",
+      "keep": true
+    }
   ],
   "statusLabels": {
     "done": "ALTYAPIDA MEVCUT",
@@ -31,18 +51,36 @@
     "sheetTitle": "BMMS NEDİR?",
     "titleHtml": "Her mühendislik sonucu <em>kaynağına kadar</em> izlenebilmeli.",
     "lede": "BMMS, denizcilik kurallarını, teknik belgeleri ve mühendislik kanıtlarını izlenebilir tek bir zincirde ilişkilendirmek için geliştirilen bir bilgi sistemidir. Bir değerlendirmenin hangi kaynağa, hangi revizyona ve hangi bağlama dayandığını görünür kılar; dayanak kurulamadığında kesin bir cevap üretmek yerine bunu açıkça kaydeder.",
-    "ctaPrimary": { "href": "#yaklasim", "label": "Yaklaşımı keşfet" },
-    "ctaSecondary": { "href": "#iletisim", "label": "İletişime geç" },
+    "ctaPrimary": {
+      "href": "#yaklasim",
+      "label": "Yaklaşımı keşfet"
+    },
+    "ctaSecondary": {
+      "href": "#iletisim",
+      "label": "İletişime geç"
+    },
     "status": "AŞAMA: ARAŞTIRMA VE GELİŞTİRME · KONTROLLÜ PİLOT HAZIRLIĞI",
     "globeAria": "Dönen tel kafes dünya çizimi: meridyenler, düğümler ve düğümler arasındaki bağlantı yayları. Kavramsal bir bilgi ağını temsil eder.",
     "figureTitle": "ŞEKİL 1 · KAVRAMSAL BİLGİ AĞI",
     "figureNote": "Canlı veri, gerçek kullanıcı ya da konum haritası değildir.",
     "legend": [
-      { "kind": "node", "label": "kaynak kaydı" },
-      { "kind": "dot", "label": "pasaj / kanıt" },
-      { "kind": "arc", "label": "kaynaklar arası ilişki" }
+      {
+        "kind": "node",
+        "label": "kaynak kaydı"
+      },
+      {
+        "kind": "dot",
+        "label": "pasaj / kanıt"
+      },
+      {
+        "kind": "arc",
+        "label": "kaynaklar arası ilişki"
+      }
     ],
-    "titleblock": ["BMMS · KONGRE TANITIMI", "ÖLÇEKSİZ · KAVRAMSAL ŞEMA"]
+    "titleblock": [
+      "BMMS · KONGRE TANITIMI",
+      "ÖLÇEKSİZ · KAVRAMSAL ŞEMA"
+    ]
   },
   "problem": {
     "sheet": "PAFTA 02 / 06",
@@ -75,14 +113,66 @@
       "title": "ŞEKİL 2 · KAYNAK PARÇALARI",
       "stateLoose": "DAĞINIK",
       "stateSet": "ORTAK KAYIT DÜZENİ",
-      "fields": ["KAYNAK", "SÜRÜM", "KONUM"],
+      "fields": [
+        "KAYNAK",
+        "SÜRÜM",
+        "KONUM"
+      ],
       "fragments": [
-        { "type": "DÜZENLEYİCİ KURAL · IMO", "name": "SOLAS / MARPOL gerekliliği", "scatter": [-34, 26, -5] },
-        { "type": "KLAS YAYINI · IACS", "name": "Klas kuralı veya tavsiyesi", "scatter": [40, -10, 4] },
-        { "type": "SEKTÖR REHBERİ · OCIMF", "name": "Operasyonel rehber", "scatter": [-18, -22, 3] },
-        { "type": "ÜRETİCİ BELGESİ · OEM", "name": "Ekipman talimatı", "scatter": [30, 18, -6] },
-        { "type": "İŞLETME KAYDI · PMS", "name": "Bakım kaydı", "scatter": [-40, -6, 5] },
-        { "type": "SAHA BELGESİ", "name": "Servis raporu", "scatter": [24, -24, -3] }
+        {
+          "type": "DÜZENLEYİCİ KURAL · IMO",
+          "name": "SOLAS / MARPOL gerekliliği",
+          "scatter": [
+            -34,
+            26,
+            -5
+          ]
+        },
+        {
+          "type": "KLAS YAYINI · IACS",
+          "name": "Klas kuralı veya tavsiyesi",
+          "scatter": [
+            40,
+            -10,
+            4
+          ]
+        },
+        {
+          "type": "SEKTÖR REHBERİ · OCIMF",
+          "name": "Operasyonel rehber",
+          "scatter": [
+            -18,
+            -22,
+            3
+          ]
+        },
+        {
+          "type": "ÜRETİCİ BELGESİ · OEM",
+          "name": "Ekipman talimatı",
+          "scatter": [
+            30,
+            18,
+            -6
+          ]
+        },
+        {
+          "type": "İŞLETME KAYDI · PMS",
+          "name": "Bakım kaydı",
+          "scatter": [
+            -40,
+            -6,
+            5
+          ]
+        },
+        {
+          "type": "SAHA BELGESİ",
+          "name": "Servis raporu",
+          "scatter": [
+            24,
+            -24,
+            -3
+          ]
+        }
       ],
       "footLabel": "ORTAK DÜZEN",
       "foot": "Her parça; kaynağı, sürümü ve belge içindeki konumu ile aynı biçimde kaydedildiğinde karşılaştırılabilir ve izlenebilir hâle gelir. Kaynak aileleri sisteme yalnızca işleme hakkı belirlendiği ölçüde alınır."
@@ -94,14 +184,33 @@
     "title": "Kaynaktan karara, kopmayan bir zincir.",
     "intro": "BMMS'nin temel fikri, her adımın bir öncekine bağlı kalmasıdır. Zincirin bir halkası kurulamıyorsa sistem boşluğu tahminle doldurmaz; eksik halkayı gösterir.",
     "legend": [
-      { "kind": "done", "text": "Sunucu tarafında uygulanmış ve otomatik testlerle sınanmış. Son kullanıcıya açık bir ürün arayüzü anlamına gelmez." },
-      { "kind": "partial", "text": "Temel veri modeli ve servisler var; kapsam geliştiriliyor." },
-      { "kind": "goal", "text": "Kabul edilmiş geliştirme yönü; henüz uygulanmadı." }
+      {
+        "kind": "done",
+        "text": "Sunucu tarafında uygulanmış ve otomatik testlerle sınanmış. Son kullanıcıya açık bir ürün arayüzü anlamına gelmez."
+      },
+      {
+        "kind": "partial",
+        "text": "Temel veri modeli ve servisler var; kapsam geliştiriliyor."
+      },
+      {
+        "kind": "goal",
+        "text": "Kabul edilmiş geliştirme yönü; henüz uygulanmadı."
+      }
     ],
     "canonLabel": "PROJE BELGELERİNDEKİ TAM ZİNCİR",
     "canon": [
-      "Source", "SourceVersion", "Passage", "Authority", "Applicability", "Obligation", "Evidence",
-      "Engineering Assessment", "Human Decision", "Residual Obligation", "Assurance State", "Audit History"
+      "Source",
+      "SourceVersion",
+      "Passage",
+      "Authority",
+      "Applicability",
+      "Obligation",
+      "Evidence",
+      "Engineering Assessment",
+      "Human Decision",
+      "Residual Obligation",
+      "Assurance State",
+      "Audit History"
     ],
     "steps": [
       {
@@ -154,22 +263,56 @@
     "question": "Bu sefer için kullanılan yakıt, kükürt içeriği gerekliliğini karşılıyor mu?",
     "locLegend": "GEMİNİN KONUMU · VAKA BAĞLAMI",
     "locOptions": [
-      { "value": "in", "label": "ECA içinde", "context": "ECA içinde" },
-      { "value": "out", "label": "ECA dışında", "context": "ECA dışında" },
-      { "value": "unk", "label": "Bilinmiyor", "context": "konum bilinmiyor" }
+      {
+        "value": "in",
+        "label": "ECA içinde",
+        "context": "ECA içinde"
+      },
+      {
+        "value": "out",
+        "label": "ECA dışında",
+        "context": "ECA dışında"
+      },
+      {
+        "value": "unk",
+        "label": "Bilinmiyor",
+        "context": "konum bilinmiyor"
+      }
     ],
     "locHint": "ECA: Emisyon Kontrol Alanı",
     "eviLegend": "SUNULAN KANIT",
     "eviOptions": [
-      { "value": "doc", "label": "Yakıt teslim belgesi var" },
-      { "value": "none", "label": "Belge yok" }
+      {
+        "value": "doc",
+        "label": "Yakıt teslim belgesi var"
+      },
+      {
+        "value": "none",
+        "label": "Belge yok"
+      }
     ],
-    "cols": ["1 · BULUNAN PASAJLAR", "2 · KANIT", "3 · DURUM"],
+    "cols": [
+      "1 · BULUNAN PASAJLAR",
+      "2 · KANIT",
+      "3 · DURUM"
+    ],
     "passages": {
-      "a": { "name": "Pasaj A", "title": "Pasaj A — ECA içinde uygulanan sınır", "meta": "Temsili kaynak · sürüm ve pasaj kimliğiyle" },
-      "b": { "name": "Pasaj B", "title": "Pasaj B — Genel sınır", "meta": "Temsili kaynak · sürüm ve pasaj kimliğiyle" }
+      "a": {
+        "name": "Pasaj A",
+        "title": "Pasaj A — ECA içinde uygulanan sınır",
+        "meta": "Temsili kaynak · sürüm ve pasaj kimliğiyle"
+      },
+      "b": {
+        "name": "Pasaj B",
+        "title": "Pasaj B — Genel sınır",
+        "meta": "Temsili kaynak · sürüm ve pasaj kimliğiyle"
+      }
     },
-    "evidence": { "title": "Yakıt teslim belgesi", "meta": "Temsili belge", "chainName": "teslim belgesi" },
+    "evidence": {
+      "title": "Yakıt teslim belgesi",
+      "meta": "Temsili belge",
+      "chainName": "teslim belgesi"
+    },
     "pills": {
       "on": "UYGULANABİLİR",
       "off": "İLGİLİ · BU BAĞLAMDA UYGULANAMAZ",
@@ -184,18 +327,32 @@
       "ready": {
         "label": "UZMAN KARARINA HAZIR",
         "text": "Bağlam, {passage}'yı uygulanabilir kılıyor; kanıt bu pasajla ilişkilendirildi. Kanıtın yeterli olup olmadığına yetkili uzman karar verir.",
-        "chain": ["Bağlam: {context}", "{passage}", "{evidence}", "karar: yetkili uzman"]
+        "chain": [
+          "Bağlam: {context}",
+          "{passage}",
+          "{evidence}",
+          "karar: yetkili uzman"
+        ]
       },
       "missing": {
         "label": "KANIT EKSİK",
         "text": "Uygulanabilir gereklilik belirlendi ({passage}), ancak karşılandığını gösteren bir kanıt yok. Eksik kanıt, gerekliliğin bulunmadığı anlamına gelmez.",
-        "chain": ["Bağlam: {context}", "{passage}", "kanıt: yok", "açık yükümlülük"]
+        "chain": [
+          "Bağlam: {context}",
+          "{passage}",
+          "kanıt: yok",
+          "açık yükümlülük"
+        ]
       },
       "unknown": {
         "label": "BELİRSİZ · SONUÇ ÜRETİLMEDİ",
         "text": "Konum bilinmeden hangi sınırın geçerli olduğu belirlenemez. Sistem tahmin yürütmez; eksik bağlam bilgisini kaydeder ve değerlendirmeyi askıda bırakır.",
         "textNoEvidence": " Ayrıca kanıt sunulmadı.",
-        "chain": ["Bağlam: konum bilinmiyor", "uygulanabilir pasaj: belirlenemedi", "eksik bilgi kaydedildi"]
+        "chain": [
+          "Bağlam: konum bilinmiyor",
+          "uygulanabilir pasaj: belirlenemedi",
+          "eksik bilgi kaydedildi"
+        ]
       }
     },
     "note": "Temsili senaryo. Konu, MARPOL Ek VI kapsamındaki yakıt kükürt sınırlarından sadeleştirilmiştir. Pasaj ve belge adları örnektir; gerçek bir kaynaktan alıntı ya da BMMS tarafından üretilmiş bir sistem çıktısı değildir. Amaç, sistemin ayırt etmeye çalıştığı durumları göstermektir."
@@ -205,7 +362,13 @@
     "sheetTitle": "BİLİMSEL YAKLAŞIM VE KALİTE",
     "title": "Güvenilirlik neye dayanıyor?",
     "intro": "BMMS'de kalite yalnızca doğru cevap oranıyla ölçülmez. Bir sonucun dayanağı, kapsamı ve belirsizliği de açık, ölçülebilir ve denetlenebilir olmalıdır.",
-    "invariant": ["BULUNAN", "YETKİLİ", "GÜNCEL", "UYGULANABİLİR", "YETERLİ"],
+    "invariant": [
+      "BULUNAN",
+      "YETKİLİ",
+      "GÜNCEL",
+      "UYGULANABİLİR",
+      "YETERLİ"
+    ],
     "invariantAria": "Bulunan, yetkili, güncel, uygulanabilir ve yeterli kavramları birbirine eşit değildir.",
     "invariantCaption": "Projenin kural setindeki temel ayrım: Bir pasajın bulunması; yetkili bir kaynaktan geldiği, güncel olduğu, bu duruma uygulanabilir olduğu ya da tek başına yeterli olduğu anlamına gelmez. Bu ayrımlar kodda ve proje belgelerinde değişmez kural olarak tanımlıdır.",
     "items": [
@@ -300,10 +463,22 @@
     "title": "Yöntemi birlikte sınayalım.",
     "intro": "Projenin en çok ihtiyaç duyduğu şey eleştirel ve bağımsız bakıştır. Aşağıdaki başlıklarda akademik değerlendirme, araştırma katkısı ve iş birliği için görüşmeye açığız.",
     "collab": [
-      { "title": "Akademik değerlendirme", "text": "Epistemik ayrımların, belirsizlik temsilinin ve değerlendirme tasarımının eleştirel incelenmesi." },
-      { "title": "Araştırma katkısı", "text": "Belge yapısı çıkarımı, bilgi erişimi değerlendirmesi, kaynak izlenebilirliği ve insan ile yapay zekânın birlikte çalıştığı karar süreçleri." },
-      { "title": "Alan uzmanlığı", "text": "Denizcilik mühendisliği, klas ve düzenleyici çerçeveler konusunda uzman görüşü." },
-      { "title": "Vaka tabanlı değerlendirme", "text": "Zorluğu kalibre edilmiş, gerçekçi vaka senaryolarının birlikte geliştirilmesi." }
+      {
+        "title": "Akademik değerlendirme",
+        "text": "Epistemik ayrımların, belirsizlik temsilinin ve değerlendirme tasarımının eleştirel incelenmesi."
+      },
+      {
+        "title": "Araştırma katkısı",
+        "text": "Belge yapısı çıkarımı, bilgi erişimi değerlendirmesi, kaynak izlenebilirliği ve insan ile yapay zekânın birlikte çalıştığı karar süreçleri."
+      },
+      {
+        "title": "Alan uzmanlığı",
+        "text": "Denizcilik mühendisliği, klas ve düzenleyici çerçeveler konusunda uzman görüşü."
+      },
+      {
+        "title": "Vaka tabanlı değerlendirme",
+        "text": "Zorluğu kalibre edilmiş, gerçekçi vaka senaryolarının birlikte geliştirilmesi."
+      }
     ],
     "bridge": "Kaynak izlenebilirliği, belirsizliğin açıkça gösterilmesi ve uzman kararının kayda geçirilmesi gibi yöntemsel sorular birçok disiplinde ortaktır. Farklı alanlardan gelen bakışlar da değerlidir.",
     "label": "İLETİŞİM",
@@ -327,5 +502,10 @@
   "motion": {
     "pause": "Hareketi durdur",
     "play": "Hareketi başlat"
+  },
+  "langSwitch": {
+    "aria": "Dil seçimi / Language",
+    "tr": "Türkçe",
+    "en": "English"
   }
 }

@@ -12,6 +12,8 @@ sırasında masaüstünde de gösterilir.
   "blueprint" dünya. Dünya ayrı bir parça olarak, sayfa açıldıktan sonra yüklenir.
 - **Hareket her zaman kapatılabilir.** Sağ alttaki düğme ve işletim sisteminin
   "hareketi azalt" ayarı desteklenir.
+- **İki dil.** Türkçe `bskn.net/`, İngilizce `bskn.net/en/`; sağ üstteki TR / EN
+  düğmesiyle geçilir. İki sayfa da ayrı ayrı statik HTML olarak üretilir.
 - **İçerik doğruluğu.** Sayfadaki her iddia BMMS deposundaki bir kayda
   dayanır: [`docs/CONTENT_SOURCES.md`](docs/CONTENT_SOURCES.md).
 
@@ -31,10 +33,12 @@ npm run check      # tip denetimi + derleme + testler
 ## Yapı
 
 ```text
-index.html                    Kabuk: <!--app:head--> ve <!--app:body--> işaretleri
+index.html                    Türkçe sayfa kabuğu (bskn.net/)
+en/index.html                 İngilizce sayfa kabuğu (bskn.net/en/)
 vite.config.ts                İşaretleri şablon çıktısıyla dolduran Vite eklentisi
 src/
-  content/tr.json             Sayfadaki TÜM metin (düzenlemek için tek yer)
+  content/tr.json             Türkçe metnin tamamı
+  content/en.json             İngilizce metnin tamamı (tr.json ile aynı yapı)
   config.ts                   İletişim bilgileri ve site adresi (boş alan sayfada görünmez)
   templates/page.ts           tr.json → statik HTML (derleme anında çalışır)
   main.ts                     Giriş: yazı tipleri, stiller, hareket, etkileşim
@@ -63,7 +67,7 @@ docs/                         Tasarım, içerik kaynakları, yayın
 
 | Ne | Nerede |
 |---|---|
-| Bir metni değiştirmek | `src/content/tr.json` |
+| Bir metni değiştirmek | `src/content/tr.json` ve aynı yerde `src/content/en.json` |
 | İletişim bilgisi (e-posta, telefon, bağlantı) | `src/config.ts` |
 | Renk veya yazı tipi | `src/styles/tokens.css` |
 | Dünyanın hızı, eğimi, ışık darbesi sıklığı | `src/scenes/globe/GlobeScene.ts` → `TUNING` |

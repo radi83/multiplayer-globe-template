@@ -8,6 +8,15 @@ Kural: Sayfada doğrulanmamış başarı oranı, kullanıcı sayısı, kurum log
 akademik onay, sertifika ya da kullanım hikâyesi yer almaz. Mevcut özellik,
 kısmen mevcut özellik ve geliştirme hedefi her yerde ayrı gösterilir.
 
+## İngilizce sürüm
+
+`src/content/en.json`, `tr.json`'un çevirisidir; aynı iddiaları, aynı durum
+etiketlerini ve aynı temsili senaryoyu içerir. Yeni bir iddia eklenmez.
+Teknik terimlerde BMMS deposunun kendi İngilizce terimleri kullanılır
+(`RETRIEVED != AUTHORITATIVE != CURRENT != APPLICABLE != SUFFICIENT`,
+Applicability, Obligation, Assurance State, Abstention). Türkçe metin
+değiştiğinde İngilizce karşılığı da aynı değişiklikte güncellenmelidir.
+
 ## Kimlik ve görsel dil
 
 | Sayfadaki öğe | Kaynak |

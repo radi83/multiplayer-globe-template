@@ -1,33 +1,43 @@
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { defineConfig, type Plugin } from "vite";
-import { renderBody, renderHead, type Content } from "./src/templates/page.ts";
+import { renderBody, renderHead, type Content, type Lang } from "./src/templates/page.ts";
 import { CONTACT, SITE_URL } from "./src/config.ts";
 
-const contentPath = fileURLToPath(new URL("./src/content/tr.json", import.meta.url));
+const root = (path: string): string => fileURLToPath(new URL(path, import.meta.url));
+const contentPath: Record<Lang, string> = {
+  tr: root("./src/content/tr.json"),
+  en: root("./src/content/en.json"),
+};
+
+/** Hangi HTML dosyası hangi dilde: en/index.html İngilizce, diğerleri Türkçe. */
+const langOf = (filename: string): Lang => (/[\\/]en[\\/]index\.html$/.test(filename) ? "en" : "tr");
 
 /**
- * index.html içindeki <!--app:head--> ve <!--app:body--> işaretlerini
- * src/content/tr.json + src/templates/page.ts çıktısıyla değiştirir.
- * Sonuç: metnin tamamı statik HTML'de, JavaScript'e bağımlı değil.
+ * HTML dosyalarındaki <!--app:head--> ve <!--app:body--> işaretlerini
+ * src/content/<dil>.json + src/templates/page.ts çıktısıyla değiştirir.
+ * Sonuç: her dilde metnin tamamı statik HTML'de, JavaScript'e bağımlı değil.
  */
 function staticContent(): Plugin {
+  const watched = Object.values(contentPath);
   return {
     name: "bmms-static-content",
     configureServer(server) {
-      server.watcher.add(contentPath);
+      watched.forEach((f) => server.watcher.add(f));
       server.watcher.on("change", (file) => {
-        if (file === contentPath) server.ws.send({ type: "full-reload" });
+        if (watched.includes(file)) server.ws.send({ type: "full-reload" });
       });
     },
     transformIndexHtml: {
       order: "pre",
-      handler(html) {
-        const content = JSON.parse(readFileSync(contentPath, "utf8")) as Content;
+      handler(html, ctx) {
+        const lang = langOf(ctx.filename);
+        const content = JSON.parse(readFileSync(contentPath[lang], "utf8")) as Content;
         const out = html
-          .replace("<!--app:head-->", renderHead(content, SITE_URL))
-          .replace("<!--app:body-->", renderBody(content, CONTACT));
-        if (out.includes("<!--app:")) throw new Error("index.html: işlenmemiş şablon işareti kaldı");
+          .replace("<!--app:head-->", renderHead(content, SITE_URL, lang))
+          .replace("<!--app:body-->", renderBody(content, CONTACT, lang));
+        if (out.includes("<!--app:")) throw new Error(`${ctx.filename}: işlenmemiş şablon işareti kaldı`);
+        if (!out.includes(`<html lang="${lang}"`)) throw new Error(`${ctx.filename}: <html lang> "${lang}" olmalı`);
         return out;
       },
     },
@@ -45,5 +55,11 @@ export default defineConfig({
     assetsInlineLimit: 0,
     // Three.js parçası bilerek büyük ve sonradan yükleniyor; bütçe scripts/check-budget.mjs içinde.
     chunkSizeWarningLimit: 600,
+    rollupOptions: {
+      input: {
+        tr: root("./index.html"),
+        en: root("./en/index.html"),
+      },
+    },
   },
 });

@@ -1,15 +1,17 @@
 /**
  * Temsili senaryo: bağlam ve kanıt seçimine göre pasajların uygulanabilirliği
- * ve sonuç durumu. Tüm metinler src/content/tr.json dosyasından gelir.
+ * ve sonuç durumu. Metinler sayfanın diline göre src/content/<dil>.json
+ * dosyasından gelir.
  */
-import content from "../content/tr.json";
+import tr from "../content/tr.json";
+import en from "../content/en.json";
 import { flowLinks } from "../motion/timelines";
 
 type Loc = "in" | "out" | "unk";
-type PillKind = keyof typeof content.demo.pills;
-type Kind = keyof typeof content.demo.states;
+type PillKind = keyof typeof tr.demo.pills;
+type Kind = keyof typeof tr.demo.states;
 
-const d = content.demo;
+const d = (document.documentElement.lang === "en" ? en : tr).demo;
 
 function fill(template: string, vars: Record<string, string>): string {
   return template.replace(/\{(\w+)\}/g, (_, key: string) => vars[key] ?? "");
