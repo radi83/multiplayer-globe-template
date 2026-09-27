@@ -1,0 +1,20 @@
+/* ============ 06 · Aşama ============ */
+.stages { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(20px, 3vw, 36px); }
+.stage { position: relative; display: grid; gap: 12px; align-content: start; padding-top: 21px; }
+.stage__rule { position: absolute; left: 0; right: 0; top: 0; height: 3px; background: var(--ink); transform-origin: left; }
+.stage--now .stage__rule { background: var(--red); }
+.stage--goal .stage__rule { background: repeating-linear-gradient(90deg, var(--faint) 0 6px, transparent 6px 10px); }
+.stage .k { font: 500 0.7rem/1 var(--f-mono); letter-spacing: .14em; color: var(--muted); }
+.stage--now .k { color: var(--red); }
+.stage h3 { font-weight: 600; font-size: 1.3rem; line-height: 1.2; }
+.stage ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+.stage li { position: relative; padding-left: 18px; color: var(--ink-2); font-size: 0.97rem; }
+.stage li::before { content: ""; position: absolute; left: 0; top: 0.62em; width: 7px; height: 2px; background: var(--ink); }
+.stage--now li::before { background: var(--red); }
+.stage--goal li::before { background: var(--faint); }
+.stage .fn { font-size: 0.85rem; color: var(--muted); padding-top: 4px; }
+.honesty {
+  margin-top: 36px; padding: 18px 20px; border-left: 3px solid var(--red); background: var(--paper-2);
+  font-size: 1rem; color: var(--ink-2); max-width: 72ch;
+}
+@media (max-width: 900px) { .stages { grid-template-columns: minmax(0, 1fr); } }

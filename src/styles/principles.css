@@ -1,0 +1,27 @@
+/* ============ 05 · İlkeler ============ */
+.invariant {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px;
+  font: 500 clamp(0.95rem, 0.7rem + 1.1vw, 1.4rem)/1.35 var(--f-mono); letter-spacing: .04em;
+  padding-block: 22px; border-block: 1.5px solid var(--ink);
+}
+.invariant .ne { display: inline-block; color: var(--red); }
+.invariant-cap { margin-top: 12px; font-size: 0.92rem; color: var(--muted); max-width: 70ch; }
+.principles {
+  margin-top: 40px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px; background: var(--line); border: 1px solid var(--line);
+}
+.pr { position: relative; background: var(--paper); padding: clamp(20px, 2.6vw, 30px); display: grid; gap: 10px; align-content: start; transition: background-color .25s ease; }
+.pr::before {
+  content: ""; position: absolute; left: 0; top: 0; right: 0; height: 2px; background: var(--red);
+  transform: scaleX(0); transform-origin: left; transition: transform .45s var(--ease-out);
+}
+.pr:hover::before, .pr:active::before { transform: scaleX(1); }
+.pr:hover { background: #FCFCFB; }
+.pr .k { font: 500 0.68rem/1 var(--f-mono); letter-spacing: .14em; color: var(--red); }
+.pr h3 { font-weight: 600; font-size: 1.22rem; line-height: 1.22; }
+.pr p { color: var(--ink-2); font-size: 0.97rem; }
+.discipline { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 8px 10px; align-items: center; font: 400 0.8rem/1.5 var(--f-mono); color: var(--muted); }
+.discipline b { font-weight: 500; letter-spacing: .12em; color: var(--ink); font-size: .7rem; margin-right: 6px; }
+.discipline span + span::before { content: "·"; color: var(--red); margin-right: 10px; }
+@media (max-width: 980px) { .principles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 620px) { .principles { grid-template-columns: minmax(0, 1fr); } }

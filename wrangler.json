@@ -1,29 +1,20 @@
 {
-  "compatibility_date": "2025-04-01",
-  "main": "src/server/index.ts",
+  "$schema": "node_modules/wrangler/config-schema.json",
   "name": "multiplayer-globe-template",
-  "migrations": [
-    {
-      "new_sqlite_classes": ["Globe"],
-      "tag": "v1"
-    }
-  ],
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-09-01",
   "assets": {
-    "directory": "public"
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "404-page"
   },
   "build": {
-    "command": "npx esbuild src/client/index.tsx --bundle --outdir=public/dist --splitting --sourcemap --format=esm"
+    "command": "npm run build"
   },
   "durable_objects": {
-    "bindings": [
-      {
-        "class_name": "Globe",
-        "name": "Globe"
-      }
-    ]
+    "bindings": [{ "class_name": "Globe", "name": "Globe" }]
   },
-  "observability": {
-    "enabled": true
-  },
+  "migrations": [{ "new_sqlite_classes": ["Globe"], "tag": "v1" }],
+  "observability": { "enabled": true },
   "upload_source_maps": true
 }

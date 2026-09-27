@@ -1,0 +1,27 @@
+/* ============ İletişim ve alt bilgi ============ */
+.contact-sec { position: relative; isolation: isolate; overflow: hidden; background: var(--stage); color: var(--stage-ink); padding-block: clamp(64px, 9vw, 120px); }
+.contact-sec .sec-head p { color: var(--stage-text); }
+.collab { list-style: none; margin: clamp(32px, 5vw, 48px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--stage-line); border: 1px solid var(--stage-line); }
+.collab li { background: var(--stage); padding: clamp(18px, 2.4vw, 26px); display: grid; gap: 6px; align-content: start; transition: background-color .25s ease; }
+.collab li:hover { background: var(--stage-2); }
+.collab h3 { font-weight: 600; font-size: 1.18rem; }
+.collab p { color: var(--stage-text); font-size: 0.97rem; }
+.bridge { margin-top: 24px; color: var(--stage-muted); max-width: 70ch; font-size: 0.95rem; }
+.contact {
+  margin-top: 36px; display: grid; gap: 16px; padding: clamp(20px, 3vw, 28px);
+  border: 1px solid var(--stage-line); background: rgba(242,242,239,.03); max-width: 720px;
+}
+.contact__k { font: 500 0.7rem/1 var(--f-mono); letter-spacing: .14em; color: var(--red-on-dark); }
+.contact__lead { font: 600 1.25rem/1.35 var(--f-display); }
+.contact__details { display: grid; gap: 16px; }
+.contact__row { display: grid; gap: 6px; }
+.contact__label { font: 500 0.7rem/1 var(--f-mono); letter-spacing: .12em; color: var(--stage-muted); }
+.contact__value { font: 500 1.05rem/1.4 var(--f-mono); user-select: all; word-break: break-all; }
+.contact__actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.contact__actions .btn { min-height: 46px; }
+.copy-msg { font: 400 0.8rem/1.4 var(--f-mono); color: var(--stage-muted); min-height: 1.4em; }
+@media (max-width: 700px) { .collab { grid-template-columns: minmax(0, 1fr); } }
+
+.foot { background: var(--stage); color: var(--stage-muted); border-top: 1px solid var(--stage-line); }
+.foot .wrap { display: grid; gap: 12px; padding-block: 28px calc(88px + env(safe-area-inset-bottom, 0px)); font-size: 0.86rem; }
+.foot .wordmark { color: var(--stage-ink); font-size: 1.15rem; }
