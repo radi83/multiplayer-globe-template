@@ -11,7 +11,7 @@ void main() {
   vFacing = facing(world.xyz);
   vLat = aLat;
   // Yavaşça yukarı aşağı gezinen tarama bandı: kontrollü ışık vurgusu.
-  float band = sin(uTime * 0.21) * 0.85;
+  float band = sin(uTime * 0.42) * 0.85;
   vScan = exp(-pow((normalize(world.xyz).y - band) * 6.0, 2.0));
   gl_Position = projectionMatrix * viewMatrix * world;
 }

@@ -20,6 +20,16 @@ function supportsWebGL(): boolean {
   }
 }
 
+/** Sayfanın dilindeki cümle/kelime listesi, şablonun yazdığı data-* özniteliğinden. */
+function readList(raw: string | undefined): string[] {
+  try {
+    const list: unknown = JSON.parse(raw ?? "[]");
+    return Array.isArray(list) ? list.filter((x): x is string => typeof x === "string") : [];
+  } catch {
+    return [];
+  }
+}
+
 export function bootGlobe(): void {
   const frame = document.getElementById("globe");
   if (!frame || !supportsWebGL()) return;
@@ -27,7 +37,13 @@ export function bootGlobe(): void {
   const load = (): void => {
     import("./GlobeScene")
       .then(({ createGlobeScene }) => {
-        const handle = createGlobeScene(frame, document.getElementById("bmms"), isMotionOn());
+        const handle = createGlobeScene(
+          frame,
+          document.getElementById("bmms"),
+          isMotionOn(),
+          readList(frame.dataset.phrases),
+          readList(frame.dataset.words),
+        );
         if (handle) onMotionChange((on) => handle.setMotion(on));
       })
       .catch(() => {

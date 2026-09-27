@@ -27,6 +27,7 @@ import {
   type IUniform,
 } from "three";
 import { graticule, network, shell, type LineSet, type Vec3 } from "./geometry";
+import { createTextLayer, PHRASE_STYLE, WORD_STYLE, type TextLayer } from "./phrases";
 import facingChunk from "./shaders/facing.glsl?raw";
 import graticuleVert from "./shaders/graticule.vert?raw";
 import graticuleFrag from "./shaders/graticule.frag?raw";
@@ -55,15 +56,16 @@ const COLOR = {
 /** Görsel ayarlar tek yerde. */
 const TUNING = {
   tilt: 0.36,
-  spin: 0.05, // rad/sn
+  spin: 0.28, // rad/sn (bir tur ≈ 22 sn)
+  phraseSpin: 0.28, // cümle ve kelime katmanı (küreyle aynı hız)
   cameraDistance: 4.9,
   fov: 32,
   revealSeconds: 2.4,
   drawDelay: 0.8,
   drawSeconds: 1.8,
-  maxPulses: 3,
-  pulseGap: [1.1, 2.8] as const,
-  pulseDuration: [1.8, 2.6] as const,
+  maxPulses: 4,
+  pulseGap: [0.22, 0.6] as const,
+  pulseDuration: [0.55, 0.85] as const,
 };
 
 const easeOutCubic = (t: number): number => 1 - Math.pow(1 - Math.min(1, Math.max(0, t)), 3);
@@ -93,7 +95,13 @@ function lineGeometry(set: LineSet): BufferGeometry {
   return g;
 }
 
-export function createGlobeScene(frame: HTMLElement, hero: HTMLElement | null, initialMotion: boolean): GlobeHandle | null {
+export function createGlobeScene(
+  frame: HTMLElement,
+  hero: HTMLElement | null,
+  initialMotion: boolean,
+  phraseTexts: string[] = [],
+  wordTexts: string[] = [],
+): GlobeHandle | null {
   let renderer: WebGLRenderer;
   try {
     renderer = new WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance" });
@@ -308,7 +316,9 @@ export function createGlobeScene(frame: HTMLElement, hero: HTMLElement | null, i
     tilt.rotation.y = pointerYaw;
     tilt.rotation.x = TUNING.tilt + pointerTilt;
     shellOpacity.value = 0.05 + 0.2 * (0.5 + 0.5 * Math.sin(elapsed / 4.2));
-    shellLines.rotation.y = -elapsed * 0.012;
+    shellLines.rotation.y = -elapsed * 0.09;
+    phraseGroup.rotation.y += dt * TUNING.phraseSpin;
+    for (const layer of textLayers) layer.update(elapsed, phraseGroup.rotation.y, TUNING.phraseSpin, draw.value >= 1);
 
     if (draw.value >= 1) updatePulses(elapsed, dt);
     renderFrame();
@@ -327,6 +337,7 @@ export function createGlobeScene(frame: HTMLElement, hero: HTMLElement | null, i
     if (!motion) {
       applyIntro(Number.POSITIVE_INFINITY);
       clearPulses();
+      textLayers.forEach((layer, i) => layer.showStatic(phraseGroup.rotation.y, i === 0));
       shellOpacity.value = 0.12;
     }
     renderFrame();
@@ -387,6 +398,33 @@ export function createGlobeScene(frame: HTMLElement, hero: HTMLElement | null, i
   };
   canvas.addEventListener("webglcontextlost", onContextLost);
 
+  /* ---- Küre içindeki cümleler ve kelimeler (yazı tipi yüklenince eklenir) ---- */
+  // Yazılar küreyle aynı eğimde, kendi dönüş katmanlarında.
+  const phraseGroup = new Group();
+  tilt.add(phraseGroup);
+  // Sıra önemli: 0 = cümleler (hareket kapalıyken ilk cümle gösterilir), 1 = kelimeler.
+  const textLayers: TextLayer[] = [];
+  let disposed = false;
+  Promise.all([
+    createTextLayer(phraseGroup, renderer, phraseTexts, PHRASE_STYLE),
+    createTextLayer(phraseGroup, renderer, wordTexts, WORD_STYLE),
+  ])
+    .then((layers) => {
+      const ready = layers.filter((l): l is TextLayer => l !== null);
+      if (disposed) {
+        ready.forEach((l) => l.dispose());
+        return;
+      }
+      textLayers.push(...ready);
+      if (!running) {
+        if (!motion) textLayers.forEach((layer, i) => layer.showStatic(phraseGroup.rotation.y, i === 0));
+        renderFrame();
+      }
+    })
+    .catch(() => {
+      /* Yazılar olmadan da sahne çalışır. */
+    });
+
   resize();
   if (!motion) applyIntro(Number.POSITIVE_INFINITY);
   sync();
@@ -400,6 +438,8 @@ export function createGlobeScene(frame: HTMLElement, hero: HTMLElement | null, i
       sync();
     },
     dispose(): void {
+      disposed = true;
+      textLayers.forEach((l) => l.dispose());
       renderer.setAnimationLoop(null);
       resizeObserver.disconnect();
       intersection.disconnect();

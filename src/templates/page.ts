@@ -144,7 +144,7 @@ function hero(c: Content, lang: Lang): string {
       </div>
       <figure class="globe" aria-labelledby="globe-cap">
         <div class="globe__stage">
-          <div class="globe__frame" id="globe" role="img" aria-label="${esc(h.globeAria)}">
+          <div class="globe__frame" id="globe" role="img" aria-label="${esc(h.globeAria)}" data-phrases="${esc(JSON.stringify(h.globePhrases))}" data-words="${esc(JSON.stringify(h.globeWords))}">
             ${globeFallback}
             ${globeOverlay}
           </div>

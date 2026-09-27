@@ -89,7 +89,9 @@
 .globe__overlay { pointer-events: none; overflow: visible; }
 .globe__axes { stroke: rgba(242,242,239,.1); stroke-width: 1; stroke-dasharray: 16 5 2 5; fill: none; }
 .globe__ring { fill: none; stroke: rgba(242,242,239,.22); stroke-width: 1; transform-box: view-box; transform-origin: 50% 50%; }
-html[data-motion="on"] .globe__ring { animation: ring-turn 240s linear infinite; }
+html[data-motion="on"] .globe__ring { animation: ring-turn 40s linear infinite; }
+html[data-motion="on"] .globe__axes { animation: axes-flow 3s linear infinite; }
+@keyframes axes-flow { to { stroke-dashoffset: -56; } }
 @keyframes ring-turn { to { transform: rotate(360deg); } }
 .globe__labels text { font: 500 9.5px var(--f-mono); fill: rgba(242,242,239,.5); dominant-baseline: middle; text-anchor: middle; letter-spacing: .04em; }
 .globe__labels text[text-anchor="end"] { text-anchor: end; }
