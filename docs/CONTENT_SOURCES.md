@@ -79,10 +79,13 @@ değerlendirme setindeki `SULPHUR-GEO-01` karşı-olgusal ailesinden esinlenmiş
 **temsilidir**; gerçek bir kaynaktan alıntı ya da BMMS sistem çıktısı değildir
 ve sayfada bu açıkça yazar. Sınır değerleri bilerek verilmemiştir.
 
+## İletişim
+
+E-posta (`c@bskn.tr`) ve telefon (`+90 532 659 1923`) proje sahibi tarafından
+verilmiştir; `src/config.ts` içinde tutulur.
+
 ## Tamamlanması gerekenler
 
-- **İletişim bilgisi:** `src/config.ts`. Boşken sayfa yalnızca "sunumda
-  görüşebilirsiniz" notunu gösterir.
 - **Ad tutarlılığı:** Bir tanıtım görselinde "Berth Maritime Management System"
   geçiyor; depo "Maritime Engineering Knowledge System" diyor. Sayfa depodakini
   kullanır.

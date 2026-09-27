@@ -35,7 +35,7 @@ index.html                    Kabuk: <!--app:head--> ve <!--app:body--> işaretl
 vite.config.ts                İşaretleri şablon çıktısıyla dolduran Vite eklentisi
 src/
   content/tr.json             Sayfadaki TÜM metin (düzenlemek için tek yer)
-  config.ts                   İletişim bilgileri (boş alan sayfada görünmez)
+  config.ts                   İletişim bilgileri ve site adresi (boş alan sayfada görünmez)
   templates/page.ts           tr.json → statik HTML (derleme anında çalışır)
   main.ts                     Giriş: yazı tipleri, stiller, hareket, etkileşim
   styles/                     tokens.css + bölüm başına bir stil dosyası
@@ -64,7 +64,7 @@ docs/                         Tasarım, içerik kaynakları, yayın
 | Ne | Nerede |
 |---|---|
 | Bir metni değiştirmek | `src/content/tr.json` |
-| İletişim bilgisi eklemek | `src/config.ts` |
+| İletişim bilgisi (e-posta, telefon, bağlantı) | `src/config.ts` |
 | Renk veya yazı tipi | `src/styles/tokens.css` |
 | Dünyanın hızı, eğimi, ışık darbesi sıklığı | `src/scenes/globe/GlobeScene.ts` → `TUNING` |
 | Kaydırma sahneleri | `src/motion/timelines.ts` |

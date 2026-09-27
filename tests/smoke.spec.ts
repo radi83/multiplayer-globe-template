@@ -98,3 +98,13 @@ test("klavyeyle ilk odak içeriğe geç bağlantısıdır", async ({ page }) => 
   await page.keyboard.press("Tab");
   await expect(page.locator(":focus")).toHaveText("İçeriğe geç");
 });
+
+test("iletişim bilgileri görünür ve bağlantılar doğru", async ({ page }) => {
+  await page.goto("/");
+  const contact = page.locator("#contact");
+  await expect(contact).toContainText("c@bskn.tr");
+  await expect(contact).toContainText("+90 532 659 1923");
+  await expect(contact.locator('a[href="mailto:c@bskn.tr"]')).toHaveCount(1);
+  await expect(contact.locator('a[href="tel:+905326591923"]')).toHaveCount(1);
+  await expect(contact.locator("#copy-mail")).toBeVisible();
+});

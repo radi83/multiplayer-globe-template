@@ -357,6 +357,13 @@ function contact(c: Content, cfg: ContactConfig): string {
     );
     actions.push(`<a class="btn btn--ghost" href="mailto:${esc(cfg.email)}">${esc(k.mail)}</a>`);
   }
+  if (cfg.phone) {
+    const tel = cfg.phone.replace(/[^\d+]/g, "");
+    rows.push(
+      `<div class="contact__row"><span class="contact__label">${esc(k.fieldPhone)}</span><span class="contact__value">${esc(cfg.phone)}</span></div>`,
+    );
+    actions.push(`<a class="btn btn--ghost" href="tel:${esc(tel)}">${esc(k.call)}</a>`);
+  }
   if (cfg.url && /^https:\/\//.test(cfg.url)) {
     actions.push(`<a class="btn btn--ghost" href="${esc(cfg.url)}" target="_blank" rel="noopener">${esc(k.open)}</a>`);
   }

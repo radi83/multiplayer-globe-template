@@ -12,13 +12,16 @@ export interface ContactConfig {
   name: string;
   /** Örn. "ad@kurum.edu.tr" */
   email: string;
+  /** Görünen biçim, örn. "+90 532 000 0000". Arama bağlantısı bundan türetilir. */
+  phone: string;
   /** Yalnızca https:// ile başlayan adres kabul edilir. */
   url: string;
 }
 
 export const CONTACT: ContactConfig = {
   name: "",
-  email: "",
+  email: "c@bskn.tr",
+  phone: "+90 532 659 1923",
   url: "",
 };
 
