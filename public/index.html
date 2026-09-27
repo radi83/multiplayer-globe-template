@@ -1,27 +1,1481 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
-    />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Globe</title>
-    <!-- Favicon -->
-    <link rel="icon" href="/favicon.ico" sizes="any" />
-    <!-- Primary Meta Tags -->
-    <meta name="title" content="PartyServer" />
-    <meta name="description" content="Everything's better with friends!" />
-    <meta name="author" content="PartyServer" />
-    <!-- Theme Colour -->
-    <meta name="theme-color" content="#ffffff" />
+<html lang="tr">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="BMMS — denizcilik mühendisliği bilgisini kaynaklarıyla ilişkilendiren, izlenebilir ve denetlenebilir bir bilgi sistemi projesi.">
+<meta name="theme-color" content="#0F1011">
+<meta property="og:title" content="BMMS — Maritime Engineering Knowledge System">
+<meta property="og:description" content="Her mühendislik sonucu kaynağına kadar izlenebilmeli.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23111111'/%3E%3Crect width='6' height='32' fill='%23B3121D'/%3E%3Ctext x='19' y='22' font-family='Arial' font-weight='700' font-size='15' fill='%23fff' text-anchor='middle'%3EB%3C/text%3E%3C/svg%3E">
+<!-- BMMS:ARTIFACT-START -->
+<title>BMMS Kongre Sayfası</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+/* ------------------------------------------------------------------
+   Renk ve tipografi değişkenleri.
+   Palet: BMMS deposu docs/BRAND_SYSTEM.md (kanonik).
+   --red-on-dark yalnızca koyu zemindeki küçük vurgular için açıklaştırılmış tondur.
+------------------------------------------------------------------- */
+:root {
+  color-scheme: light;
+  --red: #B3121D;
+  --red-deep: #940E17;
+  --red-on-dark: #E2464F;
+  --ink: #111111;
+  --ink-2: #2B2B2A;
+  --paper: #FFFFFF;
+  --paper-2: #F5F5F3;
+  --line: #D9D9D6;
+  --line-soft: #ECECE8;
+  --muted: #555555;
+  --faint: #8A8A87;
+  --stage: #0F1011;
+  --stage-2: #17191B;
+  --stage-ink: #F2F2EF;
+  --stage-text: #C9CAC6;
+  --stage-muted: #A3A5A1;
+  --stage-line: rgba(242, 242, 239, 0.14);
+  --stage-grid: rgba(242, 242, 239, 0.065);
+  --stage-grid-fine: rgba(242, 242, 239, 0.028);
 
-    <link rel="stylesheet" href="/normalize.css" />
-    <link rel="stylesheet" href="/dist/index.css" />
-  </head>
-  <body>
-    <div id="root">Loading...</div>
-    <script type="module" src="/dist/index.js"></script>
-  </body>
+  --f-display: "IBM Plex Sans Condensed", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --f-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+  --gutter: clamp(16px, 4vw, 48px);
+  --maxw: 1200px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 400 1.0625rem/1.65 var(--f-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+img, svg, canvas { max-width: 100%; }
+a { color: inherit; }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; margin: 0; }
+p { margin: 0; }
+.wrap { max-width: var(--maxw); margin-inline: auto; padding-inline: var(--gutter); }
+
+:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+.on-dark :focus-visible { outline-color: var(--stage-ink); }
+
+.skip {
+  position: absolute; left: 12px; top: -60px; z-index: 50;
+  background: var(--ink); color: #fff; padding: 10px 14px; text-decoration: none; font-weight: 600;
+}
+.skip:focus { top: calc(12px + env(safe-area-inset-top, 0px)); }
+
+/* ---------- Ortak etiketler ---------- */
+.sheet {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px;
+  font: 500 0.72rem/1.3 var(--f-mono); letter-spacing: 0.14em; color: var(--muted);
+}
+.sheet::before { content: ""; width: 8px; height: 8px; background: var(--red); flex: none; }
+.sheet .sep { color: var(--line); }
+.on-dark .sheet { color: var(--stage-muted); }
+.on-dark .sheet .sep { color: var(--stage-line); }
+
+.sec-head { max-width: 46rem; display: grid; gap: 18px; }
+.sec-head h2 {
+  font-weight: 700; font-size: clamp(1.95rem, 1.25rem + 2.6vw, 3.05rem);
+  line-height: 1.05; letter-spacing: -0.005em;
+}
+.sec-head p { color: var(--ink-2); max-width: 62ch; font-size: 1.08rem; }
+
+/* ---------- Düğmeler ---------- */
+.btn {
+  display: inline-flex; align-items: center; gap: 0.65em;
+  min-height: 50px; padding: 0 1.3em;
+  font: 600 1rem/1 var(--f-body); text-decoration: none;
+  border: 1.5px solid transparent; border-radius: 2px; cursor: pointer;
+  transition: background-color .2s ease, border-color .2s ease, color .2s ease, transform .15s ease;
+}
+.btn svg { width: 16px; height: 16px; flex: none; transition: transform .25s ease; }
+.btn:hover svg { transform: translateX(3px); }
+.btn:active { transform: translateY(1px); }
+.btn--primary { background: var(--red); border-color: var(--red); color: #fff; }
+.btn--primary:hover { background: var(--red-deep); border-color: var(--red-deep); }
+.btn--ghost { background: transparent; color: var(--stage-ink); border-color: rgba(242,242,239,.42); }
+.btn--ghost:hover { border-color: var(--stage-ink); background: rgba(242,242,239,.06); }
+
+/* ================================================================
+   01 · İlk ekran
+================================================================ */
+.hero {
+  position: relative; isolation: isolate; overflow: hidden;
+  background: var(--stage); color: var(--stage-ink);
+}
+.hero__bg {
+  position: absolute; inset: -140px 0 0 0; z-index: -2; pointer-events: none;
+  background-image:
+    linear-gradient(var(--stage-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--stage-grid) 1px, transparent 1px),
+    linear-gradient(var(--stage-grid-fine) 1px, transparent 1px),
+    linear-gradient(90deg, var(--stage-grid-fine) 1px, transparent 1px);
+  background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px;
+  background-position: -1px -1px;
+  will-change: transform;
+}
+.hero__light {
+  position: absolute; z-index: -1; pointer-events: none;
+  width: min(900px, 120vw); aspect-ratio: 1; right: -12%; top: 50%;
+  transform: translateY(-50%);
+  background: radial-gradient(closest-side, rgba(242,242,239,.075), rgba(179,18,29,.05) 55%, transparent 100%);
+}
+.topbar {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding-block: calc(18px + env(safe-area-inset-top, 0px)) 18px;
+  border-bottom: 1px solid var(--stage-line);
+}
+.wordmark {
+  display: inline-flex; align-items: center; gap: 12px; text-decoration: none;
+  font: 700 1.45rem/1 var(--f-display); letter-spacing: 0.02em;
+}
+.wordmark::before { content: ""; width: 5px; height: 1.15em; background: var(--red); }
+.wordmark small {
+  font: 500 0.68rem/1.25 var(--f-mono); letter-spacing: 0.12em; color: var(--stage-muted); max-width: 17em;
+}
+.topnav { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
+.topnav a {
+  font: 500 0.78rem/1 var(--f-mono); letter-spacing: 0.08em; text-decoration: none;
+  color: var(--stage-text); padding: 12px 10px; border-bottom: 1px solid transparent;
+  transition: color .2s ease, border-color .2s ease;
+}
+.topnav a:hover { color: var(--stage-ink); border-bottom-color: var(--red-on-dark); }
+@media (max-width: 860px) {
+  .topnav a:not(.topnav__keep) { display: none; }
+  .wordmark small { display: none; }
+}
+
+.hero__inner {
+  display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
+  gap: clamp(20px, 4vw, 56px); align-items: center;
+  padding-block: clamp(24px, 4vw, 48px) clamp(32px, 5vw, 60px);
+}
+.hero__copy { display: grid; gap: 22px; align-content: start; }
+.hero h1 {
+  font-weight: 700; font-size: clamp(2.3rem, 1.25rem + 3.4vw, 3.8rem);
+  line-height: 1.02; letter-spacing: -0.012em; color: var(--stage-ink);
+}
+.hero h1 em { font-style: normal; color: var(--red-on-dark); }
+.hero .lede { color: var(--stage-text); font-size: clamp(1.02rem, 0.96rem + 0.3vw, 1.15rem); max-width: 38em; }
+.actions { display: flex; flex-wrap: wrap; gap: 12px; padding-top: 4px; }
+.status-line {
+  display: flex; align-items: center; gap: 10px;
+  font: 500 0.74rem/1.45 var(--f-mono); letter-spacing: 0.06em; color: var(--stage-muted);
+  padding-top: 14px; border-top: 1px solid var(--stage-line); max-width: 38em;
+}
+.status-line::before { content: ""; width: 7px; height: 7px; flex: none; border: 1.5px solid var(--red-on-dark); }
+
+.globe { margin: 0; display: grid; gap: 14px; justify-items: center; }
+.globe__frame { position: relative; width: 100%; max-width: 560px; aspect-ratio: 1 / 1; }
+.globe__frame > svg, .globe__frame > canvas {
+  position: absolute; inset: 0; width: 100%; height: 100%; display: block;
+}
+.globe__frame > canvas { opacity: 0; transition: opacity 1.1s ease; }
+.globe__frame.is-live > canvas { opacity: 1; }
+.globe__frame.is-live > .globe__fallback { opacity: 0; transition: opacity .8s ease; }
+.globe__frame::before, .globe__frame::after {
+  content: ""; position: absolute; width: 18px; height: 18px; pointer-events: none;
+  border-color: var(--stage-line); border-style: solid;
+}
+.globe__frame::before { left: 0; top: 0; border-width: 1px 0 0 1px; }
+.globe__frame::after { right: 0; bottom: 0; border-width: 0 1px 1px 0; }
+.globe figcaption {
+  width: 100%; max-width: 560px;
+  font: 400 0.74rem/1.55 var(--f-mono); color: var(--stage-muted);
+  padding-top: 10px; border-top: 1px solid var(--stage-line);
+}
+.globe figcaption b { color: var(--stage-ink); font-weight: 500; letter-spacing: .08em; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-top: 6px; }
+.legend span { display: inline-flex; align-items: center; gap: 7px; }
+.legend i { display: inline-block; flex: none; }
+.lg-node { width: 7px; height: 7px; border-radius: 50%; background: var(--red-on-dark); box-shadow: 0 0 0 3px rgba(226,70,79,.25); }
+.lg-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--stage-ink); }
+.lg-arc { width: 18px; height: 1.5px; background: var(--red-on-dark); }
+
+.titleblock {
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 24px;
+  border-top: 1px solid var(--stage-line); padding-block: 12px 14px;
+  font: 500 0.68rem/1.4 var(--f-mono); letter-spacing: 0.12em; color: var(--stage-muted);
+}
+@media (max-width: 860px) {
+  .hero__inner { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .globe__frame { max-width: 380px; }
+}
+@media (max-width: 520px) {
+  .hero__copy { gap: 16px; }
+  .hero .lede { font-size: 1rem; line-height: 1.55; }
+  .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .actions .btn { justify-content: center; padding: 0 0.8em; min-height: 48px; font-size: 0.95rem; white-space: nowrap; }
+  .actions .btn svg { display: none; }
+  .status-line { font-size: 0.68rem; padding-top: 12px; }
+}
+
+/* ================================================================
+   Bölümler
+================================================================ */
+.sec { position: relative; padding-block: clamp(64px, 9vw, 120px); border-top: 1px solid var(--line); }
+.sec--alt { background: var(--paper-2); }
+.sec-body { margin-top: clamp(36px, 5vw, 56px); }
+
+/* ---------- 02 Problem ---------- */
+.problem { display: grid; grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr); gap: clamp(32px, 5vw, 72px); align-items: start; }
+.issues { list-style: none; margin: 0; padding: 0; display: grid; }
+.issues li { display: grid; gap: 6px; padding-block: 20px; border-top: 1px solid var(--line); }
+.issues li:last-child { border-bottom: 1px solid var(--line); }
+.issues .tag { font: 500 0.7rem/1 var(--f-mono); letter-spacing: 0.14em; color: var(--red); }
+.issues h3 { font-weight: 600; font-size: 1.28rem; line-height: 1.2; }
+.issues p { color: var(--muted); max-width: 58ch; }
+
+.frag-stage {
+  position: relative; overflow: hidden; margin: 0;
+  border: 1px solid var(--line); background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--line-soft) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
+  background-size: 24px 24px; background-position: -1px -1px;
+  padding: clamp(16px, 3vw, 28px);
+  display: grid; gap: 16px;
+}
+.frag-stage__head {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 6px 12px; flex-wrap: wrap;
+  font: 500 0.7rem/1.3 var(--f-mono); letter-spacing: 0.12em; color: var(--muted);
+}
+.frag-state { display: grid; text-align: right; color: var(--ink); }
+.frag-state span { grid-area: 1 / 1; transition: opacity .35s ease; }
+.frag-state .is-b { opacity: 0; color: var(--red); }
+.frag-stage.is-set .frag-state .is-a { opacity: 0; }
+.frag-stage.is-set .frag-state .is-b { opacity: 1; }
+.frags { list-style: none; margin: 0; padding: 0 0 0 14px; display: grid; gap: 8px; position: relative; }
+.frags::before {
+  content: ""; position: absolute; left: 0; top: 4px; bottom: 4px; width: 2px; background: var(--red);
+  transform-origin: top; transform: scaleY(0); transition: transform .6s ease;
+}
+.frag-stage.is-set .frags::before { transform: scaleY(1); }
+.frag {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 14px; align-items: center;
+  background: var(--paper); border: 1px solid var(--line);
+  padding: 11px 14px; box-shadow: 0 1px 0 rgba(17,17,17,.04);
+  will-change: transform;
+}
+.frag__type { font: 500 0.68rem/1.2 var(--f-mono); letter-spacing: .12em; color: var(--muted); }
+.frag__name { font-weight: 600; font-size: 0.98rem; line-height: 1.3; grid-column: 1; }
+.frag__fields { grid-column: 2; grid-row: 1 / span 2; display: flex; gap: 4px; }
+.frag__fields span {
+  font: 500 0.6rem/1 var(--f-mono); letter-spacing: .08em; padding: 5px;
+  border: 1px dashed var(--line); color: var(--faint);
+  transition: border-color .35s ease, color .35s ease;
+}
+.frag-stage.is-set .frag__fields span { border-style: solid; border-color: var(--ink); color: var(--ink); }
+.frag-stage__foot { font-size: 0.9rem; color: var(--muted); max-width: 60ch; }
+.frag-stage__foot b { font-family: var(--f-mono); font-weight: 500; font-size: .72rem; letter-spacing: .12em; color: var(--ink); margin-right: 6px; }
+@media (max-width: 900px) { .problem { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 480px) {
+  .frag { grid-template-columns: minmax(0, 1fr); }
+  .frag__fields { grid-column: 1; grid-row: auto; }
+}
+
+/* ---------- 03 Yaklaşım ---------- */
+.approach { display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); gap: clamp(32px, 6vw, 88px); align-items: start; }
+.approach__aside { position: sticky; top: calc(28px + env(safe-area-inset-top, 0px)); display: grid; gap: 28px; }
+.status-legend { display: grid; gap: 12px; margin: 0; padding: 18px 0 0; border-top: 1px solid var(--line); }
+.status-legend div { display: grid; gap: 4px; }
+.status-legend dd { margin: 0; font-size: 0.9rem; color: var(--muted); }
+.chip {
+  display: inline-flex; align-items: center; gap: 7px; width: fit-content;
+  font: 500 0.66rem/1 var(--f-mono); letter-spacing: 0.1em;
+  padding: 5px 8px; border: 1px solid var(--ink); color: var(--ink); background: var(--paper);
+}
+.chip::before { content: ""; width: 7px; height: 7px; flex: none; background: var(--ink); }
+.chip--partial::before { background: linear-gradient(90deg, var(--ink) 50%, transparent 50%); box-shadow: inset 0 0 0 1px var(--ink); }
+.chip--goal { border-color: var(--faint); color: var(--muted); border-style: dashed; }
+.chip--goal::before { background: transparent; box-shadow: inset 0 0 0 1px var(--faint); }
+.canon { font: 400 0.78rem/1.75 var(--f-mono); color: var(--muted); padding-top: 18px; border-top: 1px solid var(--line); }
+.canon b { display: block; font-weight: 500; letter-spacing: .12em; color: var(--ink); font-size: .7rem; margin-bottom: 4px; }
+.canon .ar { color: var(--red); }
+
+.flow { list-style: none; margin: 0; padding: 0; position: relative; --draw: 0; }
+.flow::before, .flow::after {
+  content: ""; position: absolute; left: 21px; top: 22px; bottom: 22px; width: 2px; background: var(--line);
+}
+.flow::after { background: var(--red); transform-origin: top; transform: scaleY(var(--draw)); }
+.step { position: relative; display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 20px; padding-block: 18px; }
+.step__node {
+  position: relative; z-index: 1; width: 44px; height: 44px; display: grid; place-items: center;
+  font: 500 0.8rem/1 var(--f-mono); color: var(--faint);
+  background: var(--paper-2); border: 1.5px solid var(--line);
+  transition: background-color .3s ease, border-color .3s ease, color .3s ease, transform .3s ease;
+}
+.step.is-reached .step__node { border-color: var(--ink); color: var(--ink); background: var(--paper); }
+.step.is-active .step__node { background: var(--red); border-color: var(--red); color: #fff; transform: scale(1.06); }
+.step__body { display: grid; gap: 8px; padding: 14px 18px 16px; border: 1px solid transparent; transition: border-color .3s ease, background-color .3s ease; }
+.step.is-active .step__body { border-color: var(--line); background: var(--paper); }
+.step__body h3 { font-weight: 600; font-size: 1.32rem; line-height: 1.2; }
+.step__body p { color: var(--ink-2); max-width: 60ch; }
+.step__body .note { font-size: 0.9rem; color: var(--muted); }
+.flow__end { position: relative; z-index: 1; display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 20px; padding-top: 18px; align-items: start; }
+.flow__end-mark { width: 44px; height: 44px; display: grid; place-items: center; }
+.flow__end-mark::before { content: ""; width: 14px; height: 14px; border: 2px solid var(--ink); background: var(--paper-2); }
+.flow__end p { font-size: 0.95rem; color: var(--ink-2); display: grid; gap: 8px; padding-left: 18px; }
+@media (max-width: 900px) {
+  .approach { grid-template-columns: minmax(0, 1fr); }
+  .approach__aside { position: static; }
+}
+@media (max-width: 480px) {
+  .step, .flow__end { grid-template-columns: 36px minmax(0, 1fr); gap: 12px; }
+  .step__node, .flow__end-mark { width: 36px; height: 36px; }
+  .flow::before, .flow::after { left: 17px; }
+  .step__body { padding: 10px 12px 12px; }
+  .flow__end p { padding-left: 12px; }
+}
+
+/* ---------- 04 Örnek ---------- */
+.demo { border: 1px solid var(--ink); background: var(--paper); }
+.demo__bar {
+  display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 16px;
+  padding: 12px clamp(16px, 3vw, 24px); background: var(--ink); color: #fff;
+  font: 500 0.72rem/1.3 var(--f-mono); letter-spacing: .12em;
+}
+.demo__bar .badge { border: 1px solid rgba(255,255,255,.55); padding: 5px 8px; }
+.demo__q { padding: clamp(18px, 3vw, 28px) clamp(16px, 3vw, 28px) 8px; display: grid; gap: 6px; }
+.demo__q .lbl { font: 500 0.7rem/1 var(--f-mono); letter-spacing: .14em; color: var(--red); }
+.demo__q p { font: 600 clamp(1.15rem, 1rem + .6vw, 1.45rem)/1.3 var(--f-display); max-width: 40ch; }
+.demo__controls { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 18px 36px; padding: 12px clamp(16px, 3vw, 28px) 22px; border-bottom: 1px solid var(--line); }
+.seg { border: 0; margin: 0; padding: 0; min-width: 0; display: grid; gap: 8px; align-content: start; }
+.seg legend { padding: 0; font: 500 0.7rem/1.3 var(--f-mono); letter-spacing: .12em; color: var(--muted); margin-bottom: 8px; }
+.seg__opts { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg input { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+.seg label {
+  min-height: 44px; display: inline-flex; align-items: center; padding: 0 14px;
+  border: 1px solid var(--line); background: var(--paper); cursor: pointer;
+  font-weight: 500; font-size: 0.95rem;
+  transition: background-color .2s ease, color .2s ease, border-color .2s ease;
+}
+.seg label:hover { border-color: var(--ink); }
+.seg input:checked + label { background: var(--ink); color: #fff; border-color: var(--ink); }
+.seg input:focus-visible + label { outline: 2px solid var(--red); outline-offset: 2px; }
+.seg small { font-size: .8rem; color: var(--muted); }
+
+.board {
+  display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.9fr) minmax(0, 1.05fr);
+  gap: 40px; padding: clamp(18px, 3vw, 28px);
+  background-image: linear-gradient(var(--line-soft) 1px, transparent 1px), linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
+  background-size: 24px 24px; background-position: -1px -1px;
+}
+.col { position: relative; display: grid; gap: 10px; align-content: start; }
+.col__h { font: 500 0.7rem/1.3 var(--f-mono); letter-spacing: .12em; color: var(--muted); }
+.col:not(:last-child)::after {
+  content: ""; position: absolute; top: 50%; right: -40px; width: 40px; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--red), transparent) no-repeat var(--line);
+  background-size: 0% 100%;
+}
+.board.is-flowing .col:not(:last-child)::after { animation: flow 1.1s ease-out; }
+@keyframes flow { from { background-size: 60% 100%; background-position: -60% 0; } to { background-size: 60% 100%; background-position: 200% 0; } }
+.card { background: var(--paper); border: 1px solid var(--line); padding: 12px 14px; display: grid; gap: 6px; transition: border-color .3s ease, opacity .3s ease; }
+.card__t { font-weight: 600; line-height: 1.3; }
+.card__m { font: 400 0.72rem/1.45 var(--f-mono); color: var(--muted); }
+.card.is-on { border-color: var(--ink); box-shadow: inset 3px 0 0 var(--ink); }
+.card.is-off { opacity: 0.72; }
+.card.is-unk { border-style: dashed; border-color: var(--red); }
+.pill { font: 500 0.64rem/1.25 var(--f-mono); letter-spacing: .08em; padding: 5px 7px; width: fit-content; border: 1px solid var(--line); color: var(--muted); }
+.pill--on { background: var(--ink); color: #fff; border-color: var(--ink); }
+.pill--unk { border: 1px dashed var(--red); color: var(--red); }
+.pill--miss { border-color: var(--red); color: var(--red); }
+.result { border: 1.5px solid var(--ink); background: var(--paper); padding: 14px 16px; display: grid; gap: 10px; }
+.result__state { display: flex; align-items: center; gap: 10px; font: 700 1.2rem/1.15 var(--f-display); letter-spacing: .01em; }
+.result__state::before { content: ""; width: 12px; height: 12px; flex: none; background: var(--ink); }
+.result[data-kind="unknown"] { border-color: var(--red); border-style: dashed; }
+.result[data-kind="unknown"] .result__state::before { background: transparent; box-shadow: inset 0 0 0 2px var(--red); }
+.result[data-kind="missing"] { border-color: var(--red); }
+.result[data-kind="missing"] .result__state::before { background: var(--red); }
+.result__txt { font-size: 0.95rem; color: var(--ink-2); }
+.result__chain { font: 400 0.72rem/1.6 var(--f-mono); color: var(--muted); border-top: 1px solid var(--line); padding-top: 8px; }
+.result__chain .ar { color: var(--red); }
+.demo__note { padding: 14px clamp(16px, 3vw, 28px) 18px; border-top: 1px solid var(--line); font-size: 0.86rem; color: var(--muted); }
+@media (max-width: 900px) {
+  .board { grid-template-columns: minmax(0, 1fr); gap: 30px; }
+  .col:not(:last-child)::after {
+    top: auto; bottom: -30px; right: auto; left: 22px; width: 2px; height: 30px;
+    background: linear-gradient(180deg, transparent, var(--red), transparent) no-repeat var(--line);
+    background-size: 100% 0%;
+  }
+  .board.is-flowing .col:not(:last-child)::after { animation: flowv 1.1s ease-out; }
+}
+@keyframes flowv { from { background-size: 100% 60%; background-position: 0 -60%; } to { background-size: 100% 60%; background-position: 0 200%; } }
+
+/* ---------- 05 İlkeler ---------- */
+.invariant {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px;
+  font: 500 clamp(0.95rem, 0.7rem + 1.1vw, 1.4rem)/1.35 var(--f-mono); letter-spacing: .04em;
+  padding-block: 22px; border-block: 1.5px solid var(--ink);
+}
+.invariant .ne { color: var(--red); }
+.invariant-cap { margin-top: 12px; font-size: 0.92rem; color: var(--muted); max-width: 70ch; }
+.principles {
+  margin-top: 40px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px; background: var(--line); border: 1px solid var(--line);
+}
+.pr { position: relative; background: var(--paper); padding: clamp(20px, 2.6vw, 30px); display: grid; gap: 10px; align-content: start; transition: background-color .25s ease; }
+.pr::before { content: ""; position: absolute; left: 0; top: 0; right: 0; height: 2px; background: var(--red); transform: scaleX(0); transform-origin: left; transition: transform .35s ease; }
+.pr:hover::before { transform: scaleX(1); }
+.pr:hover { background: #FCFCFB; }
+.pr .k { font: 500 0.68rem/1 var(--f-mono); letter-spacing: .14em; color: var(--red); }
+.pr h3 { font-weight: 600; font-size: 1.22rem; line-height: 1.22; }
+.pr p { color: var(--ink-2); font-size: 0.97rem; }
+.discipline { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 8px 10px; align-items: center; font: 400 0.8rem/1.5 var(--f-mono); color: var(--muted); }
+.discipline b { font-weight: 500; letter-spacing: .12em; color: var(--ink); font-size: .7rem; margin-right: 6px; }
+.discipline span + span::before { content: "·"; color: var(--red); margin-right: 10px; }
+@media (max-width: 980px) { .principles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 620px) { .principles { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- 06 Aşama ---------- */
+.stages { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(20px, 3vw, 36px); }
+.stage { display: grid; gap: 12px; align-content: start; padding-top: 18px; border-top: 3px solid var(--ink); }
+.stage--now { border-top-color: var(--red); }
+.stage--goal { border-top: 3px dashed var(--faint); }
+.stage .k { font: 500 0.7rem/1 var(--f-mono); letter-spacing: .14em; color: var(--muted); }
+.stage--now .k { color: var(--red); }
+.stage h3 { font-weight: 600; font-size: 1.3rem; line-height: 1.2; }
+.stage ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+.stage li { position: relative; padding-left: 18px; color: var(--ink-2); font-size: 0.97rem; }
+.stage li::before { content: ""; position: absolute; left: 0; top: 0.62em; width: 7px; height: 2px; background: var(--ink); }
+.stage--now li::before { background: var(--red); }
+.stage--goal li::before { background: var(--faint); }
+.stage .fn { font-size: 0.85rem; color: var(--muted); padding-top: 4px; }
+.honesty {
+  margin-top: 36px; padding: 18px 20px; border-left: 3px solid var(--red); background: var(--paper-2);
+  font-size: 1rem; color: var(--ink-2); max-width: 72ch;
+}
+@media (max-width: 900px) { .stages { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- İletişim ---------- */
+.contact-sec { position: relative; isolation: isolate; overflow: hidden; background: var(--stage); color: var(--stage-ink); padding-block: clamp(64px, 9vw, 120px); }
+.contact-sec .hero__bg { inset: -80px 0 0 0; }
+.contact-sec .sec-head p { color: var(--stage-text); }
+.collab { list-style: none; margin: clamp(32px, 5vw, 48px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--stage-line); border: 1px solid var(--stage-line); }
+.collab li { background: var(--stage); padding: clamp(18px, 2.4vw, 26px); display: grid; gap: 6px; align-content: start; transition: background-color .25s ease; }
+.collab li:hover { background: var(--stage-2); }
+.collab h3 { font-weight: 600; font-size: 1.18rem; }
+.collab p { color: var(--stage-text); font-size: 0.97rem; }
+.bridge { margin-top: 24px; color: var(--stage-muted); max-width: 70ch; font-size: 0.95rem; }
+.contact {
+  margin-top: 36px; display: grid; gap: 16px; padding: clamp(20px, 3vw, 28px);
+  border: 1px solid var(--stage-line); background: rgba(242,242,239,.03); max-width: 720px;
+}
+.contact__k { font: 500 0.7rem/1 var(--f-mono); letter-spacing: .14em; color: var(--red-on-dark); }
+.contact__lead { font: 600 1.25rem/1.35 var(--f-display); }
+.contact__details { display: grid; gap: 16px; }
+.contact__row { display: grid; gap: 6px; }
+.contact__label { font: 500 0.7rem/1 var(--f-mono); letter-spacing: .12em; color: var(--stage-muted); }
+.contact__value { font: 500 1.05rem/1.4 var(--f-mono); user-select: all; word-break: break-all; }
+.contact__actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.contact__actions .btn { min-height: 46px; }
+.copy-msg { font: 400 0.8rem/1.4 var(--f-mono); color: var(--stage-muted); min-height: 1.4em; }
+@media (max-width: 700px) { .collab { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- Alt bilgi ---------- */
+.foot { background: var(--stage); color: var(--stage-muted); border-top: 1px solid var(--stage-line); }
+.foot .wrap { display: grid; gap: 12px; padding-block: 28px calc(88px + env(safe-area-inset-bottom, 0px)); font-size: 0.86rem; }
+.foot .wordmark { color: var(--stage-ink); font-size: 1.15rem; }
+
+/* ---------- Hareket denetimi ---------- */
+.motion-toggle {
+  position: fixed; z-index: 40; right: 14px; bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+  display: inline-flex; align-items: center; gap: 9px; min-height: 40px; padding: 0 12px;
+  font: 500 0.72rem/1 var(--f-mono); letter-spacing: .06em;
+  color: #fff; background: rgba(17,17,17,.88); border: 1px solid rgba(242,242,239,.22); border-radius: 2px; cursor: pointer;
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  transition: background-color .2s ease, border-color .2s ease;
+}
+.motion-toggle:hover { background: #000; border-color: rgba(242,242,239,.5); }
+.motion-toggle__icon { width: 10px; height: 10px; flex: none; box-shadow: inset 3px 0 0 #fff, inset -3px 0 0 #fff; }
+@media (max-width: 600px) {
+  .motion-toggle { width: 42px; min-height: 42px; padding: 0; justify-content: center; }
+  .motion-toggle__label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+}
+html[data-motion="off"] .motion-toggle__icon { box-shadow: none; width: 0; height: 0; border-left: 9px solid #fff; border-top: 5px solid transparent; border-bottom: 5px solid transparent; }
+
+/* ---------- Hareket tercihleri ---------- */
+html[data-motion="off"] .board.is-flowing .col::after { animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+}
+</style>
+
+<a class="skip" href="#icerik">İçeriğe geç</a>
+
+<!-- =========================== 01 · BMMS NEDİR =========================== -->
+<header class="hero on-dark" id="bmms">
+  <div class="hero__bg" aria-hidden="true"></div>
+  <div class="hero__light" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="topbar">
+      <a class="wordmark" href="#bmms" aria-label="BMMS, sayfanın başı">BMMS <small>MARITIME ENGINEERING KNOWLEDGE SYSTEM</small></a>
+      <nav class="topnav" aria-label="Sayfa bölümleri">
+        <a href="#problem">Problem</a>
+        <a href="#yaklasim">Yaklaşım</a>
+        <a href="#ornek">Örnek</a>
+        <a href="#ilkeler">İlkeler</a>
+        <a href="#asama">Aşama</a>
+        <a class="topnav__keep" href="#iletisim">İletişim</a>
+      </nav>
+    </div>
+
+    <div class="hero__inner">
+      <div class="hero__copy">
+        <p class="sheet">PAFTA 01 / 06 <span class="sep">/</span> BMMS NEDİR?</p>
+        <h1>Her mühendislik sonucu <em>kaynağına kadar</em> izlenebilmeli.</h1>
+        <p class="lede">BMMS, denizcilik kurallarını, teknik belgeleri ve mühendislik kanıtlarını izlenebilir tek bir zincirde ilişkilendirmek için geliştirilen bir bilgi sistemidir. Bir değerlendirmenin hangi kaynağa, hangi revizyona ve hangi bağlama dayandığını görünür kılar; dayanak kurulamadığında kesin bir cevap üretmek yerine bunu açıkça kaydeder.</p>
+        <div class="actions">
+          <a class="btn btn--primary" href="#yaklasim">Yaklaşımı keşfet
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6"/></svg></a>
+          <a class="btn btn--ghost" href="#iletisim">İletişime geç</a>
+        </div>
+        <p class="status-line">AŞAMA: ARAŞTIRMA VE GELİŞTİRME · KONTROLLÜ PİLOT HAZIRLIĞI</p>
+      </div>
+
+      <figure class="globe" aria-labelledby="globe-cap">
+        <div class="globe__frame" id="globe" role="img" aria-label="Dönen tel kafes dünya çizimi: meridyenler, düğümler ve düğümler arasındaki bağlantı yayları. Kavramsal bir bilgi ağını temsil eder.">
+          <svg class="globe__fallback" viewBox="0 0 400 400" aria-hidden="true">
+            <g fill="none" stroke="rgba(242,242,239,.22)" stroke-width="1">
+              <circle cx="200" cy="200" r="170" stroke="rgba(242,242,239,.2)"/>
+              <path d="M200 18v364M18 200h364" stroke="rgba(242,242,239,.1)" stroke-dasharray="16 5 2 5"/>
+              <ellipse cx="200" cy="200" rx="49" ry="144"/>
+              <ellipse cx="200" cy="200" rx="93" ry="144"/>
+              <ellipse cx="200" cy="200" rx="125" ry="144"/>
+              <ellipse cx="200" cy="200" rx="142" ry="144"/>
+              <ellipse cx="200" cy="200" rx="144" ry="29" stroke="rgba(242,242,239,.4)"/>
+              <ellipse cx="200" cy="151" rx="135" ry="27"/>
+              <ellipse cx="200" cy="249" rx="135" ry="27"/>
+              <ellipse cx="200" cy="107" rx="110" ry="22"/>
+              <ellipse cx="200" cy="293" rx="110" ry="22"/>
+              <ellipse cx="200" cy="75" rx="72" ry="14"/>
+              <ellipse cx="200" cy="325" rx="72" ry="14"/>
+              <circle cx="200" cy="200" r="144" stroke="rgba(242,242,239,.45)"/>
+            </g>
+            <g fill="none" stroke="rgba(226,70,79,.7)" stroke-width="1.2">
+              <path d="M128 142 Q 176 78 246 120"/>
+              <path d="M246 120 Q 300 170 274 238"/>
+              <path d="M150 262 Q 196 214 274 238"/>
+              <path d="M128 142 Q 118 206 150 262"/>
+            </g>
+            <g fill="#E2464F"><circle cx="128" cy="142" r="3"/><circle cx="246" cy="120" r="3"/><circle cx="274" cy="238" r="3"/></g>
+            <g fill="rgba(242,242,239,.85)"><circle cx="150" cy="262" r="2"/><circle cx="210" cy="180" r="2"/><circle cx="182" cy="300" r="2"/><circle cx="300" cy="160" r="2"/></g>
+          </svg>
+        </div>
+        <figcaption id="globe-cap">
+          <b>ŞEKİL 1 · KAVRAMSAL BİLGİ AĞI</b> — Canlı veri, gerçek kullanıcı ya da konum haritası değildir.
+          <span class="legend">
+            <span><i class="lg-node"></i>kaynak kaydı</span>
+            <span><i class="lg-dot"></i>pasaj / kanıt</span>
+            <span><i class="lg-arc"></i>kaynaklar arası ilişki</span>
+          </span>
+        </figcaption>
+      </figure>
+    </div>
+
+    <div class="titleblock" aria-hidden="true">
+      <span>BMMS · KONGRE TANITIMI</span>
+      <span>ÖLÇEKSİZ · KAVRAMSAL ŞEMA</span>
+    </div>
+  </div>
+</header>
+
+<main id="icerik">
+
+<!-- =========================== 02 · PROBLEM =========================== -->
+<section class="sec" id="problem" aria-labelledby="h-problem">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="sheet">PAFTA 02 / 06 <span class="sep">/</span> PROBLEM</p>
+      <h2 id="h-problem">Bilgi mevcut. Dayanağını bulmak zor.</h2>
+      <p>Bir gemideki teknik bir soruyu yanıtlarken mühendis; kurallara, klas yayınlarına, üretici talimatlarına, bakım kayıtlarına ve servis raporlarına birlikte bakar. Zorluk yalnızca bilgiyi bulmak değildir. Bilginin kimden geldiğini, hangi sürüm olduğunu ve o durum için geçerli olup olmadığını da korumak gerekir.</p>
+    </div>
+
+    <div class="problem sec-body">
+      <ul class="issues">
+        <li>
+          <span class="tag">DAĞINIKLIK</span>
+          <h3>Kaynaklar farklı yerlerde ve biçimlerde</h3>
+          <p>Düzenleyici metinler, klas yayınları, üretici belgeleri ve işletme kayıtları ayrı sistemlerde tutulur. Aynı konuya ait bilgi tek bir yerde görünmez.</p>
+        </li>
+        <li>
+          <span class="tag">REVİZYON</span>
+          <h3>Doğru sürümü seçmek ayrı bir iş</h3>
+          <p>Kurallar ve belgeler zamanla revize edilir. Bir olay değerlendirilirken o tarihte yürürlükte olan sürüm kullanılmalıdır; en yeni sürüm her zaman doğru sürüm değildir.</p>
+        </li>
+        <li>
+          <span class="tag">DAYANAK</span>
+          <h3>Sonuç kalır, dayanağı kaybolur</h3>
+          <p>Bir değerlendirme rapora yazıldığında, hangi belgenin hangi bölümüne dayandığı çoğu zaman kaydedilmez. Sonradan doğrulamak ya da itiraz etmek güçleşir.</p>
+        </li>
+        <li>
+          <span class="tag">UYGULANABİLİRLİK</span>
+          <h3>İlgili olan her zaman geçerli değildir</h3>
+          <p>Aramada bulunan bir paragraf konuyla ilgili olabilir. O gemi, o ekipman ve o koşul için uygulanabilir olduğu ise ayrıca gösterilmelidir.</p>
+        </li>
+      </ul>
+
+      <figure class="frag-stage" data-frags>
+        <div class="frag-stage__head">
+          <span>ŞEKİL 2 · KAYNAK PARÇALARI</span>
+          <span class="frag-state" aria-hidden="true"><span class="is-a">DAĞINIK</span><span class="is-b">ORTAK KAYIT DÜZENİ</span></span>
+        </div>
+        <ul class="frags">
+          <li class="frag" data-s="-34,26,-5"><span class="frag__type">DÜZENLEYİCİ KURAL · IMO</span><span class="frag__name">SOLAS / MARPOL gerekliliği</span><span class="frag__fields" aria-hidden="true"><span>KAYNAK</span><span>SÜRÜM</span><span>KONUM</span></span></li>
+          <li class="frag" data-s="40,-10,4"><span class="frag__type">KLAS YAYINI · IACS</span><span class="frag__name">Klas kuralı veya tavsiyesi</span><span class="frag__fields" aria-hidden="true"><span>KAYNAK</span><span>SÜRÜM</span><span>KONUM</span></span></li>
+          <li class="frag" data-s="-18,-22,3"><span class="frag__type">SEKTÖR REHBERİ · OCIMF</span><span class="frag__name">Operasyonel rehber</span><span class="frag__fields" aria-hidden="true"><span>KAYNAK</span><span>SÜRÜM</span><span>KONUM</span></span></li>
+          <li class="frag" data-s="30,18,-6"><span class="frag__type">ÜRETİCİ BELGESİ · OEM</span><span class="frag__name">Ekipman talimatı</span><span class="frag__fields" aria-hidden="true"><span>KAYNAK</span><span>SÜRÜM</span><span>KONUM</span></span></li>
+          <li class="frag" data-s="-40,-6,5"><span class="frag__type">İŞLETME KAYDI · PMS</span><span class="frag__name">Bakım kaydı</span><span class="frag__fields" aria-hidden="true"><span>KAYNAK</span><span>SÜRÜM</span><span>KONUM</span></span></li>
+          <li class="frag" data-s="24,-24,-3"><span class="frag__type">SAHA BELGESİ</span><span class="frag__name">Servis raporu</span><span class="frag__fields" aria-hidden="true"><span>KAYNAK</span><span>SÜRÜM</span><span>KONUM</span></span></li>
+        </ul>
+        <figcaption class="frag-stage__foot"><b>ORTAK DÜZEN</b>Her parça; kaynağı, sürümü ve belge içindeki konumu ile aynı biçimde kaydedildiğinde karşılaştırılabilir ve izlenebilir hâle gelir. Kaynak aileleri sisteme yalnızca işleme hakkı belirlendiği ölçüde alınır.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== 03 · YAKLAŞIM =========================== -->
+<section class="sec sec--alt" id="yaklasim" aria-labelledby="h-yaklasim">
+  <div class="wrap approach">
+    <div class="approach__aside">
+      <div class="sec-head">
+        <p class="sheet">PAFTA 03 / 06 <span class="sep">/</span> YAKLAŞIM</p>
+        <h2 id="h-yaklasim">Kaynaktan karara, kopmayan bir zincir.</h2>
+        <p>BMMS'nin temel fikri, her adımın bir öncekine bağlı kalmasıdır. Zincirin bir halkası kurulamıyorsa sistem boşluğu tahminle doldurmaz; eksik halkayı gösterir.</p>
+      </div>
+      <dl class="status-legend">
+        <div><dt><span class="chip">ALTYAPIDA MEVCUT</span></dt><dd>Sunucu tarafında uygulanmış ve otomatik testlerle sınanmış. Son kullanıcıya açık bir ürün arayüzü anlamına gelmez.</dd></div>
+        <div><dt><span class="chip chip--partial">KISMEN MEVCUT</span></dt><dd>Temel veri modeli ve servisler var; kapsam geliştiriliyor.</dd></div>
+        <div><dt><span class="chip chip--goal">GELİŞTİRME HEDEFİ</span></dt><dd>Kabul edilmiş geliştirme yönü; henüz uygulanmadı.</dd></div>
+      </dl>
+      <p class="canon"><b>PROJE BELGELERİNDEKİ TAM ZİNCİR</b>Source <span class="ar">→</span> SourceVersion <span class="ar">→</span> Passage <span class="ar">→</span> Authority <span class="ar">→</span> Applicability <span class="ar">→</span> Obligation <span class="ar">→</span> Evidence <span class="ar">→</span> Engineering Assessment <span class="ar">→</span> Human Decision <span class="ar">→</span> Residual Obligation <span class="ar">→</span> Assurance State <span class="ar">→</span> Audit History</p>
+    </div>
+
+    <ol class="flow" data-flow>
+      <li class="step">
+        <span class="step__node" aria-hidden="true">01</span>
+        <div class="step__body">
+          <span class="chip">ALTYAPIDA MEVCUT</span>
+          <h3>Kaynak ve sürüm</h3>
+          <p>Belge; yayımlayan otorite, sürüm ve bilindiğinde yürürlük tarihiyle kaydedilir. Ham belge değiştirilmeden saklanır; düzeltme, yeni bir sürüm olarak eklenir.</p>
+        </div>
+      </li>
+      <li class="step">
+        <span class="step__node" aria-hidden="true">02</span>
+        <div class="step__body">
+          <span class="chip">ALTYAPIDA MEVCUT</span>
+          <h3>Pasaj</h3>
+          <p>Belge, kalıcı kimliği olan bölümlere ayrılır. Atıf, belirli bir sürümdeki belirli bir pasaja yapılır; aynı atıf yıllar sonra da aynı metni gösterir.</p>
+        </div>
+      </li>
+      <li class="step">
+        <span class="step__node" aria-hidden="true">03</span>
+        <div class="step__body">
+          <span class="chip chip--partial">KISMEN MEVCUT</span>
+          <h3>Uygulanabilirlik</h3>
+          <p>Bulunan pasajın bu gemi, bu ekipman ve bu olay için geçerli olup olmadığı ayrıca değerlendirilir. Bağlam yetersizse durum “belirsiz” olarak kalır.</p>
+          <p class="note">Otorite, revizyon ve uygulanabilirlik temeli kuruldu; kapsam genişletiliyor.</p>
+        </div>
+      </li>
+      <li class="step">
+        <span class="step__node" aria-hidden="true">04</span>
+        <div class="step__body">
+          <span class="chip chip--partial">KISMEN MEVCUT</span>
+          <h3>Yükümlülük ve kanıt</h3>
+          <p>Geçerli gereklilikler, onları karşıladığı öne sürülen kanıtlarla ilişkilendirilir. Eksik kanıt, gerekliliğin bulunmadığı anlamına gelmez.</p>
+          <p class="note">İddia ile kanıt arasındaki bağlar altyapıda var. Yükümlülük kümesinin eksiksiz belirlenmesi ayrı bir geliştirme konusudur.</p>
+        </div>
+      </li>
+      <li class="step">
+        <span class="step__node" aria-hidden="true">05</span>
+        <div class="step__body">
+          <span class="chip chip--partial">KISMEN MEVCUT</span>
+          <h3>Uzman kararı</h3>
+          <p>Son değerlendirme yetkili kişiye aittir. İncelemeyi yapan kişi ile karar yetkisi taşıyan kişi ayrı tutulur; yapay zekâ çıktısı doğrulanmış kanıt sayılmaz.</p>
+          <p class="note">İnceleme durumu veri modelinde tutuluyor; gözden geçirme arayüzü prototip aşamasında.</p>
+        </div>
+      </li>
+      <li class="step">
+        <span class="step__node" aria-hidden="true">06</span>
+        <div class="step__body">
+          <span class="chip chip--goal">GELİŞTİRME HEDEFİ</span>
+          <h3>Güvence durumu</h3>
+          <p>Sonuç; kapsamı, kullanılan kaynak sürümleri, kanıt kümesi, karar yetkisi ve açık kalan yükümlülükleriyle birlikte kaydedilir. Koşullar değişirse yeniden değerlendirilir.</p>
+        </div>
+      </li>
+      <li class="flow__end">
+        <span class="flow__end-mark" aria-hidden="true"></span>
+        <p><span class="chip">ALTYAPIDA MEVCUT</span>Kayıtlar eklemeli bir denetim geçmişine yazılır. Eski kayıt silinmez; yenisiyle geçersiz kılınır.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- =========================== 04 · SOMUT ÖRNEK =========================== -->
+<section class="sec" id="ornek" aria-labelledby="h-ornek">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="sheet">PAFTA 04 / 06 <span class="sep">/</span> SOMUT ÖRNEK</p>
+      <h2 id="h-ornek">Aynı kaynaklar, farklı bağlam, farklı sonuç.</h2>
+      <p>Aşağıda bağlamı değiştirin. Hangi pasajın uygulanabilir sayıldığını, kanıtın nereye bağlandığını ve hangi durumda sonuç üretilmediğini izleyin.</p>
+    </div>
+
+    <div class="demo sec-body" id="demo">
+      <div class="demo__bar">
+        <span>ÖRNEK KONU · YAKIT KÜKÜRT SINIRI (SADELEŞTİRİLMİŞ)</span>
+        <span class="badge">TEMSİLİ SENARYO</span>
+      </div>
+      <div class="demo__q">
+        <span class="lbl">SORU</span>
+        <p>Bu sefer için kullanılan yakıt, kükürt içeriği gerekliliğini karşılıyor mu?</p>
+      </div>
+      <div class="demo__controls">
+        <fieldset class="seg">
+          <legend>GEMİNİN KONUMU · VAKA BAĞLAMI</legend>
+          <div class="seg__opts">
+            <input type="radio" name="loc" id="loc-in" value="in" checked><label for="loc-in">ECA içinde</label>
+            <input type="radio" name="loc" id="loc-out" value="out"><label for="loc-out">ECA dışında</label>
+            <input type="radio" name="loc" id="loc-unk" value="unk"><label for="loc-unk">Bilinmiyor</label>
+          </div>
+          <small>ECA: Emisyon Kontrol Alanı</small>
+        </fieldset>
+        <fieldset class="seg">
+          <legend>SUNULAN KANIT</legend>
+          <div class="seg__opts">
+            <input type="radio" name="evi" id="evi-doc" value="doc" checked><label for="evi-doc">Yakıt teslim belgesi var</label>
+            <input type="radio" name="evi" id="evi-none" value="none"><label for="evi-none">Belge yok</label>
+          </div>
+        </fieldset>
+      </div>
+
+      <div class="board" id="board">
+        <div class="col">
+          <span class="col__h">1 · BULUNAN PASAJLAR</span>
+          <div class="card" id="pa">
+            <span class="card__t">Pasaj A — ECA içinde uygulanan sınır</span>
+            <span class="card__m">Temsili kaynak · sürüm ve pasaj kimliğiyle</span>
+            <span class="pill" id="pa-pill"></span>
+          </div>
+          <div class="card" id="pb">
+            <span class="card__t">Pasaj B — Genel sınır</span>
+            <span class="card__m">Temsili kaynak · sürüm ve pasaj kimliğiyle</span>
+            <span class="pill" id="pb-pill"></span>
+          </div>
+        </div>
+        <div class="col">
+          <span class="col__h">2 · KANIT</span>
+          <div class="card" id="ev">
+            <span class="card__t">Yakıt teslim belgesi</span>
+            <span class="card__m">Temsili belge</span>
+            <span class="pill" id="ev-pill"></span>
+          </div>
+        </div>
+        <div class="col">
+          <span class="col__h">3 · DURUM</span>
+          <div class="result" id="result" data-kind="ready" aria-live="polite">
+            <span class="result__state" id="res-state">UZMAN KARARINA HAZIR</span>
+            <p class="result__txt" id="res-txt">Bağlam, Pasaj A'yı uygulanabilir kılıyor; kanıt bu pasajla ilişkilendirildi. Kanıtın yeterli olup olmadığına yetkili uzman karar verir.</p>
+            <p class="result__chain" id="res-chain"></p>
+          </div>
+        </div>
+      </div>
+
+      <p class="demo__note">Temsili senaryo. Konu, MARPOL Ek VI kapsamındaki yakıt kükürt sınırlarından sadeleştirilmiştir. Pasaj ve belge adları örnektir; gerçek bir kaynaktan alıntı ya da BMMS tarafından üretilmiş bir sistem çıktısı değildir. Amaç, sistemin ayırt etmeye çalıştığı durumları göstermektir.</p>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== 05 · İLKELER =========================== -->
+<section class="sec sec--alt" id="ilkeler" aria-labelledby="h-ilkeler">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="sheet">PAFTA 05 / 06 <span class="sep">/</span> BİLİMSEL YAKLAŞIM VE KALİTE</p>
+      <h2 id="h-ilkeler">Güvenilirlik neye dayanıyor?</h2>
+      <p>BMMS'de kalite yalnızca doğru cevap oranıyla ölçülmez. Bir sonucun dayanağı, kapsamı ve belirsizliği de açık, ölçülebilir ve denetlenebilir olmalıdır.</p>
+    </div>
+
+    <div class="sec-body">
+      <p class="invariant" aria-label="Bulunan, yetkili, güncel, uygulanabilir ve yeterli kavramları birbirine eşit değildir.">
+        <span>BULUNAN</span><span class="ne">≠</span><span>YETKİLİ</span><span class="ne">≠</span><span>GÜNCEL</span><span class="ne">≠</span><span>UYGULANABİLİR</span><span class="ne">≠</span><span>YETERLİ</span>
+      </p>
+      <p class="invariant-cap">Projenin kural setindeki temel ayrım: Bir pasajın bulunması; yetkili bir kaynaktan geldiği, güncel olduğu, bu duruma uygulanabilir olduğu ya da tek başına yeterli olduğu anlamına gelmez. Bu ayrımlar kodda ve proje belgelerinde değişmez kural olarak tanımlıdır.</p>
+
+      <div class="principles">
+        <article class="pr">
+          <span class="k">İZLENEBİLİRLİK</span>
+          <h3>Her iddia bir kaynağa bağlanır</h3>
+          <p>Kaynak kaydı; yayımlayan otoriteyi, başlığı, sürümü, bilindiğinde yürürlük tarihini ve içerik kimliğini taşır. Atıflar pasaj düzeyindedir ve belirli bir sürüme sabitlenir.</p>
+        </article>
+        <article class="pr">
+          <span class="k">KAPSAM VE HAKLAR</span>
+          <h3>Sisteme neyin girdiği açıktır</h3>
+          <p>Her kaynak ailesinin hangi hak temeliyle alındığı kayıt altındadır. Bir belgeye erişebilmek onu işleme hakkı anlamına gelmez; hakkı belirsiz materyal inceleme durumunda bekletilir.</p>
+        </article>
+        <article class="pr">
+          <span class="k">BELİRSİZLİK</span>
+          <h3>Bilinmeyen, bilinmeyen olarak kalır</h3>
+          <p>Dayanak kurulamadığında “belirsiz” ya da “inceleme gerekli” durumu açıkça kaydedilir. Bir açığın tespit edilmemiş olması, kapanmış olduğunu kanıtlamaz.</p>
+        </article>
+        <article class="pr">
+          <span class="k">UZMAN YETKİSİ</span>
+          <h3>Karar yetkili insana aittir</h3>
+          <p>Model çıktısı, açık ve kayıtlı bir insan onayı olmadan doğrulanmış kanıt olarak saklanmaz. Bir kaydı gözden geçirmiş olmak, karar yetkisine sahip olmak anlamına gelmez.</p>
+        </article>
+        <article class="pr">
+          <span class="k">YÖNTEM ŞEFFAFLIĞI</span>
+          <h3>Hangi yöntemin çalıştığı gizlenmez</h3>
+          <p>Varsayılan arama yöntemi sözcükseldir (lexical). Anlamsal ve hibrit yöntemler, ölçütleri önceden kayda geçirilmiş bir deneyde sınandı; terfi ölçütünü karşılamadığı için deneysel tutuluyor ve sessizce devreye alınmıyor.</p>
+        </article>
+        <article class="pr">
+          <span class="k">ÖLÇÜM DÜRÜSTLÜĞÜ</span>
+          <h3>Kolay test, başarısız testtir</h3>
+          <p>Toplam başarı oranının yanında yanlış kapanış, kaçırılan yükümlülük ve gerektiğinde çekimser kalamama gibi kritik hatalar ayrıca izlenir. Güncel modellerin tavan performans gösterdiği bir kalibrasyon seti “fazla kolay” olarak işaretlendi ve sıralama için kullanılmadı.</p>
+        </article>
+      </div>
+
+      <p class="discipline"><b>MÜHENDİSLİK DİSİPLİNİ</b><span>Mimari karar kayıtları (ADR)</span><span>Değiştirilemez kanıt deposu</span><span>Sıkı tip denetimi</span><span>Hata ve sınır durumu testleri</span><span>Her değişiklikte otomatik kalite kapıları</span><span>Bağımsız inceleme</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== 06 · AŞAMA VE İLETİŞİM =========================== -->
+<section class="sec" id="asama" aria-labelledby="h-asama">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="sheet">PAFTA 06 / 06 <span class="sep">/</span> AŞAMA VE İLETİŞİM</p>
+      <h2 id="h-asama">Proje nerede duruyor?</h2>
+      <p>Aşağıdaki ayrım, projenin kendi görev ve karar kayıtlarına dayanır.</p>
+    </div>
+
+    <div class="stages sec-body">
+      <div class="stage">
+        <span class="k">TAMAMLANDI</span>
+        <h3>Temel altyapı</h3>
+        <ul>
+          <li>Otorite, kaynak ve sürüm modeli</li>
+          <li>Değiştirilemez kanıt deposu ve içerik kimliği</li>
+          <li>Belgeden pasaj çıkarımı, kalıcı pasaj kimliği</li>
+          <li>Sözcüksel kanıt arama ve kanıt paketleri</li>
+          <li>Çekimserlik, köken ve denetim kayıtları</li>
+          <li>Düzenleyici otorite, revizyon ve uygulanabilirlik temeli</li>
+          <li>Anlamsal ve hibrit arama deneyi (ön kayıtlı; varsayılan yapılmadı)</li>
+        </ul>
+      </div>
+      <div class="stage stage--now">
+        <span class="k">SÜRÜYOR</span>
+        <h3>Kontrollü pilot hazırlığı</h3>
+        <ul>
+          <li>Hak temeli belirlenmiş kaynaklarla, tek kurumlu ve kontrollü bir ortamda çalışma akışının gerçek koşullarda sınanması</li>
+          <li>Gözden geçirme arayüzü prototip aşamasında</li>
+        </ul>
+        <p class="fn">Pilot hazırlığı, belirli bir sürüm üzerinde çalışma zamanı kanıtıyla gösterilmeden tamamlanmış sayılmaz.</p>
+      </div>
+      <div class="stage stage--goal">
+        <span class="k">HEDEF</span>
+        <h3>Kabul edilmiş geliştirme yönü</h3>
+        <ul>
+          <li>Birden çok kaynak ailesi: IMO / SOLAS / ISM, MARPOL / MEPC, IACS, OCIMF ve yetkili üretici belgeleri (haklar uygun olduğunda)</li>
+          <li>Vaka tabanlı değerlendirme seti</li>
+          <li>Ekipman, bakım, sertifika ve yükümlülük takibi için operasyonel modüller</li>
+          <li>İmzalı dışa aktarım ve doğrulanabilir kanıt paketi</li>
+        </ul>
+        <p class="fn">Kabul edilmiş bir mimari yön, uygulama yetkisi anlamına gelmez.</p>
+      </div>
+    </div>
+
+    <p class="honesty">BMMS bir araştırma ve geliştirme projesidir. Üretimde kullanılan, sertifikalı ya da bir otorite tarafından onaylanmış bir sistem değildir.</p>
+  </div>
+</section>
+
+<section class="contact-sec on-dark" id="iletisim" aria-labelledby="h-iletisim">
+  <div class="hero__bg" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="sheet">İŞ BİRLİĞİ</p>
+      <h2 id="h-iletisim">Yöntemi birlikte sınayalım.</h2>
+      <p>Projenin en çok ihtiyaç duyduğu şey eleştirel ve bağımsız bakıştır. Aşağıdaki başlıklarda akademik değerlendirme, araştırma katkısı ve iş birliği için görüşmeye açığız.</p>
+    </div>
+
+    <ul class="collab">
+      <li><h3>Akademik değerlendirme</h3><p>Epistemik ayrımların, belirsizlik temsilinin ve değerlendirme tasarımının eleştirel incelenmesi.</p></li>
+      <li><h3>Araştırma katkısı</h3><p>Belge yapısı çıkarımı, bilgi erişimi değerlendirmesi, kaynak izlenebilirliği ve insan ile yapay zekânın birlikte çalıştığı karar süreçleri.</p></li>
+      <li><h3>Alan uzmanlığı</h3><p>Denizcilik mühendisliği, klas ve düzenleyici çerçeveler konusunda uzman görüşü.</p></li>
+      <li><h3>Vaka tabanlı değerlendirme</h3><p>Zorluğu kalibre edilmiş, gerçekçi vaka senaryolarının birlikte geliştirilmesi.</p></li>
+    </ul>
+    <p class="bridge">Kaynak izlenebilirliği, belirsizliğin açıkça gösterilmesi ve uzman kararının kayda geçirilmesi gibi yöntemsel sorular birçok disiplinde ortaktır. Farklı alanlardan gelen bakışlar da değerlidir.</p>
+
+    <div class="contact" id="contact">
+      <span class="contact__k">İLETİŞİM</span>
+      <p class="contact__lead">Sunum sırasında ve sonrasında proje ekibiyle doğrudan görüşebilirsiniz.</p>
+      <div class="contact__details" id="contact-details" hidden></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot on-dark">
+  <div class="wrap">
+    <span class="wordmark">BMMS <small>MARITIME ENGINEERING KNOWLEDGE SYSTEM</small></span>
+    <p>Bu sayfa bir proje tanıtımıdır. Şekiller kavramsaldır; temsili senaryo gerçek kaynak alıntısı veya sistem çıktısı içermez.</p>
+    <p>Sağ alttaki düğmeyle sürekli animasyonları durdurabilirsiniz.</p>
+  </div>
+</footer>
+
+<button class="motion-toggle" type="button" id="motion-toggle"><span class="motion-toggle__icon" aria-hidden="true"></span><span class="motion-toggle__label" id="motion-label">Hareketi durdur</span></button>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ----------------------------------------------------------------
+     İLETİŞİM BİLGİLERİ
+     Yalnızca gerçek ve paylaşılmasına izin verilmiş bilgileri girin.
+     Boş bırakılan alan sayfada hiç gösterilmez.
+  ---------------------------------------------------------------- */
+  var CONFIG = {
+    contactName: "",   // örn. "Ad Soyad, unvan"
+    contactEmail: "",  // örn. "ad@kurum.edu.tr"
+    contactUrl: ""     // örn. "https://..." (kurum veya proje sayfası)
+  };
+
+  var root = document.documentElement;
+  if (!root.getAttribute("lang")) root.setAttribute("lang", "tr");
+  var reduceMQ = window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : null;
+  var stored = null;
+  try { stored = window.localStorage.getItem("bmms-motion"); } catch (e) { stored = null; }
+  var motion = stored ? stored === "on" : !(reduceMQ && reduceMQ.matches);
+  var globe = null;
+
+  function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
+
+  /* ---------- Hareket denetimi ---------- */
+  var toggle = document.getElementById("motion-toggle");
+  var toggleLabel = document.getElementById("motion-label");
+  function applyMotion() {
+    root.setAttribute("data-motion", motion ? "on" : "off");
+    toggleLabel.textContent = motion ? "Hareketi durdur" : "Hareketi başlat";
+    if (globe) globe.sync();
+    update();
+  }
+  toggle.addEventListener("click", function () {
+    motion = !motion;
+    stored = motion ? "on" : "off";
+    try { window.localStorage.setItem("bmms-motion", stored); } catch (e) {}
+    applyMotion();
+  });
+  if (reduceMQ && reduceMQ.addEventListener) {
+    reduceMQ.addEventListener("change", function (e) {
+      if (!stored) { motion = !e.matches; applyMotion(); }
+    });
+  }
+
+  /* ---------- Kaydırmaya bağlı sahneler ---------- */
+  var heroBgs = [].slice.call(document.querySelectorAll(".hero__bg"));
+  var fStage = document.querySelector("[data-frags]");
+  var frags = fStage ? [].slice.call(fStage.querySelectorAll("[data-s]")) : [];
+  frags.forEach(function (f) { f._s = f.getAttribute("data-s").split(",").map(Number); });
+  var flow = document.querySelector("[data-flow]");
+  var steps = flow ? [].slice.call(flow.querySelectorAll(".step")) : [];
+
+  function updateFrags(vh) {
+    if (!fStage) return;
+    var e = 1;
+    if (motion) {
+      var r = fStage.getBoundingClientRect();
+      var p = clamp((vh * 0.92 - r.top) / (vh * 0.5), 0, 1);
+      e = 1 - Math.pow(1 - p, 3);
+    }
+    var k = Math.min(1, fStage.clientWidth / 560), q = 1 - e;
+    for (var i = 0; i < frags.length; i++) {
+      var s = frags[i]._s;
+      frags[i].style.transform = q < 0.002 ? "" :
+        "translate(" + (s[0] * k * q).toFixed(1) + "px," + (s[1] * k * q).toFixed(1) + "px) rotate(" + (s[2] * q).toFixed(2) + "deg)";
+    }
+    fStage.classList.toggle("is-set", e > 0.9);
+  }
+
+  function updateFlow(vh) {
+    if (!flow) return;
+    var r = flow.getBoundingClientRect();
+    var line = vh * 0.55;
+    var d = motion ? clamp((line - r.top) / r.height, 0, 1) : 1;
+    flow.style.setProperty("--draw", d.toFixed(3));
+    var active = -1;
+    for (var i = 0; i < steps.length; i++) {
+      var n = steps[i].firstElementChild.getBoundingClientRect();
+      if (n.top + n.height / 2 < line) active = i;
+    }
+    for (var j = 0; j < steps.length; j++) {
+      steps[j].classList.toggle("is-reached", motion ? j <= active : true);
+      steps[j].classList.toggle("is-active", j === active);
+    }
+  }
+
+  function updateParallax(vh) {
+    for (var i = 0; i < heroBgs.length; i++) {
+      var bg = heroBgs[i];
+      if (!motion) { bg.style.transform = ""; continue; }
+      var host = bg.parentElement.getBoundingClientRect();
+      if (host.bottom < -50 || host.top > vh + 50) continue;
+      bg.style.transform = "translate3d(0," + (-host.top * 0.16).toFixed(1) + "px,0)";
+    }
+  }
+
+  function update() {
+    var vh = window.innerHeight || document.documentElement.clientHeight;
+    updateFrags(vh);
+    updateFlow(vh);
+    updateParallax(vh);
+  }
+  var ticking = false;
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(function () { ticking = false; update(); });
+  }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll);
+
+  /* ---------- Temsili senaryo ---------- */
+  var demo = document.getElementById("demo");
+  if (demo) {
+    var board = document.getElementById("board");
+    var el = function (id) { return document.getElementById(id); };
+    var PILL = {
+      on: ["UYGULANABİLİR", "pill pill--on"],
+      off: ["İLGİLİ · BU BAĞLAMDA UYGULANAMAZ", "pill"],
+      unk: ["UYGULANABİLİRLİĞİ BELİRLENEMEDİ", "pill pill--unk"]
+    };
+    var setCard = function (card, pill, kind) {
+      card.className = "card" + (kind === "on" ? " is-on" : kind === "off" ? " is-off" : " is-unk");
+      pill.textContent = PILL[kind][0];
+      pill.className = PILL[kind][1];
+    };
+    var AR = ' <span class="ar">→</span> ';
+    var renderDemo = function (animate) {
+      var loc = (demo.querySelector("input[name=loc]:checked") || {}).value || "in";
+      var evi = (demo.querySelector("input[name=evi]:checked") || {}).value || "doc";
+      var hasDoc = evi === "doc";
+
+      if (loc === "in") { setCard(el("pa"), el("pa-pill"), "on"); setCard(el("pb"), el("pb-pill"), "off"); }
+      else if (loc === "out") { setCard(el("pa"), el("pa-pill"), "off"); setCard(el("pb"), el("pb-pill"), "on"); }
+      else { setCard(el("pa"), el("pa-pill"), "unk"); setCard(el("pb"), el("pb-pill"), "unk"); }
+
+      var ev = el("ev"), evp = el("ev-pill");
+      if (hasDoc && loc !== "unk") {
+        ev.className = "card is-on"; evp.className = "pill pill--on";
+        evp.textContent = "SUNULDU · PASAJLA İLİŞKİLENDİRİLDİ";
+      } else if (hasDoc) {
+        ev.className = "card"; evp.className = "pill";
+        evp.textContent = "SUNULDU · BAĞLANACAĞI GEREKLİLİK BELİRSİZ";
+      } else {
+        ev.className = "card is-unk"; evp.className = "pill pill--miss";
+        evp.textContent = "SUNULMADI";
+      }
+
+      var applicable = loc === "in" ? "Pasaj A" : "Pasaj B";
+      var ctxText = loc === "in" ? "ECA içinde" : loc === "out" ? "ECA dışında" : "konum bilinmiyor";
+      var kind, state, txt, chain;
+      if (loc === "unk") {
+        kind = "unknown";
+        state = "BELİRSİZ · SONUÇ ÜRETİLMEDİ";
+        txt = "Konum bilinmeden hangi sınırın geçerli olduğu belirlenemez. Sistem tahmin yürütmez; eksik bağlam bilgisini kaydeder ve değerlendirmeyi askıda bırakır." + (hasDoc ? "" : " Ayrıca kanıt sunulmadı.");
+        chain = "Bağlam: konum bilinmiyor" + AR + "uygulanabilir pasaj: belirlenemedi" + AR + "eksik bilgi kaydedildi";
+      } else if (!hasDoc) {
+        kind = "missing";
+        state = "KANIT EKSİK";
+        txt = "Uygulanabilir gereklilik belirlendi (" + applicable + "), ancak karşılandığını gösteren bir kanıt yok. Eksik kanıt, gerekliliğin bulunmadığı anlamına gelmez.";
+        chain = "Bağlam: " + ctxText + AR + applicable + AR + "kanıt: yok" + AR + "açık yükümlülük";
+      } else {
+        kind = "ready";
+        state = "UZMAN KARARINA HAZIR";
+        txt = "Bağlam, " + applicable + "'yı uygulanabilir kılıyor; kanıt bu pasajla ilişkilendirildi. Kanıtın yeterli olup olmadığına yetkili uzman karar verir.";
+        chain = "Bağlam: " + ctxText + AR + applicable + AR + "teslim belgesi" + AR + "karar: yetkili uzman";
+      }
+      el("result").setAttribute("data-kind", kind);
+      el("res-state").textContent = state;
+      el("res-txt").textContent = txt;
+      el("res-chain").innerHTML = chain;
+
+      if (animate && motion) {
+        board.classList.remove("is-flowing");
+        void board.offsetWidth;
+        board.classList.add("is-flowing");
+      }
+    };
+    demo.addEventListener("change", function () { renderDemo(true); });
+    renderDemo(false);
+  }
+
+  /* ---------- İletişim ---------- */
+  (function renderContact() {
+    var box = document.getElementById("contact-details");
+    if (!box) return;
+    var esc = function (s) {
+      return String(s).replace(/[&<>"']/g, function (c) {
+        return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+      });
+    };
+    var parts = [], actions = [];
+    if (CONFIG.contactName) parts.push('<div class="contact__row"><span class="contact__label">KİŞİ</span><span>' + esc(CONFIG.contactName) + "</span></div>");
+    if (CONFIG.contactEmail) {
+      parts.push('<div class="contact__row"><span class="contact__label">E-POSTA</span><span class="contact__value" id="contact-mail">' + esc(CONFIG.contactEmail) + "</span></div>");
+      actions.push('<button class="btn btn--primary" type="button" id="copy-mail">Adresi kopyala</button>');
+      actions.push('<a class="btn btn--ghost" href="mailto:' + esc(CONFIG.contactEmail) + '">E-posta yaz</a>');
+    }
+    if (CONFIG.contactUrl && /^https:\/\//.test(CONFIG.contactUrl)) {
+      actions.push('<a class="btn btn--ghost" href="' + esc(CONFIG.contactUrl) + '" target="_blank" rel="noopener">Bağlantıyı aç</a>');
+    }
+    if (actions.length) parts.push('<div class="contact__actions">' + actions.join("") + '</div><p class="copy-msg" id="copy-msg" aria-live="polite"></p>');
+    if (!parts.length) return;
+    box.innerHTML = parts.join("");
+    box.hidden = false;
+    var btn = document.getElementById("copy-mail");
+    if (!btn) return;
+    btn.addEventListener("click", function () {
+      var msg = document.getElementById("copy-msg");
+      var fallback = function () {
+        var range = document.createRange();
+        range.selectNodeContents(document.getElementById("contact-mail"));
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+        msg.textContent = "Adres seçildi; cihazınızın kopyala komutunu kullanın.";
+      };
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(CONFIG.contactEmail).then(function () {
+            msg.textContent = "Adres panoya kopyalandı.";
+          }, fallback);
+        } else { fallback(); }
+      } catch (e) { fallback(); }
+    });
+  })();
+
+  /* ---------- Dönen blueprint dünya (Canvas 2D, kütüphanesiz) ---------- */
+  function createGlobe(frame, hero) {
+    var canvas = document.createElement("canvas");
+    var ctx = null;
+    try { ctx = canvas.getContext("2d"); } catch (e) { ctx = null; }
+    if (!ctx) return null;
+    canvas.setAttribute("aria-hidden", "true");
+    frame.appendChild(canvas);
+
+    var DEG = Math.PI / 180;
+    var LINE = "242,242,239", RED = "226,70,79";
+    var W = 0, cx0 = 0, cy0 = 0, R = 0;
+    var yaw = 0.9, tilt = 0.36, yawOff = 0, tiltOff = 0, tYawOff = 0, tTiltOff = 0;
+    var running = false, raf = 0, last = 0, visible = true, live = false;
+
+    function sph(lat, lon, s) {
+      var a = lat * DEG, b = lon * DEG, k = s || 1;
+      return [Math.cos(a) * Math.sin(b) * k, Math.sin(a) * k, Math.cos(a) * Math.cos(b) * k];
+    }
+
+    // Meridyenler ve paraleller
+    var lines = [], la, lo, pts;
+    for (lo = 0; lo < 360; lo += 20) {
+      pts = [];
+      for (la = -90; la <= 90; la += 5) pts.push(sph(la, lo));
+      lines.push({ p: pts, strong: lo % 180 === 0 });
+    }
+    for (la = -60; la <= 60; la += 20) {
+      pts = [];
+      for (lo = 0; lo <= 360; lo += 5) pts.push(sph(la, lo));
+      lines.push({ p: pts, strong: la === 0 });
+    }
+    // Açılıp kapanan dış katman
+    var shell = [];
+    [-30, 0, 30].forEach(function (lat) {
+      var s = [];
+      for (var l = 0; l <= 360; l += 4) s.push(sph(lat, l, 1.075));
+      shell.push(s);
+    });
+
+    // Düğümler: sabit tohumla üretilir, her açılışta aynı düzen
+    var seed = 20260927;
+    function rnd() { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; }
+    var nodes = [];
+    for (var i = 0; i < 26; i++) nodes.push({ v: sph(-50 + rnd() * 112, rnd() * 360), sel: i < 6, flash: 0 });
+
+    var arcs = [];
+    function addArc(a, b) {
+      var A = nodes[a].v, B = nodes[b].v;
+      var om = Math.acos(clamp(A[0] * B[0] + A[1] * B[1] + A[2] * B[2], -1, 1));
+      if (om < 0.3 || om > 2.3) return;
+      var s = Math.sin(om), out = [], n = 40, h = 0.05 + 0.17 * om / Math.PI;
+      for (var k = 0; k <= n; k++) {
+        var t = k / n, f1 = Math.sin((1 - t) * om) / s, f2 = Math.sin(t * om) / s, lift = 1 + h * Math.sin(Math.PI * t);
+        out.push([(A[0] * f1 + B[0] * f2) * lift, (A[1] * f1 + B[1] * f2) * lift, (A[2] * f1 + B[2] * f2) * lift]);
+      }
+      arcs.push({ p: out, to: b });
+    }
+    for (var s0 = 0; s0 < 6; s0++) { addArc(s0, 6 + Math.floor(rnd() * 20)); addArc(s0, 6 + Math.floor(rnd() * 20)); }
+    for (var e0 = 0; e0 < 6; e0++) addArc(6 + Math.floor(rnd() * 20), 6 + Math.floor(rnd() * 20));
+    addArc(0, 3); addArc(1, 4); addArc(2, 5);
+
+    // Ortografik projeksiyon
+    var cyw = 1, syw = 0, ct = 1, st = 0;
+    function setup() {
+      var y = yaw + yawOff, t = tilt + tiltOff;
+      cyw = Math.cos(y); syw = Math.sin(y); ct = Math.cos(t); st = Math.sin(t);
+    }
+    function proj(v, o) {
+      var x = v[0] * cyw + v[2] * syw;
+      var z1 = -v[0] * syw + v[2] * cyw;
+      var yy = v[1] * ct - z1 * st;
+      o[0] = cx0 + R * x; o[1] = cy0 - R * yy; o[2] = v[1] * st + z1 * ct; o[3] = x * x + yy * yy;
+      return o;
+    }
+    var PA = [0, 0, 0, 0], PB = [0, 0, 0, 0];
+    function vis(o, surface) { return surface ? o[2] >= 0 : (o[2] >= 0 || o[3] > 1); }
+    function addSegs(p, front, surface) {
+      proj(p[0], PA);
+      var va = vis(PA, surface);
+      for (var i = 1; i < p.length; i++) {
+        proj(p[i], PB);
+        var vb = vis(PB, surface);
+        if ((va && vb) === front) { ctx.moveTo(PA[0], PA[1]); ctx.lineTo(PB[0], PB[1]); }
+        PA[0] = PB[0]; PA[1] = PB[1]; PA[2] = PB[2]; PA[3] = PB[3]; va = vb;
+      }
+    }
+
+    var pulses = [], nextSpawn = 0;
+    function drawPulse(p, t) {
+      var n = p.length - 1, head = t * n, tail = Math.max(0, head - n * 0.2);
+      var i0 = Math.floor(tail), i1 = Math.floor(head);
+      ctx.lineWidth = 1.7;
+      for (var i = i0; i < i1; i++) {
+        proj(p[i], PA); proj(p[i + 1], PB);
+        if (!vis(PA, false) || !vis(PB, false)) continue;
+        var a = (i - tail) / Math.max(1, head - tail);
+        ctx.strokeStyle = "rgba(255,236,236," + (0.1 + 0.75 * a).toFixed(3) + ")";
+        ctx.beginPath(); ctx.moveTo(PA[0], PA[1]); ctx.lineTo(PB[0], PB[1]); ctx.stroke();
+      }
+      var f = head - i1, q0 = p[i1], q1 = p[Math.min(n, i1 + 1)];
+      proj([q0[0] + (q1[0] - q0[0]) * f, q0[1] + (q1[1] - q0[1]) * f, q0[2] + (q1[2] - q0[2]) * f], PA);
+      if (!vis(PA, false)) return;
+      var g = ctx.createRadialGradient(PA[0], PA[1], 0, PA[0], PA[1], 9);
+      g.addColorStop(0, "rgba(" + RED + ",0.55)");
+      g.addColorStop(1, "rgba(" + RED + ",0)");
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(PA[0], PA[1], 9, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = "#fff";
+      ctx.beginPath(); ctx.arc(PA[0], PA[1], 1.6, 0, Math.PI * 2); ctx.fill();
+    }
+
+    function draw(now) {
+      var w = W, j, k;
+      if (!w) return;
+      ctx.clearRect(0, 0, w, w);
+      cx0 = w / 2; cy0 = w / 2; R = w * 0.355;
+      setup();
+
+      // Merkez eksenleri (çizgi-nokta)
+      ctx.save();
+      ctx.setLineDash([16, 5, 2, 5]);
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = "rgba(" + LINE + ",0.10)";
+      ctx.beginPath();
+      ctx.moveTo(cx0 - R * 1.34, cy0); ctx.lineTo(cx0 + R * 1.34, cy0);
+      ctx.moveTo(cx0, cy0 - R * 1.34); ctx.lineTo(cx0, cy0 + R * 1.34);
+      ctx.stroke();
+      ctx.restore();
+
+      // Koordinat halkası
+      var rr = R * 1.19;
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = "rgba(" + LINE + ",0.2)";
+      ctx.beginPath(); ctx.arc(cx0, cy0, rr, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath();
+      for (var d = 0; d < 360; d += 5) {
+        var an = d * DEG - Math.PI / 2, len = d % 30 === 0 ? 8 : d % 10 === 0 ? 4.5 : 2;
+        ctx.moveTo(cx0 + Math.cos(an) * rr, cy0 + Math.sin(an) * rr);
+        ctx.lineTo(cx0 + Math.cos(an) * (rr + len), cy0 + Math.sin(an) * (rr + len));
+      }
+      ctx.stroke();
+      if (w >= 260) {
+        ctx.fillStyle = "rgba(" + LINE + ",0.5)";
+        ctx.font = "500 " + (w < 420 ? 9 : 10) + "px 'IBM Plex Mono', ui-monospace, monospace";
+        ctx.textAlign = "center"; ctx.textBaseline = "middle";
+        var lab = ["000°", "090°", "180°", "270°"];
+        var lr = Math.min(rr + 22, w / 2 - 18);
+        for (k = 0; k < 4; k++) {
+          var aa = k * Math.PI / 2 - Math.PI / 2;
+          ctx.fillText(lab[k], cx0 + Math.cos(aa) * lr, cy0 + Math.sin(aa) * lr);
+        }
+      }
+
+      // Açılıp kapanan dış katman
+      var br = motion ? 0.5 + 0.5 * Math.sin(now / 4200) : 0.55;
+      ctx.save();
+      ctx.setLineDash([2, 6]);
+      ctx.strokeStyle = "rgba(" + LINE + "," + (0.04 + 0.2 * br).toFixed(3) + ")";
+      ctx.beginPath();
+      for (j = 0; j < shell.length; j++) addSegs(shell[j], true, false);
+      ctx.stroke();
+      ctx.restore();
+
+      // Arka yüz
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = "rgba(" + LINE + ",0.07)";
+      ctx.beginPath();
+      for (j = 0; j < lines.length; j++) addSegs(lines[j].p, false, true);
+      ctx.stroke();
+      ctx.strokeStyle = "rgba(" + RED + ",0.13)";
+      ctx.beginPath();
+      for (j = 0; j < arcs.length; j++) addSegs(arcs[j].p, false, false);
+      ctx.stroke();
+
+      // Kontrollü ışık: kürenin sol üstünden hafif aydınlatma
+      var lg = ctx.createRadialGradient(cx0 - R * 0.35, cy0 - R * 0.4, R * 0.05, cx0, cy0, R);
+      lg.addColorStop(0, "rgba(242,242,239,0.075)");
+      lg.addColorStop(1, "rgba(242,242,239,0)");
+      ctx.fillStyle = lg;
+      ctx.beginPath(); ctx.arc(cx0, cy0, R, 0, Math.PI * 2); ctx.fill();
+
+      // Ön yüz ızgarası
+      ctx.strokeStyle = "rgba(" + LINE + ",0.27)";
+      ctx.beginPath();
+      for (j = 0; j < lines.length; j++) if (!lines[j].strong) addSegs(lines[j].p, true, true);
+      ctx.stroke();
+      ctx.strokeStyle = "rgba(" + LINE + ",0.5)";
+      ctx.beginPath();
+      for (j = 0; j < lines.length; j++) if (lines[j].strong) addSegs(lines[j].p, true, true);
+      ctx.stroke();
+
+      // Kenar
+      ctx.strokeStyle = "rgba(" + LINE + ",0.5)";
+      ctx.beginPath(); ctx.arc(cx0, cy0, R, 0, Math.PI * 2); ctx.stroke();
+
+      // Ön yaylar
+      ctx.lineWidth = 1.15;
+      ctx.strokeStyle = "rgba(" + RED + ",0.72)";
+      ctx.beginPath();
+      for (j = 0; j < arcs.length; j++) addSegs(arcs[j].p, true, false);
+      ctx.stroke();
+
+      // Düğümler
+      for (j = 0; j < nodes.length; j++) {
+        var nd = nodes[j];
+        proj(nd.v, PA);
+        if (PA[2] < 0) {
+          ctx.fillStyle = "rgba(" + LINE + ",0.12)";
+          ctx.beginPath(); ctx.arc(PA[0], PA[1], 1.2, 0, Math.PI * 2); ctx.fill();
+          continue;
+        }
+        if (nd.sel) {
+          ctx.strokeStyle = "rgba(" + RED + "," + (0.5 * (1 - nd.flash) + 0.2).toFixed(3) + ")";
+          ctx.lineWidth = 1;
+          ctx.beginPath(); ctx.arc(PA[0], PA[1], 5.5 + nd.flash * 9, 0, Math.PI * 2); ctx.stroke();
+          ctx.fillStyle = "rgb(" + RED + ")";
+          ctx.beginPath(); ctx.arc(PA[0], PA[1], 2.7, 0, Math.PI * 2); ctx.fill();
+        } else {
+          ctx.fillStyle = "rgba(" + LINE + "," + (0.55 + 0.4 * PA[2]).toFixed(3) + ")";
+          ctx.beginPath(); ctx.arc(PA[0], PA[1], 1.8 + nd.flash * 1.5, 0, Math.PI * 2); ctx.fill();
+        }
+      }
+
+      // Işık darbeleri
+      if (motion && running) {
+        if (now > nextSpawn && pulses.length < 3 && arcs.length) {
+          pulses.push({ a: arcs[Math.floor(Math.random() * arcs.length)], t0: now, dur: 1700 + Math.random() * 900 });
+          nextSpawn = now + 1100 + Math.random() * 1700;
+        }
+        for (j = pulses.length - 1; j >= 0; j--) {
+          var pu = pulses[j], t = (now - pu.t0) / pu.dur;
+          if (t >= 1) { nodes[pu.a.to].flash = 1; pulses.splice(j, 1); continue; }
+          drawPulse(pu.a.p, t);
+        }
+      }
+
+      if (!live) { live = true; frame.classList.add("is-live"); }
+    }
+
+    function loop(now) {
+      raf = 0;
+      if (!running) return;
+      var dt = last ? Math.min(64, now - last) : 16;
+      last = now;
+      yaw += dt * 0.00005;
+      yawOff += (tYawOff - yawOff) * 0.05;
+      tiltOff += (tTiltOff - tiltOff) * 0.05;
+      for (var i = 0; i < nodes.length; i++) if (nodes[i].flash > 0) nodes[i].flash = Math.max(0, nodes[i].flash - dt / 900);
+      draw(now);
+      raf = window.requestAnimationFrame(loop);
+    }
+    function start() { if (running) return; running = true; last = 0; raf = window.requestAnimationFrame(loop); }
+    function stop() {
+      running = false;
+      if (raf) window.cancelAnimationFrame(raf);
+      raf = 0; pulses.length = 0;
+      for (var i = 0; i < nodes.length; i++) nodes[i].flash = 0;
+      draw(performance.now());
+    }
+    function sync() { if (motion && visible && !document.hidden) start(); else stop(); }
+
+    function resize() {
+      var w = Math.round(frame.clientWidth);
+      if (!w) return;
+      var dpr = Math.min(2, window.devicePixelRatio || 1);
+      W = w;
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(w * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      if (!running) draw(performance.now());
+    }
+    if (window.ResizeObserver) new ResizeObserver(resize).observe(frame);
+    else window.addEventListener("resize", resize);
+    resize();
+
+    if (window.IntersectionObserver) {
+      new IntersectionObserver(function (en) { visible = en[0].isIntersecting; sync(); }, { rootMargin: "80px" }).observe(frame);
+    }
+    document.addEventListener("visibilitychange", sync);
+
+    // Fareye küçük derinlik tepkisi: yalnızca fare, dokunmatikte devre dışı
+    if (hero) {
+      hero.addEventListener("pointermove", function (e) {
+        if (e.pointerType !== "mouse" || !motion) return;
+        var r = hero.getBoundingClientRect();
+        tYawOff = ((e.clientX - r.left) / r.width - 0.5) * 0.16;
+        tTiltOff = ((e.clientY - r.top) / r.height - 0.5) * 0.1;
+      });
+      hero.addEventListener("pointerleave", function () { tYawOff = 0; tTiltOff = 0; });
+    }
+
+    return { sync: sync };
+  }
+
+  function bootGlobe() {
+    var frame = document.getElementById("globe");
+    if (!frame) return;
+    try { globe = createGlobe(frame, document.getElementById("bmms")); } catch (e) { globe = null; }
+    if (globe) globe.sync();
+  }
+
+  applyMotion();
+  // Metin önce görünür; üç boyutlu görsel sayfa yüklendikten sonra başlatılır.
+  var later = function () {
+    if (window.requestIdleCallback) window.requestIdleCallback(bootGlobe, { timeout: 1200 });
+    else window.setTimeout(bootGlobe, 200);
+  };
+  if (document.readyState === "complete") later();
+  else window.addEventListener("load", later);
+})();
+</script>
+<!-- BMMS:ARTIFACT-END -->
 </html>
