@@ -1,0 +1,46 @@
+/* ============ 03 · Yaklaşım ============ */
+.approach { display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); gap: clamp(32px, 6vw, 88px); align-items: start; }
+.approach__aside { position: sticky; top: calc(28px + env(safe-area-inset-top, 0px)); display: grid; gap: 28px; }
+.status-legend { display: grid; gap: 12px; margin: 0; padding: 18px 0 0; border-top: 1px solid var(--line); }
+.status-legend div { display: grid; gap: 4px; }
+.status-legend dd { margin: 0; font-size: 0.9rem; color: var(--muted); }
+.canon { font: 400 0.78rem/1.75 var(--f-mono); color: var(--muted); padding-top: 18px; border-top: 1px solid var(--line); }
+.canon b { display: block; font-weight: 500; letter-spacing: .12em; color: var(--ink); font-size: .7rem; margin-bottom: 4px; }
+.canon .ar { color: var(--red); }
+
+.flow-wrap { position: relative; --node: 44px; }
+.flow__track, .flow__fill {
+  position: absolute; left: calc(var(--node) / 2 - 1px); top: 22px; bottom: 22px; width: 2px;
+}
+.flow__track { background: var(--line); }
+.flow__fill { background: var(--red); transform-origin: top; }
+.flow { list-style: none; margin: 0; padding: 0; position: relative; }
+.step { position: relative; display: grid; grid-template-columns: var(--node) minmax(0, 1fr); gap: 20px; padding-block: 18px; }
+.step__node {
+  position: relative; z-index: 1; width: var(--node); height: var(--node); display: grid; place-items: center;
+  font: 500 0.8rem/1 var(--f-mono); color: var(--faint);
+  background: var(--paper-2); border: 1.5px solid var(--line);
+  transition: background-color .3s ease, border-color .3s ease, color .3s ease, transform .4s var(--ease-out);
+}
+.step.is-reached .step__node { border-color: var(--ink); color: var(--ink); background: var(--paper); }
+.step.is-active .step__node { background: var(--red); border-color: var(--red); color: #fff; transform: scale(1.08); }
+.step__body { display: grid; gap: 8px; padding: 14px 18px 16px; border: 1px solid transparent; transition: border-color .3s ease, background-color .3s ease; }
+.step.is-active .step__body { border-color: var(--line); background: var(--paper); }
+.step__body h3 { font-weight: 600; font-size: 1.32rem; line-height: 1.2; }
+.step__body p { color: var(--ink-2); max-width: 60ch; }
+.step__body .note { font-size: 0.9rem; color: var(--muted); }
+.flow__end { position: relative; z-index: 1; display: grid; grid-template-columns: var(--node) minmax(0, 1fr); gap: 20px; padding-top: 18px; align-items: start; }
+.flow__end-mark { width: var(--node); height: var(--node); display: grid; place-items: center; }
+.flow__end-mark::before { content: ""; width: 14px; height: 14px; border: 2px solid var(--ink); background: var(--paper-2); }
+.flow__end p { font-size: 0.95rem; color: var(--ink-2); display: grid; gap: 8px; padding-left: 18px; }
+
+@media (max-width: 900px) {
+  .approach { grid-template-columns: minmax(0, 1fr); }
+  .approach__aside { position: static; }
+}
+@media (max-width: 480px) {
+  .flow-wrap { --node: 36px; }
+  .step, .flow__end { gap: 12px; }
+  .step__body { padding: 10px 12px 12px; }
+  .flow__end p { padding-left: 12px; }
+}

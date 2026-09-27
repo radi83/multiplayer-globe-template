@@ -1,0 +1,31 @@
+/* ============ Hareket denetimi ============ */
+.motion-toggle {
+  position: fixed; z-index: 40; right: 14px; bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+  display: inline-flex; align-items: center; gap: 9px; min-height: 40px; padding: 0 12px;
+  font: 500 0.72rem/1 var(--f-mono); letter-spacing: .06em;
+  color: #fff; background: rgba(17,17,17,.88); border: 1px solid rgba(242,242,239,.22); border-radius: 2px; cursor: pointer;
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  transition: background-color .2s ease, border-color .2s ease;
+}
+.motion-toggle:hover { background: #000; border-color: rgba(242,242,239,.5); }
+.motion-toggle__icon { width: 10px; height: 10px; flex: none; box-shadow: inset 3px 0 0 #fff, inset -3px 0 0 #fff; }
+html[data-motion="off"] .motion-toggle__icon {
+  box-shadow: none; width: 0; height: 0;
+  border-left: 9px solid #fff; border-top: 5px solid transparent; border-bottom: 5px solid transparent;
+}
+@media (max-width: 600px) {
+  .motion-toggle { width: 42px; min-height: 42px; padding: 0; justify-content: center; }
+  .motion-toggle__label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+}
+
+/* Yumuşak kaydırma açıkken tarayıcının kendi yumuşatması kapanır. */
+html.lenis, html.lenis body { height: auto; }
+html.lenis { scroll-behavior: auto; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+html[data-motion="off"] { scroll-behavior: auto; }
+html[data-motion="off"] *, html[data-motion="off"] *::before, html[data-motion="off"] *::after {
+  animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important;
+}

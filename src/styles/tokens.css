@@ -1,0 +1,37 @@
+/*
+ * Tasarım değişkenleri.
+ * Palet kaynağı: BMMS deposu, docs/BRAND_SYSTEM.md (kanonik).
+ * --red-on-dark: koyu zeminde küçük metin kontrastı için açıklaştırılmış ton.
+ */
+:root {
+  color-scheme: light;
+
+  --red: #B3121D;
+  --red-deep: #940E17;
+  --red-on-dark: #E2464F;
+  --ink: #111111;
+  --ink-2: #2B2B2A;
+  --paper: #FFFFFF;
+  --paper-2: #F5F5F3;
+  --line: #D9D9D6;
+  --line-soft: #ECECE8;
+  --muted: #555555;
+  --faint: #8A8A87;
+
+  --stage: #0F1011;
+  --stage-2: #17191B;
+  --stage-ink: #F2F2EF;
+  --stage-text: #C9CAC6;
+  --stage-muted: #A3A5A1;
+  --stage-line: rgba(242, 242, 239, 0.14);
+  --stage-grid: rgba(242, 242, 239, 0.065);
+  --stage-grid-fine: rgba(242, 242, 239, 0.028);
+
+  --f-display: "IBM Plex Sans Condensed", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --f-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+  --gutter: clamp(16px, 4vw, 48px);
+  --maxw: 1200px;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
