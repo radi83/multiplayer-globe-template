@@ -21,6 +21,11 @@ Cloudflare panelinde Worker → Settings → Build:
 | Kök dizin | `/` |
 | Node sürümü | 22 (`NODE_VERSION=22` ortam değişkeni) |
 
+Durum (2026-09-27): Worker, `radi83/multiplayer-globe-template` deposuna bağlandı;
+dal `main`, yayın komutu `npx wrangler deploy`. Panelde "Build command" boş
+bırakılabilir: `wrangler deploy`, `wrangler.json` içindeki `npm run build`
+adımını kendisi çalıştırır. Node sürümü `.nvmrc` dosyasından okunur.
+
 `main` dalına birleştirme canlı yayına alır. Diğer dallar (ör. `bmms-kongre`)
 Cloudflare'de önizleme sürümü olarak yüklenebilir.
 
