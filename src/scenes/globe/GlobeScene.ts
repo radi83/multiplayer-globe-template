@@ -27,7 +27,7 @@ import {
   type IUniform,
 } from "three";
 import { graticule, network, shell, type LineSet, type Vec3 } from "./geometry";
-import { createPhraseLayer, type PhraseLayer } from "./phrases";
+import { createTextLayer, PHRASE_STYLE, WORD_STYLE, type TextLayer } from "./phrases";
 import facingChunk from "./shaders/facing.glsl?raw";
 import graticuleVert from "./shaders/graticule.vert?raw";
 import graticuleFrag from "./shaders/graticule.frag?raw";
@@ -57,7 +57,7 @@ const COLOR = {
 const TUNING = {
   tilt: 0.36,
   spin: 0.28, // rad/sn (bir tur ≈ 22 sn)
-  phraseSpin: 0.14, // cümle katmanı: okunabilirlik için kürenin yarı hızında
+  phraseSpin: 0.28, // cümle ve kelime katmanı (küreyle aynı hız)
   cameraDistance: 4.9,
   fov: 32,
   revealSeconds: 2.4,
@@ -100,6 +100,7 @@ export function createGlobeScene(
   hero: HTMLElement | null,
   initialMotion: boolean,
   phraseTexts: string[] = [],
+  wordTexts: string[] = [],
 ): GlobeHandle | null {
   let renderer: WebGLRenderer;
   try {
@@ -317,7 +318,7 @@ export function createGlobeScene(
     shellOpacity.value = 0.05 + 0.2 * (0.5 + 0.5 * Math.sin(elapsed / 4.2));
     shellLines.rotation.y = -elapsed * 0.09;
     phraseGroup.rotation.y += dt * TUNING.phraseSpin;
-    phrases?.update(elapsed, phraseGroup.rotation.y, TUNING.phraseSpin, draw.value >= 1);
+    for (const layer of textLayers) layer.update(elapsed, phraseGroup.rotation.y, TUNING.phraseSpin, draw.value >= 1);
 
     if (draw.value >= 1) updatePulses(elapsed, dt);
     renderFrame();
@@ -336,7 +337,7 @@ export function createGlobeScene(
     if (!motion) {
       applyIntro(Number.POSITIVE_INFINITY);
       clearPulses();
-      phrases?.showStatic(phraseGroup.rotation.y);
+      textLayers.forEach((layer, i) => layer.showStatic(phraseGroup.rotation.y, i === 0));
       shellOpacity.value = 0.12;
     }
     renderFrame();
@@ -397,26 +398,31 @@ export function createGlobeScene(
   };
   canvas.addEventListener("webglcontextlost", onContextLost);
 
-  /* ---- Küre içindeki cümleler (yazı tipi yüklenince eklenir) ---- */
-  // Cümleler küreyle aynı eğimde, ama kendi (daha yavaş) dönüşleriyle.
+  /* ---- Küre içindeki cümleler ve kelimeler (yazı tipi yüklenince eklenir) ---- */
+  // Yazılar küreyle aynı eğimde, kendi dönüş katmanlarında.
   const phraseGroup = new Group();
   tilt.add(phraseGroup);
-  let phrases: PhraseLayer | null = null;
+  // Sıra önemli: 0 = cümleler (hareket kapalıyken ilk cümle gösterilir), 1 = kelimeler.
+  const textLayers: TextLayer[] = [];
   let disposed = false;
-  createPhraseLayer(phraseGroup, renderer, phraseTexts)
-    .then((layer) => {
+  Promise.all([
+    createTextLayer(phraseGroup, renderer, phraseTexts, PHRASE_STYLE),
+    createTextLayer(phraseGroup, renderer, wordTexts, WORD_STYLE),
+  ])
+    .then((layers) => {
+      const ready = layers.filter((l): l is TextLayer => l !== null);
       if (disposed) {
-        layer?.dispose();
+        ready.forEach((l) => l.dispose());
         return;
       }
-      phrases = layer;
+      textLayers.push(...ready);
       if (!running) {
-        if (!motion) phrases?.showStatic(phraseGroup.rotation.y);
+        if (!motion) textLayers.forEach((layer, i) => layer.showStatic(phraseGroup.rotation.y, i === 0));
         renderFrame();
       }
     })
     .catch(() => {
-      /* Cümleler olmadan da sahne çalışır. */
+      /* Yazılar olmadan da sahne çalışır. */
     });
 
   resize();
@@ -433,7 +439,7 @@ export function createGlobeScene(
     },
     dispose(): void {
       disposed = true;
-      phrases?.dispose();
+      textLayers.forEach((l) => l.dispose());
       renderer.setAnimationLoop(null);
       resizeObserver.disconnect();
       intersection.disconnect();

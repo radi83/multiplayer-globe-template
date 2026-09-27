@@ -72,7 +72,8 @@ docs/                         Tasarım, içerik kaynakları, yayın
 | Renk veya yazı tipi | `src/styles/tokens.css` |
 | Dünyanın hızı, eğimi, ışık darbesi sıklığı | `src/scenes/globe/GlobeScene.ts` → `TUNING` |
 | Küre içinde beliren cümleler | `src/content/tr.json` ve `en.json` → `hero.globePhrases` (satır sonu için `\n`, satır başına en fazla ~20 karakter) |
-| Cümlelerin boyutu, süresi, aynı anda kaç tane | `src/scenes/globe/phrases.ts` → `SETTINGS` |
+| Küre içinde beliren kelimeler | `src/content/tr.json` ve `en.json` → `hero.globeWords` |
+| Cümle/kelime rengi, boyutu, süresi, aynı anda kaç tane | `src/scenes/globe/phrases.ts` → `PHRASE_STYLE`, `WORD_STYLE` |
 | Kaydırma sahneleri | `src/motion/timelines.ts` |
 
 ## Dokümanlar

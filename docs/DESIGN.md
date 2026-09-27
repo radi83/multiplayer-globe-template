@@ -75,13 +75,18 @@ bağımlılık yoktur; kongre ağında harici bir istek gerekmez.
   veri, kullanıcı ya da konum içermez. Şekil altyazısı bunu açıkça belirtir.
 - Işık darbeleri yay boyunca ilerler, vardığı düğümü kısa süre parlatır.
 - Dönüş hızı ≈ 0,28 rad/sn (bir tur ≈ 22 sn); koordinat halkası 40 sn'de bir döner.
-  Cümle katmanı okunabilirlik için kürenin yarı hızında (0,14 rad/sn) döner.
+  Cümle ve kelime katmanı da küreyle aynı hızda döner.
 - **Küre içindeki cümleler:** Projenin kilit ilkeleri, kürenin içinde (yarıçap
   0,9) kavisli bir şeride çizilir ve küreyle birlikte döner. Soldan girer, öne
   geldiğinde tam okunur, yana kıvrılırken söner. Aynı anda en fazla iki cümle
   görünür. Metinler sayfanın dilinden gelir (`hero.globePhrases`); yalnızca
-  sayfada zaten doğrulanmış ifadeler kullanılır. Hareket kapalıyken ilk cümle
-  sabit olarak önde gösterilir.
+  sayfada zaten doğrulanmış ifadeler kullanılır. Renkleri kürenin çizgi
+  tonundadır ve hafif saydamdır. Hareket kapalıyken ilk cümle sabit olarak önde
+  gösterilir.
+- **Anahtar kelimeler:** Projenin kanonik terimleri (Otorite, Revizyon, Pasaj,
+  Kanıt, Uygulanabilirlik, Yükümlülük, Çekimserlik, Köken…) daha derinde (yarıçap
+  0,62), küçük, soluk, büyük harfli mono etiketler olarak döner; aynı anda en fazla
+  dört. Kaynak: `hero.globeWords`.
 - Görünmediğinde (sekme arka planda, bölüm ekran dışında) çizim durur.
 - WebGL yoksa, parça yüklenemezse ya da GPU bağlamı kaybolursa sabit SVG
   çizimi görünür kalır.

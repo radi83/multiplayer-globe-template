@@ -20,10 +20,10 @@ function supportsWebGL(): boolean {
   }
 }
 
-/** Sayfanın dilindeki kilit cümleler, şablonun yazdığı data-phrases özniteliğinden. */
-function readPhrases(frame: HTMLElement): string[] {
+/** Sayfanın dilindeki cümle/kelime listesi, şablonun yazdığı data-* özniteliğinden. */
+function readList(raw: string | undefined): string[] {
   try {
-    const list: unknown = JSON.parse(frame.dataset.phrases ?? "[]");
+    const list: unknown = JSON.parse(raw ?? "[]");
     return Array.isArray(list) ? list.filter((x): x is string => typeof x === "string") : [];
   } catch {
     return [];
@@ -37,7 +37,13 @@ export function bootGlobe(): void {
   const load = (): void => {
     import("./GlobeScene")
       .then(({ createGlobeScene }) => {
-        const handle = createGlobeScene(frame, document.getElementById("bmms"), isMotionOn(), readPhrases(frame));
+        const handle = createGlobeScene(
+          frame,
+          document.getElementById("bmms"),
+          isMotionOn(),
+          readList(frame.dataset.phrases),
+          readList(frame.dataset.words),
+        );
         if (handle) onMotionChange((on) => handle.setMotion(on));
       })
       .catch(() => {

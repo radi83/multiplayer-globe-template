@@ -161,6 +161,12 @@ test("küre cümleleri sayfanın dilinde", async ({ page }) => {
   const en = JSON.parse((await page.locator("#globe").getAttribute("data-phrases")) ?? "[]") as string[];
   expect(en.length).toBe(tr.length);
   expect(en.join(" ")).toContain("Source");
+  const enWords = JSON.parse((await page.locator("#globe").getAttribute("data-words")) ?? "[]") as string[];
+  expect(enWords).toContain("Provenance");
+  await page.goto("/");
+  const trWords = JSON.parse((await page.locator("#globe").getAttribute("data-words")) ?? "[]") as string[];
+  expect(trWords).toContain("Köken");
+  expect(trWords.length).toBe(enWords.length);
 });
 
 test("hareket kapalıyken de dünya hatasız çizilir", async ({ browser }) => {
