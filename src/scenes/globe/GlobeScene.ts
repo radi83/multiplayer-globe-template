@@ -27,6 +27,7 @@ import {
   type IUniform,
 } from "three";
 import { graticule, network, shell, type LineSet, type Vec3 } from "./geometry";
+import { createPhraseLayer, type PhraseLayer } from "./phrases";
 import facingChunk from "./shaders/facing.glsl?raw";
 import graticuleVert from "./shaders/graticule.vert?raw";
 import graticuleFrag from "./shaders/graticule.frag?raw";
@@ -55,15 +56,15 @@ const COLOR = {
 /** Görsel ayarlar tek yerde. */
 const TUNING = {
   tilt: 0.36,
-  spin: 0.05, // rad/sn
+  spin: 0.14, // rad/sn (bir tur ≈ 45 sn)
   cameraDistance: 4.9,
   fov: 32,
   revealSeconds: 2.4,
   drawDelay: 0.8,
   drawSeconds: 1.8,
-  maxPulses: 3,
-  pulseGap: [1.1, 2.8] as const,
-  pulseDuration: [1.8, 2.6] as const,
+  maxPulses: 4,
+  pulseGap: [0.45, 1.2] as const,
+  pulseDuration: [1.1, 1.7] as const,
 };
 
 const easeOutCubic = (t: number): number => 1 - Math.pow(1 - Math.min(1, Math.max(0, t)), 3);
@@ -93,7 +94,12 @@ function lineGeometry(set: LineSet): BufferGeometry {
   return g;
 }
 
-export function createGlobeScene(frame: HTMLElement, hero: HTMLElement | null, initialMotion: boolean): GlobeHandle | null {
+export function createGlobeScene(
+  frame: HTMLElement,
+  hero: HTMLElement | null,
+  initialMotion: boolean,
+  phraseTexts: string[] = [],
+): GlobeHandle | null {
   let renderer: WebGLRenderer;
   try {
     renderer = new WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance" });
@@ -308,7 +314,8 @@ export function createGlobeScene(frame: HTMLElement, hero: HTMLElement | null, i
     tilt.rotation.y = pointerYaw;
     tilt.rotation.x = TUNING.tilt + pointerTilt;
     shellOpacity.value = 0.05 + 0.2 * (0.5 + 0.5 * Math.sin(elapsed / 4.2));
-    shellLines.rotation.y = -elapsed * 0.012;
+    shellLines.rotation.y = -elapsed * 0.045;
+    phrases?.update(elapsed, globe.rotation.y, TUNING.spin, draw.value >= 1);
 
     if (draw.value >= 1) updatePulses(elapsed, dt);
     renderFrame();
@@ -327,6 +334,7 @@ export function createGlobeScene(frame: HTMLElement, hero: HTMLElement | null, i
     if (!motion) {
       applyIntro(Number.POSITIVE_INFINITY);
       clearPulses();
+      phrases?.showStatic(globe.rotation.y);
       shellOpacity.value = 0.12;
     }
     renderFrame();
@@ -387,6 +395,25 @@ export function createGlobeScene(frame: HTMLElement, hero: HTMLElement | null, i
   };
   canvas.addEventListener("webglcontextlost", onContextLost);
 
+  /* ---- Küre içindeki cümleler (yazı tipi yüklenince eklenir) ---- */
+  let phrases: PhraseLayer | null = null;
+  let disposed = false;
+  createPhraseLayer(globe, renderer, phraseTexts)
+    .then((layer) => {
+      if (disposed) {
+        layer?.dispose();
+        return;
+      }
+      phrases = layer;
+      if (!running) {
+        if (!motion) phrases?.showStatic(globe.rotation.y);
+        renderFrame();
+      }
+    })
+    .catch(() => {
+      /* Cümleler olmadan da sahne çalışır. */
+    });
+
   resize();
   if (!motion) applyIntro(Number.POSITIVE_INFINITY);
   sync();
@@ -400,6 +427,8 @@ export function createGlobeScene(frame: HTMLElement, hero: HTMLElement | null, i
       sync();
     },
     dispose(): void {
+      disposed = true;
+      phrases?.dispose();
       renderer.setAnimationLoop(null);
       resizeObserver.disconnect();
       intersection.disconnect();

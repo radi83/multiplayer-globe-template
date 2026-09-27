@@ -71,6 +71,8 @@ docs/                         Tasarım, içerik kaynakları, yayın
 | İletişim bilgisi (e-posta, telefon, bağlantı) | `src/config.ts` |
 | Renk veya yazı tipi | `src/styles/tokens.css` |
 | Dünyanın hızı, eğimi, ışık darbesi sıklığı | `src/scenes/globe/GlobeScene.ts` → `TUNING` |
+| Küre içinde beliren cümleler | `src/content/tr.json` ve `en.json` → `hero.globePhrases` (satır sonu için `\n`, satır başına en fazla ~20 karakter) |
+| Cümlelerin boyutu, süresi, aynı anda kaç tane | `src/scenes/globe/phrases.ts` → `SETTINGS` |
 | Kaydırma sahneleri | `src/motion/timelines.ts` |
 
 ## Dokümanlar

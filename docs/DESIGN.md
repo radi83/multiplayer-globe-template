@@ -74,6 +74,13 @@ bağımlılık yoktur; kongre ağında harici bir istek gerekmez.
 - 26 düğüm ve yaylar **sabit tohumla** üretilir; her açılışta aynıdır ve gerçek
   veri, kullanıcı ya da konum içermez. Şekil altyazısı bunu açıkça belirtir.
 - Işık darbeleri yay boyunca ilerler, vardığı düğümü kısa süre parlatır.
+- Dönüş hızı ≈ 0,14 rad/sn (bir tur ≈ 45 sn); koordinat halkası 80 sn'de bir döner.
+- **Küre içindeki cümleler:** Projenin kilit ilkeleri, kürenin içinde (yarıçap
+  0,9) kavisli bir şeride çizilir ve küreyle birlikte döner. Soldan girer, öne
+  geldiğinde tam okunur, yana kıvrılırken söner. Aynı anda en fazla iki cümle
+  görünür. Metinler sayfanın dilinden gelir (`hero.globePhrases`); yalnızca
+  sayfada zaten doğrulanmış ifadeler kullanılır. Hareket kapalıyken ilk cümle
+  sabit olarak önde gösterilir.
 - Görünmediğinde (sekme arka planda, bölüm ekran dışında) çizim durur.
 - WebGL yoksa, parça yüklenemezse ya da GPU bağlamı kaybolursa sabit SVG
   çizimi görünür kalır.

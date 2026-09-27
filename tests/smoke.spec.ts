@@ -151,3 +151,24 @@ test("dil düğmesi iki sayfa arasında gezer", async ({ page }) => {
   await expect(page).toHaveURL(/localhost:4173\/$/);
   await expect(page.locator("h1")).toContainText("kaynağına kadar");
 });
+
+test("küre cümleleri sayfanın dilinde", async ({ page }) => {
+  await page.goto("/");
+  const tr = JSON.parse((await page.locator("#globe").getAttribute("data-phrases")) ?? "[]") as string[];
+  expect(tr.length).toBeGreaterThanOrEqual(4);
+  expect(tr.join(" ")).toContain("Kaynak");
+  await page.goto("/en/");
+  const en = JSON.parse((await page.locator("#globe").getAttribute("data-phrases")) ?? "[]") as string[];
+  expect(en.length).toBe(tr.length);
+  expect(en.join(" ")).toContain("Source");
+});
+
+test("hareket kapalıyken de dünya hatasız çizilir", async ({ browser }) => {
+  const ctx = await browser.newContext({ reducedMotion: "reduce" });
+  const page = await ctx.newPage();
+  const errors = collectErrors(page);
+  await page.goto("/");
+  await page.waitForTimeout(3500);
+  expect(errors).toEqual([]);
+  await ctx.close();
+});

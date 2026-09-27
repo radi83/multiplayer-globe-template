@@ -15,12 +15,31 @@
   "skipLink": "Skip to content",
   "navAria": "Page sections",
   "nav": [
-    { "href": "#problem", "label": "Problem" },
-    { "href": "#yaklasim", "label": "Approach" },
-    { "href": "#ornek", "label": "Example" },
-    { "href": "#ilkeler", "label": "Principles" },
-    { "href": "#asama", "label": "Status" },
-    { "href": "#iletisim", "label": "Contact", "keep": true }
+    {
+      "href": "#problem",
+      "label": "Problem"
+    },
+    {
+      "href": "#yaklasim",
+      "label": "Approach"
+    },
+    {
+      "href": "#ornek",
+      "label": "Example"
+    },
+    {
+      "href": "#ilkeler",
+      "label": "Principles"
+    },
+    {
+      "href": "#asama",
+      "label": "Status"
+    },
+    {
+      "href": "#iletisim",
+      "label": "Contact",
+      "keep": true
+    }
   ],
   "statusLabels": {
     "done": "IMPLEMENTED IN BACKEND",
@@ -32,18 +51,46 @@
     "sheetTitle": "WHAT IS BMMS?",
     "titleHtml": "Every engineering conclusion should be traceable <em>back to its source</em>.",
     "lede": "BMMS is an information system being developed to connect maritime regulations, technical documents and engineering evidence in a single traceable chain. It shows which source, which revision and which context an assessment rests on; when that basis cannot be established, it records this explicitly instead of producing a confident answer.",
-    "ctaPrimary": { "href": "#yaklasim", "label": "Explore the approach" },
-    "ctaSecondary": { "href": "#iletisim", "label": "Get in touch" },
+    "ctaPrimary": {
+      "href": "#yaklasim",
+      "label": "Explore the approach"
+    },
+    "ctaSecondary": {
+      "href": "#iletisim",
+      "label": "Get in touch"
+    },
     "status": "STAGE: RESEARCH AND DEVELOPMENT · CONTROLLED PILOT PREPARATION",
     "globeAria": "Rotating wireframe globe: meridians, nodes and connecting arcs between nodes. It represents a conceptual knowledge network.",
+    "globePhrases": [
+      "Source\n→ Version\n→ Passage",
+      "Retrieved\n≠ Applicable",
+      "Every claim is tied\nto a source",
+      "Missing evidence ≠\n“not required”",
+      "Uncertainty\nstays visible",
+      "Decisions belong to\nauthorised people",
+      "No basis,\nno confident answer",
+      "Records are\nsuperseded,\nnever erased"
+    ],
     "figureTitle": "FIG. 1 · CONCEPTUAL KNOWLEDGE NETWORK",
     "figureNote": "Not live data, real users or a location map.",
     "legend": [
-      { "kind": "node", "label": "source record" },
-      { "kind": "dot", "label": "passage / evidence" },
-      { "kind": "arc", "label": "relation between sources" }
+      {
+        "kind": "node",
+        "label": "source record"
+      },
+      {
+        "kind": "dot",
+        "label": "passage / evidence"
+      },
+      {
+        "kind": "arc",
+        "label": "relation between sources"
+      }
     ],
-    "titleblock": ["BMMS · CONGRESS INTRODUCTION", "NOT TO SCALE · CONCEPTUAL DIAGRAM"]
+    "titleblock": [
+      "BMMS · CONGRESS INTRODUCTION",
+      "NOT TO SCALE · CONCEPTUAL DIAGRAM"
+    ]
   },
   "problem": {
     "sheet": "SHEET 02 / 06",
@@ -76,14 +123,66 @@
       "title": "FIG. 2 · SOURCE FRAGMENTS",
       "stateLoose": "SCATTERED",
       "stateSet": "COMMON RECORD STRUCTURE",
-      "fields": ["SOURCE", "VERSION", "LOCATOR"],
+      "fields": [
+        "SOURCE",
+        "VERSION",
+        "LOCATOR"
+      ],
       "fragments": [
-        { "type": "REGULATION · IMO", "name": "SOLAS / MARPOL requirement", "scatter": [-34, 26, -5] },
-        { "type": "CLASS PUBLICATION · IACS", "name": "Class rule or recommendation", "scatter": [40, -10, 4] },
-        { "type": "INDUSTRY GUIDANCE · OCIMF", "name": "Operational guideline", "scatter": [-18, -22, 3] },
-        { "type": "MANUFACTURER DOCUMENT · OEM", "name": "Equipment instruction", "scatter": [30, 18, -6] },
-        { "type": "OPERATIONAL RECORD · PMS", "name": "Maintenance record", "scatter": [-40, -6, 5] },
-        { "type": "FIELD DOCUMENT", "name": "Service report", "scatter": [24, -24, -3] }
+        {
+          "type": "REGULATION · IMO",
+          "name": "SOLAS / MARPOL requirement",
+          "scatter": [
+            -34,
+            26,
+            -5
+          ]
+        },
+        {
+          "type": "CLASS PUBLICATION · IACS",
+          "name": "Class rule or recommendation",
+          "scatter": [
+            40,
+            -10,
+            4
+          ]
+        },
+        {
+          "type": "INDUSTRY GUIDANCE · OCIMF",
+          "name": "Operational guideline",
+          "scatter": [
+            -18,
+            -22,
+            3
+          ]
+        },
+        {
+          "type": "MANUFACTURER DOCUMENT · OEM",
+          "name": "Equipment instruction",
+          "scatter": [
+            30,
+            18,
+            -6
+          ]
+        },
+        {
+          "type": "OPERATIONAL RECORD · PMS",
+          "name": "Maintenance record",
+          "scatter": [
+            -40,
+            -6,
+            5
+          ]
+        },
+        {
+          "type": "FIELD DOCUMENT",
+          "name": "Service report",
+          "scatter": [
+            24,
+            -24,
+            -3
+          ]
+        }
       ],
       "footLabel": "COMMON STRUCTURE",
       "foot": "Once every fragment is recorded in the same way, with its source, version and location within the document, it becomes comparable and traceable. Source families are admitted only to the extent that processing rights have been established."
@@ -95,14 +194,33 @@
     "title": "From source to decision, an unbroken chain.",
     "intro": "The core idea of BMMS is that every step stays attached to the one before it. If a link in the chain cannot be established, the system does not fill the gap with a guess; it shows the missing link.",
     "legend": [
-      { "kind": "done", "text": "Implemented on the server side and exercised by automated tests. Does not mean an end-user product interface." },
-      { "kind": "partial", "text": "Core data model and services exist; scope is being extended." },
-      { "kind": "goal", "text": "Accepted development direction; not yet implemented." }
+      {
+        "kind": "done",
+        "text": "Implemented on the server side and exercised by automated tests. Does not mean an end-user product interface."
+      },
+      {
+        "kind": "partial",
+        "text": "Core data model and services exist; scope is being extended."
+      },
+      {
+        "kind": "goal",
+        "text": "Accepted development direction; not yet implemented."
+      }
     ],
     "canonLabel": "THE FULL CHAIN IN THE PROJECT DOCUMENTS",
     "canon": [
-      "Source", "SourceVersion", "Passage", "Authority", "Applicability", "Obligation", "Evidence",
-      "Engineering Assessment", "Human Decision", "Residual Obligation", "Assurance State", "Audit History"
+      "Source",
+      "SourceVersion",
+      "Passage",
+      "Authority",
+      "Applicability",
+      "Obligation",
+      "Evidence",
+      "Engineering Assessment",
+      "Human Decision",
+      "Residual Obligation",
+      "Assurance State",
+      "Audit History"
     ],
     "steps": [
       {
@@ -155,22 +273,56 @@
     "question": "Does the fuel used on this voyage meet the sulphur content requirement?",
     "locLegend": "SHIP POSITION · CASE CONTEXT",
     "locOptions": [
-      { "value": "in", "label": "Inside ECA", "context": "inside ECA" },
-      { "value": "out", "label": "Outside ECA", "context": "outside ECA" },
-      { "value": "unk", "label": "Unknown", "context": "position unknown" }
+      {
+        "value": "in",
+        "label": "Inside ECA",
+        "context": "inside ECA"
+      },
+      {
+        "value": "out",
+        "label": "Outside ECA",
+        "context": "outside ECA"
+      },
+      {
+        "value": "unk",
+        "label": "Unknown",
+        "context": "position unknown"
+      }
     ],
     "locHint": "ECA: Emission Control Area",
     "eviLegend": "EVIDENCE PROVIDED",
     "eviOptions": [
-      { "value": "doc", "label": "Bunker delivery note provided" },
-      { "value": "none", "label": "No document" }
+      {
+        "value": "doc",
+        "label": "Bunker delivery note provided"
+      },
+      {
+        "value": "none",
+        "label": "No document"
+      }
     ],
-    "cols": ["1 · RETRIEVED PASSAGES", "2 · EVIDENCE", "3 · STATE"],
+    "cols": [
+      "1 · RETRIEVED PASSAGES",
+      "2 · EVIDENCE",
+      "3 · STATE"
+    ],
     "passages": {
-      "a": { "name": "Passage A", "title": "Passage A — Limit applicable inside an ECA", "meta": "Representative source · with version and passage identity" },
-      "b": { "name": "Passage B", "title": "Passage B — General limit", "meta": "Representative source · with version and passage identity" }
+      "a": {
+        "name": "Passage A",
+        "title": "Passage A — Limit applicable inside an ECA",
+        "meta": "Representative source · with version and passage identity"
+      },
+      "b": {
+        "name": "Passage B",
+        "title": "Passage B — General limit",
+        "meta": "Representative source · with version and passage identity"
+      }
     },
-    "evidence": { "title": "Bunker delivery note", "meta": "Representative document", "chainName": "bunker delivery note" },
+    "evidence": {
+      "title": "Bunker delivery note",
+      "meta": "Representative document",
+      "chainName": "bunker delivery note"
+    },
     "pills": {
       "on": "APPLICABLE",
       "off": "RELEVANT · NOT APPLICABLE IN THIS CONTEXT",
@@ -185,18 +337,32 @@
       "ready": {
         "label": "READY FOR EXPERT DECISION",
         "text": "The context makes {passage} applicable; the evidence has been linked to that passage. Whether the evidence is sufficient is decided by an authorised expert.",
-        "chain": ["Context: {context}", "{passage}", "{evidence}", "decision: authorised expert"]
+        "chain": [
+          "Context: {context}",
+          "{passage}",
+          "{evidence}",
+          "decision: authorised expert"
+        ]
       },
       "missing": {
         "label": "EVIDENCE MISSING",
         "text": "An applicable requirement was identified ({passage}), but there is no evidence showing it is met. Missing evidence does not mean the requirement does not exist.",
-        "chain": ["Context: {context}", "{passage}", "evidence: none", "open obligation"]
+        "chain": [
+          "Context: {context}",
+          "{passage}",
+          "evidence: none",
+          "open obligation"
+        ]
       },
       "unknown": {
         "label": "INDETERMINATE · NO CONCLUSION",
         "text": "Without the ship's position, it cannot be determined which limit applies. The system does not guess; it records the missing context and holds the assessment open.",
         "textNoEvidence": " No evidence was provided either.",
-        "chain": ["Context: position unknown", "applicable passage: not determined", "missing information recorded"]
+        "chain": [
+          "Context: position unknown",
+          "applicable passage: not determined",
+          "missing information recorded"
+        ]
       }
     },
     "note": "Representative scenario. The topic is simplified from the fuel sulphur limits under MARPOL Annex VI. Passage and document names are illustrative; they are neither quotations from a real source nor output produced by BMMS. The purpose is to show the states the system is designed to distinguish."
@@ -206,7 +372,13 @@
     "sheetTitle": "SCIENTIFIC APPROACH AND QUALITY",
     "title": "What does trustworthiness rest on?",
     "intro": "In BMMS, quality is not measured only by the rate of correct answers. The basis, scope and uncertainty of a conclusion must also be explicit, measurable and auditable.",
-    "invariant": ["RETRIEVED", "AUTHORITATIVE", "CURRENT", "APPLICABLE", "SUFFICIENT"],
+    "invariant": [
+      "RETRIEVED",
+      "AUTHORITATIVE",
+      "CURRENT",
+      "APPLICABLE",
+      "SUFFICIENT"
+    ],
     "invariantAria": "Retrieved, authoritative, current, applicable and sufficient are not equivalent.",
     "invariantCaption": "The core distinction in the project's rule set: retrieving a passage does not mean it comes from an authoritative source, is current, applies to this case, or is sufficient on its own. These distinctions are defined as invariants in the code and project documents.",
     "items": [
@@ -301,10 +473,22 @@
     "title": "Let's test the method together.",
     "intro": "What the project needs most is critical, independent scrutiny. We welcome conversations on academic review, research contributions and collaboration in the areas below.",
     "collab": [
-      { "title": "Academic review", "text": "Critical examination of the epistemic distinctions, the representation of uncertainty and the evaluation design." },
-      { "title": "Research contribution", "text": "Document structure extraction, information retrieval evaluation, source traceability and decision processes in which humans and AI work together." },
-      { "title": "Domain expertise", "text": "Expert input on maritime engineering, classification and regulatory frameworks." },
-      { "title": "Case-based evaluation", "text": "Jointly developing realistic case scenarios with calibrated difficulty." }
+      {
+        "title": "Academic review",
+        "text": "Critical examination of the epistemic distinctions, the representation of uncertainty and the evaluation design."
+      },
+      {
+        "title": "Research contribution",
+        "text": "Document structure extraction, information retrieval evaluation, source traceability and decision processes in which humans and AI work together."
+      },
+      {
+        "title": "Domain expertise",
+        "text": "Expert input on maritime engineering, classification and regulatory frameworks."
+      },
+      {
+        "title": "Case-based evaluation",
+        "text": "Jointly developing realistic case scenarios with calibrated difficulty."
+      }
     ],
     "bridge": "Methodological questions such as source traceability, making uncertainty explicit and recording expert decisions are shared across many disciplines. Perspectives from other fields are valuable too.",
     "label": "CONTACT",
