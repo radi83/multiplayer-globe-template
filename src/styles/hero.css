@@ -20,7 +20,23 @@
 }
 .wordmark::before { content: ""; width: 5px; height: 1.15em; background: var(--red); }
 .wordmark small { font: 500 0.68rem/1.25 var(--f-mono); letter-spacing: 0.12em; color: var(--stage-muted); max-width: 17em; }
+.topbar__right { display: flex; align-items: center; gap: 8px 14px; }
 .topnav { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
+
+/* Dil seçimi: TR / EN */
+.lang {
+  display: inline-flex; align-items: center; gap: 2px; flex: none;
+  padding: 3px; border: 1px solid var(--stage-line); border-radius: 2px;
+  font: 500 0.78rem/1 var(--f-mono); letter-spacing: 0.08em;
+}
+.lang a {
+  display: inline-grid; place-items: center; min-width: 40px; min-height: 34px; padding: 0 8px;
+  color: var(--stage-text); text-decoration: none; border-radius: 1px;
+  transition: color .2s ease, background-color .2s ease;
+}
+.lang a:hover { color: var(--stage-ink); background: rgba(242,242,239,.08); }
+.lang a[aria-current="page"] { color: #fff; background: var(--red); }
+.lang__sep { color: var(--stage-line); }
 .topnav a {
   position: relative;
   font: 500 0.78rem/1 var(--f-mono); letter-spacing: 0.08em; text-decoration: none;

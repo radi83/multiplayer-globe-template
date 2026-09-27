@@ -108,3 +108,46 @@ test("iletişim bilgileri görünür ve bağlantılar doğru", async ({ page }) 
   await expect(contact.locator('a[href="tel:+905326591923"]')).toHaveCount(1);
   await expect(contact.locator("#copy-mail")).toBeVisible();
 });
+
+test.describe("İngilizce sayfa", () => {
+  test("statik İngilizce içerik ve doğru dil", async ({ browser }) => {
+    const ctx = await browser.newContext({ javaScriptEnabled: false });
+    const page = await ctx.newPage();
+    await page.goto("/en/");
+    await expect(page.locator("html")).toHaveAttribute("lang", "en");
+    await expect(page.locator("h1")).toContainText("back to its source");
+    await expect(page.locator(".lang a[aria-current=page]")).toHaveText("EN");
+    await ctx.close();
+  });
+
+  test("hatasız açılır, yatay taşma yok, dünya yüklenir", async ({ page }) => {
+    const errors = collectErrors(page);
+    await page.goto("/en/");
+    await page.waitForTimeout(2500);
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+    expect(overflow).toBeLessThanOrEqual(0);
+    expect(errors).toEqual([]);
+  });
+
+  test("senaryo İngilizce durumları gösterir", async ({ page }) => {
+    await page.goto("/en/");
+    await expect(page.locator("#res-state")).toHaveText("READY FOR EXPERT DECISION");
+    await page.locator("label[for=loc-unk]").click();
+    await expect(page.locator("#res-state")).toHaveText("INDETERMINATE · NO CONCLUSION");
+    await page.locator("label[for=loc-in]").click();
+    await page.locator("label[for=evi-none]").click();
+    await expect(page.locator("#res-state")).toHaveText("EVIDENCE MISSING");
+    await expect(page.locator("#motion-label")).toHaveText("Pause motion");
+  });
+});
+
+test("dil düğmesi iki sayfa arasında gezer", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.locator(".lang")).toBeVisible();
+  await page.locator(".lang a", { hasText: "EN" }).click();
+  await expect(page).toHaveURL(/\/en\/$/);
+  await expect(page.locator("html")).toHaveAttribute("lang", "en");
+  await page.locator(".lang a", { hasText: "TR" }).click();
+  await expect(page).toHaveURL(/localhost:4173\/$/);
+  await expect(page.locator("h1")).toContainText("kaynağına kadar");
+});

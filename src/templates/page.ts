@@ -12,6 +12,10 @@
 import type { ContactConfig } from "../config.ts";
 
 export type Content = typeof import("../content/tr.json");
+export type Lang = "tr" | "en";
+
+/** Her dilin sitedeki yolu. Türkçe kökte, İngilizce /en/ altında. */
+export const LANG_PATH: Record<Lang, string> = { tr: "/", en: "/en/" };
 type StatusKind = keyof Content["statusLabels"];
 
 const esc = (value: string): string =>
@@ -96,7 +100,17 @@ const globeOverlay = `
 /* Bölümler                                                           */
 /* ------------------------------------------------------------------ */
 
-function hero(c: Content): string {
+/** Sağ üstteki TR / EN seçimi. Bağlantılar göreli: site bir alt yolda da çalışır. */
+function langSwitch(c: Content, lang: Lang): string {
+  const href = (target: Lang): string => (target === lang ? "./" : target === "en" ? "en/" : "../");
+  const link = (target: Lang): string =>
+    `<a href="${href(target)}" hreflang="${target}" lang="${target}" title="${esc(c.langSwitch[target])}"${
+      target === lang ? ' aria-current="page"' : ""
+    }>${target.toUpperCase()}</a>`;
+  return `<nav class="lang" aria-label="${esc(c.langSwitch.aria)}">${link("tr")}<span class="lang__sep" aria-hidden="true">/</span>${link("en")}</nav>`;
+}
+
+function hero(c: Content, lang: Lang): string {
   const h = c.hero;
   const nav = c.nav
     .map((n) => `<a href="${esc(n.href)}"${"keep" in n && n.keep ? ' class="topnav__keep"' : ""}>${esc(n.label)}</a>`)
@@ -111,7 +125,10 @@ function hero(c: Content): string {
   <div class="wrap">
     <div class="topbar">
       <a class="wordmark" href="#bmms" aria-label="${esc(c.brand.homeAria)}">${esc(c.brand.name)} <small>${esc(c.brand.full)}</small></a>
-      <nav class="topnav" aria-label="${esc(c.navAria)}">${nav}</nav>
+      <div class="topbar__right">
+        <nav class="topnav" aria-label="${esc(c.navAria)}">${nav}</nav>
+        ${langSwitch(c, lang)}
+      </div>
     </div>
     <div class="hero__inner">
       <div class="hero__copy">
@@ -407,16 +424,24 @@ function footer(c: Content): string {
 /* Dışa açık                                                          */
 /* ------------------------------------------------------------------ */
 
-export function renderHead(c: Content, siteUrl: string): string {
+export function renderHead(c: Content, siteUrl: string, lang: Lang): string {
   const m = c.meta;
+  const url = (l: Lang): string => `${siteUrl}${LANG_PATH[l]}`;
+  const other: Lang = lang === "tr" ? "en" : "tr";
+  const otherLocale = other === "tr" ? "tr_TR" : "en_US";
   return join([
-    `<link rel="canonical" href="${esc(siteUrl)}/">`,
+    `<link rel="canonical" href="${esc(url(lang))}">`,
+    `<link rel="alternate" hreflang="tr" href="${esc(url("tr"))}">`,
+    `<link rel="alternate" hreflang="en" href="${esc(url("en"))}">`,
+    `<link rel="alternate" hreflang="x-default" href="${esc(url("tr"))}">`,
     `<title>${esc(m.title)}</title>`,
     `<meta name="description" content="${esc(m.description)}">`,
     `<meta property="og:type" content="website">`,
     `<meta property="og:title" content="${esc(m.ogTitle)}">`,
     `<meta property="og:description" content="${esc(m.ogDescription)}">`,
-    `<meta property="og:url" content="${esc(siteUrl)}/">`,
+    `<meta property="og:url" content="${esc(url(lang))}">`,
+    `<meta property="og:locale" content="${esc(m.locale)}">`,
+    `<meta property="og:locale:alternate" content="${otherLocale}">`,
     `<meta property="og:image" content="${esc(siteUrl)}/og-image.jpg">`,
     `<meta property="og:image:width" content="1200">`,
     `<meta property="og:image:height" content="630">`,
@@ -424,10 +449,10 @@ export function renderHead(c: Content, siteUrl: string): string {
   ]);
 }
 
-export function renderBody(c: Content, cfg: ContactConfig): string {
+export function renderBody(c: Content, cfg: ContactConfig, lang: Lang): string {
   return join([
     `<a class="skip" href="#icerik">${esc(c.skipLink)}</a>`,
-    hero(c),
+    hero(c, lang),
     `<main id="icerik">`,
     problem(c),
     approach(c),

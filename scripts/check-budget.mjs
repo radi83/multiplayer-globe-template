@@ -56,6 +56,14 @@ if (html.includes("<!--app:")) failures.push("İşlenmemiş şablon işareti");
 if (!/<h1>[^<]*\S/.test(html)) failures.push("Başlık statik HTML'de yok");
 if (/fonts\.googleapis|fonts\.gstatic/.test(html)) failures.push("Harici yazı tipi bağlantısı var");
 
+// İngilizce sayfa: aynı kontroller + doğru dil ve karşılıklı bağlantılar.
+const en = readFileSync(join(DIST, "en", "index.html"), "utf8");
+check("HTML (EN)", gzipSync(en).length, BUDGET.html);
+if (!en.includes('<html lang="en"')) failures.push("EN sayfası lang=\"en\" değil");
+if (!html.includes('<html lang="tr"')) failures.push("TR sayfası lang=\"tr\" değil");
+if (en.includes("<!--app:") || !/<h1>[^<]*\S/.test(en)) failures.push("EN sayfası statik içerik eksik");
+if (!html.includes('hreflang="en" href="https://') || !en.includes('hreflang="tr" href="https://')) failures.push("hreflang bağlantıları eksik");
+
 if (failures.length) {
   console.error(`\nBütçe/kontrol hatası: ${failures.join(", ")}`);
   process.exit(1);
