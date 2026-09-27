@@ -56,15 +56,16 @@ const COLOR = {
 /** Görsel ayarlar tek yerde. */
 const TUNING = {
   tilt: 0.36,
-  spin: 0.14, // rad/sn (bir tur ≈ 45 sn)
+  spin: 0.28, // rad/sn (bir tur ≈ 22 sn)
+  phraseSpin: 0.14, // cümle katmanı: okunabilirlik için kürenin yarı hızında
   cameraDistance: 4.9,
   fov: 32,
   revealSeconds: 2.4,
   drawDelay: 0.8,
   drawSeconds: 1.8,
   maxPulses: 4,
-  pulseGap: [0.45, 1.2] as const,
-  pulseDuration: [1.1, 1.7] as const,
+  pulseGap: [0.22, 0.6] as const,
+  pulseDuration: [0.55, 0.85] as const,
 };
 
 const easeOutCubic = (t: number): number => 1 - Math.pow(1 - Math.min(1, Math.max(0, t)), 3);
@@ -314,8 +315,9 @@ export function createGlobeScene(
     tilt.rotation.y = pointerYaw;
     tilt.rotation.x = TUNING.tilt + pointerTilt;
     shellOpacity.value = 0.05 + 0.2 * (0.5 + 0.5 * Math.sin(elapsed / 4.2));
-    shellLines.rotation.y = -elapsed * 0.045;
-    phrases?.update(elapsed, globe.rotation.y, TUNING.spin, draw.value >= 1);
+    shellLines.rotation.y = -elapsed * 0.09;
+    phraseGroup.rotation.y += dt * TUNING.phraseSpin;
+    phrases?.update(elapsed, phraseGroup.rotation.y, TUNING.phraseSpin, draw.value >= 1);
 
     if (draw.value >= 1) updatePulses(elapsed, dt);
     renderFrame();
@@ -334,7 +336,7 @@ export function createGlobeScene(
     if (!motion) {
       applyIntro(Number.POSITIVE_INFINITY);
       clearPulses();
-      phrases?.showStatic(globe.rotation.y);
+      phrases?.showStatic(phraseGroup.rotation.y);
       shellOpacity.value = 0.12;
     }
     renderFrame();
@@ -396,9 +398,12 @@ export function createGlobeScene(
   canvas.addEventListener("webglcontextlost", onContextLost);
 
   /* ---- Küre içindeki cümleler (yazı tipi yüklenince eklenir) ---- */
+  // Cümleler küreyle aynı eğimde, ama kendi (daha yavaş) dönüşleriyle.
+  const phraseGroup = new Group();
+  tilt.add(phraseGroup);
   let phrases: PhraseLayer | null = null;
   let disposed = false;
-  createPhraseLayer(globe, renderer, phraseTexts)
+  createPhraseLayer(phraseGroup, renderer, phraseTexts)
     .then((layer) => {
       if (disposed) {
         layer?.dispose();
@@ -406,7 +411,7 @@ export function createGlobeScene(
       }
       phrases = layer;
       if (!running) {
-        if (!motion) phrases?.showStatic(globe.rotation.y);
+        if (!motion) phrases?.showStatic(phraseGroup.rotation.y);
         renderFrame();
       }
     })

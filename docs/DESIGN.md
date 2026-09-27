@@ -74,7 +74,8 @@ bağımlılık yoktur; kongre ağında harici bir istek gerekmez.
 - 26 düğüm ve yaylar **sabit tohumla** üretilir; her açılışta aynıdır ve gerçek
   veri, kullanıcı ya da konum içermez. Şekil altyazısı bunu açıkça belirtir.
 - Işık darbeleri yay boyunca ilerler, vardığı düğümü kısa süre parlatır.
-- Dönüş hızı ≈ 0,14 rad/sn (bir tur ≈ 45 sn); koordinat halkası 80 sn'de bir döner.
+- Dönüş hızı ≈ 0,28 rad/sn (bir tur ≈ 22 sn); koordinat halkası 40 sn'de bir döner.
+  Cümle katmanı okunabilirlik için kürenin yarı hızında (0,14 rad/sn) döner.
 - **Küre içindeki cümleler:** Projenin kilit ilkeleri, kürenin içinde (yarıçap
   0,9) kavisli bir şeride çizilir ve küreyle birlikte döner. Soldan girer, öne
   geldiğinde tam okunur, yana kıvrılırken söner. Aynı anda en fazla iki cümle
