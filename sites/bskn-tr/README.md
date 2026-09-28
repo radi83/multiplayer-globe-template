@@ -48,6 +48,7 @@ npm run check      # tip denetimi + derleme + testler
 | Renkler ve yazı (eski tasarım sistemi) | `src/styles/modernist.css` |
 | Düzeltmeler | `src/styles/fixes.css` |
 | Bilgisayar ekranı ölçüsü (yazı boyutları, boşluk, genişlik) | `src/styles/fixes.css` → "BİLGİSAYAR ÖLÇÜ SİSTEMİ" değişkenleri (`--t-display`, `--t-h1`, `--leading`, `--w-content`…) |
+| İlk ekrandaki blueprint gemi | Çizim: `src/ship/hull.ts` · sahne, hareket, etiketler: `src/ship/scene.ts` · yükleme: `src/ship/boot.ts` · etiket metinleri ve bağlandıkları parça: `src/copy.ts` → `shipCallouts` |
 | Gemi fotoğrafları | `public/img/` (WebP, en fazla 1200 px) |
 | Belge / üyelik görselleri | `public/uploads/` — `src/data.ts` içindeki `img` adıyla aynı dosya konursa kartta "Belgeyi gör" çıkar |
 | CV | `public/cv/Murat_Can_Baskan_CV_EN.pdf` |

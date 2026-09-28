@@ -112,6 +112,16 @@ for (const p of PAGES) {
   });
 }
 
+test("hero shows the blueprint ship and a Project link to bskn.net", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.locator("[data-ship]")).toBeVisible();
+  await expect(page.locator("[data-ship-stage]")).toHaveAttribute("role", "img");
+  const cta = page.locator(".ship__cta");
+  await expect(cta).toHaveText("Proje");
+  expect(await cta.getAttribute("href")).toBe("https://bskn.net/");
+  await expect(page.locator('img[src*="bmms"]')).toHaveCount(0);
+});
+
 test("all images load", async ({ page }) => {
   await page.goto("/");
   const srcs = await page.locator("img[src]:not([src^='data:'])").evaluateAll((els) =>

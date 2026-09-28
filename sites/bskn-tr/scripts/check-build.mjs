@@ -33,8 +33,10 @@ for (const f of readdirSync(assets)) {
   const ext = f.split(".").pop();
   if (ext !== "js" && ext !== "css") continue;
   const size = gz(p);
+  // Gemi sahnesi (Three.js) sonradan yüklenen ayrı parçadır; kendi bütçesi var.
+  const limit = f.startsWith("scene") ? 170 * 1024 : budget[ext];
   console.log(`${("assets/" + f).padEnd(40)} ${kb(size)} gzip`);
-  if (size > budget[ext]) fail.push(`${f} bütçeyi aşıyor (${kb(size)})`);
+  if (size > limit) fail.push(`${f} bütçeyi aşıyor (${kb(size)})`);
 }
 
 for (const f of ["sitemap.xml", "robots.txt", "404.html", "favicon.svg", "og-image.jpg", "cv/Murat_Can_Baskan_CV_EN.pdf"]) {

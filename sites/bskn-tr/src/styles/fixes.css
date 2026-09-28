@@ -418,7 +418,7 @@ div.scp2 {
     font-size: clamp(110px, 11vw, 190px) !important;
   }
   #hero [data-dc-tpl="26"] {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 480px) !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 560px) !important;
     align-items: center !important;
   }
   #hero [data-dc-tpl="28"] {
@@ -557,5 +557,254 @@ div.scp2 {
   #hero [style*="animation"],
   #hero [style*="animation"] * {
     animation: none !important;
+  }
+}
+
+/*
+ * İlk ekran: blueprint gemi (fotoğrafın yerine).
+ * Canlı sahne src/ship/scene.ts; yüklenemezse SVG çizim görünür.
+ */
+.ship {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 11;
+}
+@media (min-width: 1100px) and (hover: hover) and (pointer: fine) {
+  .ship {
+    aspect-ratio: 4 / 3;
+  }
+}
+.ship__stage {
+  position: absolute;
+  inset: 0;
+  color: var(--accent);
+}
+.ship__stage canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.ship__fallback {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transition: opacity 0.6s ease;
+}
+.ship__stage.is-live .ship__fallback {
+  opacity: 0;
+}
+/* Teknik çizim köşe işaretleri */
+.ship::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  --c: color-mix(in srgb, var(--ink) 35%, transparent);
+  background:
+    linear-gradient(var(--c), var(--c)) left top / 14px 1px,
+    linear-gradient(var(--c), var(--c)) left top / 1px 14px,
+    linear-gradient(var(--c), var(--c)) right top / 14px 1px,
+    linear-gradient(var(--c), var(--c)) right top / 1px 14px,
+    linear-gradient(var(--c), var(--c)) left bottom / 14px 1px,
+    linear-gradient(var(--c), var(--c)) left bottom / 1px 14px,
+    linear-gradient(var(--c), var(--c)) right bottom / 14px 1px,
+    linear-gradient(var(--c), var(--c)) right bottom / 1px 14px;
+  background-repeat: no-repeat;
+}
+.ship__hud {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+}
+.ship__leaders {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.ship__lead {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1;
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+.ship__lead--cta {
+  opacity: 0.55;
+  stroke-dasharray: 3 3;
+}
+.ship__dot {
+  fill: var(--accent);
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+.ship__halo {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1;
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+.ship__lead.is-on,
+.ship__dot.is-on {
+  opacity: 0.9;
+}
+.ship__halo.is-on {
+  opacity: 0.4;
+}
+.ship__label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding: 3px 7px 3px 8px;
+  border-left: 2px solid var(--accent);
+  background: color-mix(in srgb, var(--paper) 78%, transparent);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--accent-ink);
+  opacity: 0;
+  transition: opacity 0.9s ease;
+  will-change: transform;
+}
+.ship__label.is-on {
+  opacity: 1;
+}
+.ship__note {
+  position: absolute;
+  right: 8px;
+  bottom: 6px;
+  z-index: 2;
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  opacity: 0.8;
+}
+@media (max-width: 480px) {
+  .ship__label {
+    font-size: 9px;
+    letter-spacing: 0.08em;
+  }
+}
+/* Gemi varken arkadaki büyük "2007" çizimle çakışmasın. */
+#hero:has(.ship) [data-dc-tpl="25"] {
+  display: none;
+}
+.ship__cta {
+  position: absolute;
+  z-index: 3;
+  left: 5%;
+  bottom: 8%;
+  display: inline-flex;
+  align-items: center;
+  padding: 9px 16px;
+  background: var(--accent);
+  color: var(--color-bg);
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 13px;
+  line-height: 1.15;
+  text-decoration: none;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+.ship__cta:hover,
+.ship__cta:focus-visible {
+  background: var(--ink);
+  color: var(--paper);
+}
+@media (prefers-reduced-motion: reduce) {
+  .ship__label,
+  .ship__lead,
+  .ship__dot,
+  .ship__halo {
+    transition: none;
+  }
+}
+
+/*
+ * Geniş ekranda (yan yana düzen) gemi ilk ekranın arka planına yayılır:
+ * isimin altından sağ kenara, ilk ekranın tüm yüksekliğine. Yazılar üstte sabit
+ * kalır; altlarına denk gelen çizgiler soluklaşır, yazıların etrafında zemin
+ * renginde hafif bir hale vardır. Dar ekranda gemi yazıların altında kendi kutusundadır.
+ */
+@media (min-width: 900px) {
+  #hero [data-dc-tpl="26"] {
+    position: static !important;
+  }
+  #hero [data-dc-tpl="44"] {
+    position: static !important;
+    animation: none !important;
+  }
+  #hero [data-dc-tpl="27"] {
+    position: relative;
+    z-index: 2;
+  }
+  #hero .ship {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 18%;
+    right: 0;
+    width: auto;
+    aspect-ratio: auto;
+    z-index: 0;
+    animation: shipIn 1.4s ease 0.3s both;
+  }
+  #hero .ship__stage {
+    -webkit-mask-image: linear-gradient(to right, rgb(0 0 0 / 0.3) 0%, rgb(0 0 0 / 0.55) 22%, #000 42%);
+    mask-image: linear-gradient(to right, rgb(0 0 0 / 0.3) 0%, rgb(0 0 0 / 0.55) 22%, #000 42%);
+  }
+  #hero .ship::before {
+    /* Köşe işaretleri yalnızca sağda (solda yazılar var) */
+    background:
+      linear-gradient(var(--c), var(--c)) right 14px top 14px / 14px 1px,
+      linear-gradient(var(--c), var(--c)) right 14px top 14px / 1px 14px,
+      linear-gradient(var(--c), var(--c)) right 14px bottom 14px / 14px 1px,
+      linear-gradient(var(--c), var(--c)) right 14px bottom 14px / 1px 14px;
+    background-repeat: no-repeat;
+  }
+  #hero .ship__cta {
+    left: auto;
+    right: 40px;
+    top: 36px;
+    bottom: auto;
+  }
+  #hero .ship__note {
+    right: 34px;
+    bottom: 18px;
+  }
+  #hero [data-dc-tpl="31"],
+  #hero [data-dc-tpl="36"],
+  #hero [data-dc-tpl="30"],
+  #hero [data-dc-tpl="43"] {
+    text-shadow:
+      0 0 2px var(--paper),
+      0 0 10px var(--paper),
+      0 0 18px var(--paper);
+  }
+}
+@keyframes shipIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #hero .ship {
+    animation: none;
   }
 }
