@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f3f2f2">
+    <script>
+      // Eski sitedeki gibi: görünür olunca beliren öğeler. JS yüklenmezse 2,5 sn sonra her şey görünür.
+      if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        document.documentElement.setAttribute("data-anim", "");
+        setTimeout(function () { if (!window.__bskn) document.documentElement.removeAttribute("data-anim"); }, 2500);
+      }
+    </script>
+    <!--HEAD-->
+    <script type="module" src="/src/main.ts"></script>
+  </head>
+  <body data-lang="en" data-theme="light">
+    <script>
+      try { var p = JSON.parse(localStorage.getItem("mcb.prefs") || "{}"); if (p.dark) document.body.setAttribute("data-theme", "dark"); } catch (e) {}
+    </script>
+    <!--BODY-->
+  </body>
+</html>

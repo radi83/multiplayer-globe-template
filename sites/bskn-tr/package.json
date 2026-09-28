@@ -1,0 +1,23 @@
+{
+  "name": "bskn-tr",
+  "private": true,
+  "version": "1.0.0",
+  "description": "bskn.tr — Murat Can Başkan, Uzakyol Baş Mühendisi: kariyer sitesi",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && node scripts/check-build.mjs",
+    "preview": "vite preview --port 4174 --strictPort",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "playwright test",
+    "check": "npm run typecheck && npm run build && npm test",
+    "deploy": "npm run build && wrangler deploy"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0",
+    "@types/node": "22.20.4",
+    "typescript": "5.9.3",
+    "vite": "8.3.1",
+    "wrangler": "4.141.0"
+  }
+}
