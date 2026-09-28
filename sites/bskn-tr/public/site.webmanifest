@@ -1,0 +1,12 @@
+{
+  "name": "Murat Can Başkan — Uzakyol Baş Mühendisi",
+  "short_name": "bskn.tr",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#f1f1ef",
+  "theme_color": "#d93a1f",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

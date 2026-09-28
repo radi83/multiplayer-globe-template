@@ -83,3 +83,4 @@ docs/                         Tasarım, içerik kaynakları, yayın
 - [İçerik kaynakları ve doğrulama](docs/CONTENT_SOURCES.md)
 - [Yayın (Cloudflare) ve geri alma](docs/DEPLOY.md)
 - [SEO ve Search Console](docs/SEO.md)
+- [bskn.tr kariyer sitesi (ayrı proje)](sites/bskn-tr/README.md)
