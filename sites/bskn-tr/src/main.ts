@@ -4,7 +4,7 @@ import "./styles/fixes.css";
 
 /*
  * Eski sitenin (Claude Design) davranışları, React çalışma zamanı olmadan:
- * tema, kariyer süzgeci, kaydırınca dönen kartlar, belirme, sayaçlar,
+ * tema, kariyer süzgeci, tıklayınca açılan kartlar, belirme, sayaçlar,
  * ilerleme çubuğu, paralaks, zaman çizgisi ve belge büyütme.
  */
 
@@ -130,7 +130,7 @@ function initReveal(): void {
   els.forEach((el) => io.observe(el));
 }
 
-/* ---------- Kaydırmaya bağlı: ilerleme, paralaks, dönen kart, çizgi ---------- */
+/* ---------- Kaydırmaya bağlı: ilerleme, paralaks, çizgi ---------- */
 
 const bar = document.querySelector<HTMLElement>("[data-progress]");
 const pars = Array.from(document.querySelectorAll<HTMLElement>("[data-par]"));
@@ -153,21 +153,6 @@ function frame(): void {
       el.style.transform = `translate3d(0,${(-off * f).toFixed(1)}px,0)`;
     });
   }
-  // Odak çizgisine en yakın kart döner (eski sitedeki "scroll flip").
-  const focusY = vh * 0.52;
-  let best: HTMLElement | null = null;
-  let bestDist = Infinity;
-  cards.forEach((card) => {
-    card.removeAttribute("data-scroll-flip");
-    const rc = card.getBoundingClientRect();
-    if (rc.height === 0 || rc.bottom < 0 || rc.top > vh) return;
-    const dist = Math.abs(rc.top + rc.height / 2 - focusY);
-    if (dist < bestDist) {
-      bestDist = dist;
-      best = card;
-    }
-  });
-  if (best && bestDist < vh * 0.235) (best as HTMLElement).setAttribute("data-scroll-flip", "1");
   if (line?.parentElement) {
     const rc = line.parentElement.getBoundingClientRect();
     const p = Math.max(0, Math.min(1, (vh * 0.72 - rc.top) / Math.max(1, rc.height)));
@@ -179,6 +164,39 @@ function onScroll(): void {
   if (queued) return;
   queued = true;
   requestAnimationFrame(frame);
+}
+
+/* ---------- Deneyim kartları: tıklayınca arka yüz (dönme yok) ---------- */
+
+function initCards(): void {
+  const toggle = (card: HTMLElement): void => {
+    const open = card.getAttribute("data-open") !== "1";
+    card.setAttribute("data-open", open ? "1" : "0");
+    card.setAttribute("aria-expanded", String(open));
+  };
+  cards.forEach((card) => {
+    card.addEventListener("click", () => toggle(card));
+    card.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        toggle(card);
+      } else if (e.key === "Escape" && card.getAttribute("data-open") === "1") {
+        toggle(card);
+      }
+    });
+  });
+  // Bir kez ipucu: ilk kart göründüğünde "+" iki kez hafif halka yayar.
+  const first = cards[0]?.querySelector<HTMLElement>(".peek__plus");
+  if (!first || reduced || !("IntersectionObserver" in window)) return;
+  const io = new IntersectionObserver(
+    (entries) => {
+      if (!entries.some((e) => e.isIntersecting)) return;
+      io.disconnect();
+      setTimeout(() => first.classList.add("is-nudge"), 600);
+    },
+    { threshold: 0.6 },
+  );
+  io.observe(first);
 }
 
 /* ---------- Belge büyütme ---------- */
@@ -216,6 +234,7 @@ function initZoom(): void {
 initTheme();
 initFilters();
 initReveal();
+initCards();
 initZoom();
 frame();
 addEventListener("scroll", onScroll, { passive: true });

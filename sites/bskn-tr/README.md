@@ -5,7 +5,7 @@ kariyer sitesi. Aynı repodaki bskn.net (BMMS tanıtım sitesi) projesinden
 bağımsızdır; kendi paketi, derlemesi ve Cloudflare Worker'ı vardır.
 
 **Görünüm eski bskn.tr sitesiyle birebir aynıdır.** Eski site Claude Design ile
-yapılmıştı; elimizdeki kopya (59d204b7, dönen kartlı sürüm) çalışmayan bir
+yapılmıştı; elimizdeki kopya (59d204b7) çalışmayan bir
 "sayfa fotoğrafı" olduğu için aynı tasarım burada yeniden kuruldu:
 
 - Eski sitenin stil dosyaları aynen kullanılır: `src/styles/modernist.css`
@@ -13,12 +13,15 @@ yapılmıştı; elimizdeki kopya (59d204b7, dönen kartlı sürüm) çalışmaya
 - HTML aynı yapı ve satır içi stillerle üretilir (`data-dc-tpl` öznitelikleri
   korunur, çünkü eski stiller onlara bağlıdır).
 - React çalışma zamanı yerine küçük bir betik (`src/main.ts`) aynı davranışları
-  sağlar: tema, filtre, kaydırınca dönen kartlar, belirme, sayaçlar, paralaks.
+  sağlar: tema, filtre, tıklayınca arka yüzü açılan kartlar, belirme, sayaçlar, paralaks.
 
 Eski siteye göre yapılan düzeltmeler (`src/styles/fixes.css`):
 
 - İsim iPad'de 3 satıra bölünüyordu → tek satır.
 - Üyelik ve belge kartlarının altında boş gri hücreler kalıyordu → kaldırıldı.
+- Deneyim kartları artık dönmüyor (mide bulandırıyordu): tıklayınca doğrudan arka yüz
+  açılır; kartın sağındaki küçük gemi fotoğrafı + "Detay +" sekmesi tıklanabilir
+  olduğunu gösterir, ilk kartta "+" bir kez hafifçe halka yayar.
 - Tasarım aracından kalan "Direction / Yön A–B" düğmesi kaldırıldı.
 - Telefonda üst şerit sayfayı yana taşırıyordu → düzeltildi.
 - İçerik güncel CV'ye göre güncellendi (yıllar, 17 görev, yeni sertifikalar,

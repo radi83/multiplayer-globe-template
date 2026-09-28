@@ -48,7 +48,6 @@ html[data-anim] [data-reveal]{opacity:0;transform:translateY(48px) scale(.988)}
    ========================================================= */
 
 #kariyer [data-dc-tpl="66"]{
-  perspective:1600px;
   margin-bottom:clamp(10px,1.2vw,18px);
 }
 
@@ -62,9 +61,7 @@ html[data-anim] [data-reveal]{opacity:0;transform:translateY(48px) scale(.988)}
   border:0 !important;
   background:transparent !important;
   overflow:visible !important;
-  cursor:default !important;
-  transform-style:preserve-3d;
-  -webkit-transform-style:preserve-3d;
+  cursor:pointer !important;
   text-align:left;
 }
 
@@ -87,19 +84,14 @@ html[data-anim] [data-reveal]{opacity:0;transform:translateY(48px) scale(.988)}
   width:auto !important;
   height:auto !important;
   margin:0 !important;
-  opacity:1 !important;
   border-top:2px solid var(--rule);
   background:var(--paper);
-  backface-visibility:hidden;
-  -webkit-backface-visibility:hidden;
-  transform-style:preserve-3d;
-  -webkit-transform-style:preserve-3d;
+  /* Dönme yok: iki yüz yerinde, yalnızca kısa bir geçişle yer değiştirir. */
   transition:
-    transform .78s cubic-bezier(.2,.75,.2,1),
-    border-color .45s ease,
-    box-shadow .45s ease,
-    background .45s ease !important;
-  will-change:transform;
+    opacity .22s ease,
+    visibility .22s ease,
+    border-color .3s ease,
+    box-shadow .3s ease !important;
 }
 
 /* FRONT */
@@ -109,14 +101,16 @@ html[data-anim] [data-reveal]{opacity:0;transform:translateY(48px) scale(.988)}
   gap:clamp(12px,2.4vw,36px) !important;
   align-items:center !important;
   padding:clamp(28px,4vw,54px) clamp(20px,3vw,40px) !important;
-  transform:rotateY(0deg);
+  opacity:1 !important;
+  visibility:visible;
 }
 
 /* BACK */
 #kariyer [data-dc-tpl="67"] > [data-dc-tpl="75"]{
   display:block !important;
   grid-template-rows:1fr !important;
-  transform:rotateY(180deg);
+  opacity:0 !important;
+  visibility:hidden;
   overflow:hidden !important;
   padding:clamp(14px,1.8vw,22px) !important;
   background:color-mix(in srgb,var(--surface) 74%,var(--paper));
@@ -181,38 +175,20 @@ html[data-anim] [data-reveal]{opacity:0;transform:translateY(48px) scale(.988)}
   margin-top:clamp(13px,1.6vw,22px) !important;
 }
 
-/* SCROLL FLIP */
-#kariyer [data-dc-tpl="67"][data-scroll-flip="1"] > [data-dc-tpl="69"]{
-  transform:rotateY(-180deg);
-  border-color:var(--accent);
+/* AÇIK KART: tıklanınca ön yüz gizlenir, arka yüz görünür (dönme yok). */
+#kariyer [data-dc-tpl="67"][data-open="1"] > [data-dc-tpl="69"]{
+  opacity:0 !important;
+  visibility:hidden;
 }
-#kariyer [data-dc-tpl="67"][data-scroll-flip="1"] > [data-dc-tpl="75"]{
-  transform:rotateY(0deg);
+#kariyer [data-dc-tpl="67"][data-open="1"] > [data-dc-tpl="75"]{
+  opacity:1 !important;
+  visibility:visible;
   border-color:var(--accent);
   box-shadow:0 18px 48px color-mix(in srgb,var(--ink) 10%,transparent);
 }
-#kariyer [data-dc-tpl="67"][data-scroll-flip="1"] > [data-dc-tpl="75"] [data-dc-tpl="79"]{
+#kariyer [data-dc-tpl="67"][data-open="1"] > [data-dc-tpl="75"] [data-dc-tpl="79"]{
   transform:scale(1) !important;
   filter:grayscale(0) contrast(1.04) !important;
-}
-
-/* Desktop pointer: hovered card may be inspected regardless of scroll focus. */
-@media (hover:hover) and (pointer:fine){
-  #kariyer [data-dc-tpl="67"]:hover > [data-dc-tpl="69"],
-  #kariyer [data-dc-tpl="67"]:focus-visible > [data-dc-tpl="69"]{
-    transform:rotateY(-180deg);
-    border-color:var(--accent);
-  }
-  #kariyer [data-dc-tpl="67"]:hover > [data-dc-tpl="75"],
-  #kariyer [data-dc-tpl="67"]:focus-visible > [data-dc-tpl="75"]{
-    transform:rotateY(0deg);
-    border-color:var(--accent);
-    box-shadow:0 18px 48px color-mix(in srgb,var(--ink) 10%,transparent);
-  }
-  #kariyer [data-dc-tpl="67"]:hover > [data-dc-tpl="75"] [data-dc-tpl="79"]{
-    transform:scale(1) !important;
-    filter:grayscale(0) contrast(1.04) !important;
-  }
 }
 
 /* iPad / mobile: preserve the same two-sided behavior in a taller footprint. */
@@ -260,7 +236,7 @@ html[data-anim] [data-reveal]{opacity:0;transform:translateY(48px) scale(.988)}
   }
 }
 
-/* Reduced motion: keep the information accessible without 3D rotation. */
+/* Reduced motion: geçiş de kapatılır. */
 @media (prefers-reduced-motion:reduce){
   #kariyer [data-dc-tpl="67"] > [data-dc-tpl="69"],
   #kariyer [data-dc-tpl="67"] > [data-dc-tpl="75"]{
