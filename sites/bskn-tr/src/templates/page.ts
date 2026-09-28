@@ -244,9 +244,7 @@ function post(p: Post, lang: Lang, idx: number, c: Copy): string {
 <div class="scp2" data-dc-tpl="67" tabindex="0" role="button" aria-expanded="false" style="position: relative; display: block; width: 100%; text-align: left; border-top: 2px solid var(--rule); background: none; padding: calc(var(--leading)*0.9) 0 calc(var(--leading)*0.9) clamp(16px,3vw,40px);">
 <span aria-hidden="true" data-dc-tpl="68" style="position: absolute; left: 0px; top: calc(var(--leading)*0.9 + 6px); width: 10px; height: 10px; background: var(--accent); transform: scale(1) rotate(0deg); transition: transform 0.55s cubic-bezier(0.2, 0.7, 0.2, 1);"></span>
 <span data-dc-tpl="69" style="display: grid; grid-template-columns: minmax(128px, 13%) minmax(0px, 1fr); gap: clamp(12px, 2.4vw, 36px); align-items: start;">
-<span data-dc-tpl="70" style='font-family: var(--font-heading); font-weight: 800; font-size: ${yearSize}; line-height: 1.05; letter-spacing: -0.03em; color: var(--ink); white-space: nowrap; font-feature-settings: "tnum";'><span class="peek__plus" aria-hidden="true">+</span>${i(
-    p.years,
-  )}</span>
+<span data-dc-tpl="70" style='font-family: var(--font-heading); font-weight: 800; font-size: ${yearSize}; line-height: 1.05; letter-spacing: -0.03em; color: var(--ink); white-space: nowrap; font-feature-settings: "tnum";'>${i(p.years)}</span>
 <span data-dc-tpl="71" style="display: block; min-width: 0px;">
 <span data-dc-tpl="72" style="display: block; font-family: var(--font-heading); font-weight: 800; font-size: clamp(19px, 1.8vw, 24px); line-height: 1.14; letter-spacing: -0.02em; color: var(--ink);">${i(
     p.role[lang],
@@ -256,6 +254,7 @@ function post(p: Post, lang: Lang, idx: number, c: Copy): string {
     p.short[lang],
   )}</span>
 </span>
+<span class="peek__plus" aria-hidden="true">+</span>
 </span>
 <span data-dc-tpl="75" style="display: grid; grid-template-rows: 0fr;">
 <span class="peek-close" aria-hidden="true">× ${esc(c.closeCard)}</span>
