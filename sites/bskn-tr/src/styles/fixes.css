@@ -341,3 +341,117 @@ div.scp2 {
     animation: none;
   }
 }
+
+/*
+ * Bilgisayar (fare + geniş ekran): daha zarif ölçek.
+ * iPad ve telefon bu kuralları almaz (dokunmatik / dar ekran).
+ */
+@media (min-width: 1100px) and (hover: hover) and (pointer: fine) {
+  body {
+    --edge: clamp(32px, 6vw, 96px);
+    --leading: 26px;
+  }
+  /* İçerik genişliği; üst şerit de aynı hizaya çekilir */
+  [style*="max-width: 1440px"] {
+    max-width: 1240px !important;
+  }
+  .nav[data-dc-tpl="7"] {
+    padding-inline: calc(max(0px, (100% - 1240px) / 2) + var(--edge)) !important;
+  }
+  /* Belge kartları: içerik kadar yükseklik */
+  [data-dc-tpl="124"] {
+    min-height: 0 !important;
+    padding: 18px 18px 20px !important;
+  }
+  /* İlk ekran */
+  #hero [data-dc-tpl="31"] {
+    font-size: clamp(46px, 5vw, 76px) !important;
+  }
+  #hero [data-dc-tpl="25"] {
+    font-size: clamp(120px, 15vw, 240px) !important;
+  }
+  #hero [data-dc-tpl="36"] {
+    font-size: 17px !important;
+  }
+  #hero [data-dc-tpl="26"] {
+    align-items: center !important;
+  }
+  /* Rakamlar */
+  [data-dc-tpl="52"] {
+    font-size: clamp(36px, 3vw, 48px) !important;
+  }
+  /* Bölüm başlıkları */
+  #kariyer [data-dc-tpl="58"] {
+    font-size: clamp(30px, 2.8vw, 40px) !important;
+  }
+  [data-dc-tpl="94"],
+  [data-dc-tpl="106"],
+  [data-dc-tpl="120"] {
+    font-size: clamp(26px, 2.2vw, 32px) !important;
+  }
+  [data-dc-tpl="142"] {
+    font-size: clamp(32px, 3.6vw, 52px) !important;
+  }
+  /* Deneyim kartı: kapalı */
+  #kariyer [data-dc-tpl="67"] > [data-dc-tpl="69"] {
+    grid-template-columns: 170px minmax(0, 1fr) !important;
+    padding-top: 22px !important;
+    padding-bottom: 22px !important;
+  }
+  #kariyer [data-dc-tpl="70"] {
+    font-size: 26px !important;
+  }
+  #kariyer [data-dc-tpl="70"] .sc-interp {
+    font-size: inherit;
+  }
+  #kariyer [data-dc-tpl="72"] {
+    font-size: 19px !important;
+  }
+  #kariyer [data-dc-tpl="74"] {
+    font-size: 14.5px !important;
+  }
+  .peek__plus {
+    width: 24px;
+    height: 24px;
+    font-size: 15px;
+  }
+  /* Deneyim kartı: açık — küçük fotoğraf, sakin gölge */
+  #kariyer [data-dc-tpl="67"] > [data-dc-tpl="75"] {
+    padding: 16px !important;
+  }
+  #kariyer [data-dc-tpl="67"][data-open="1"] > [data-dc-tpl="75"] {
+    box-shadow: 0 6px 20px color-mix(in srgb, var(--ink) 6%, transparent) !important;
+  }
+  #kariyer [data-dc-tpl="77"] {
+    grid-template-columns: 280px minmax(0, 1fr) !important;
+    gap: 28px !important;
+    align-items: center !important;
+  }
+  #kariyer [data-dc-tpl="79"] {
+    aspect-ratio: 3 / 2 !important;
+  }
+  #kariyer [data-dc-tpl="84"] {
+    font-size: 15px !important;
+    line-height: 1.6 !important;
+    max-width: 62ch !important;
+  }
+  #kariyer [data-dc-tpl="85"] {
+    margin-top: 14px !important;
+  }
+  #kariyer [data-dc-tpl="87"] {
+    padding: 4px 8px !important;
+    font-size: 10.5px !important;
+  }
+  #kariyer [data-dc-tpl="75"] .peek-close {
+    padding: 4px 8px;
+    font-size: 10.5px;
+  }
+}
+
+/* "Hareketi azalt" açıksa ilk ekrandaki açılış animasyonları da kapanır. */
+@media (prefers-reduced-motion: reduce) {
+  #hero [style*="animation"],
+  #hero [style*="animation"] * {
+    animation: none !important;
+  }
+}
