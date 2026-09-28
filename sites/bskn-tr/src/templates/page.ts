@@ -195,15 +195,11 @@ function hero(lang: Lang, c: Copy): string {
 </div>
 </div>
 <figure data-dc-tpl="44" style="margin: 0px; min-width: 0px; animation: 1s cubic-bezier(0.16, 0.8, 0.24, 1) 0.34s both mcbRise;">
-<div class="ship" data-ship="" data-phrases="${esc(JSON.stringify(c.shipPhrases))}">
+<div class="ship" data-ship="" data-callouts="${esc(JSON.stringify(c.shipCallouts))}">
 <div class="ship__stage" data-ship-stage="" role="img" aria-label="${esc(c.shipLabel)}">${SHIP_SVG}</div>
-<span class="ship__phrase" data-ship-slot="" style="left: 2%; top: 8%;" aria-hidden="true"></span>
-<span class="ship__phrase" data-ship-slot="" style="right: 4%; top: 18%;" aria-hidden="true"></span>
-<span class="ship__phrase" data-ship-slot="" style="left: 44%; top: 4%;" aria-hidden="true"></span>
-<span class="ship__phrase" data-ship-slot="" style="right: 3%; top: 52%;" aria-hidden="true"></span>
-<a class="ship__cta" href="${PERSON.projectSite}${lang === "en" ? "/en/" : "/"}" hreflang="${lang}"><span class="ship__cta-t">${esc(
-    c.shipCta,
-  )}</span><span class="ship__cta-s">${esc(c.shipCtaSub)} →</span></a>
+<div class="ship__hud" data-ship-hud=""></div>
+<span class="ship__note" aria-hidden="true">${esc(c.shipNote)}</span>
+<a class="ship__cta" href="${PERSON.projectSite}${lang === "en" ? "/en/" : "/"}" hreflang="${lang}">${esc(c.shipCta)}</a>
 </div>
 </figure>
 </div>

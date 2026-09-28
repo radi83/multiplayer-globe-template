@@ -117,7 +117,7 @@ test("hero shows the blueprint ship and a Project link to bskn.net", async ({ pa
   await expect(page.locator("[data-ship]")).toBeVisible();
   await expect(page.locator("[data-ship-stage]")).toHaveAttribute("role", "img");
   const cta = page.locator(".ship__cta");
-  await expect(cta).toContainText("Proje");
+  await expect(cta).toHaveText("Proje");
   expect(await cta.getAttribute("href")).toBe("https://bskn.net/");
   await expect(page.locator('img[src*="bmms"]')).toHaveCount(0);
 });

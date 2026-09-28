@@ -418,7 +418,7 @@ div.scp2 {
     font-size: clamp(110px, 11vw, 190px) !important;
   }
   #hero [data-dc-tpl="26"] {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 480px) !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 560px) !important;
     align-items: center !important;
   }
   #hero [data-dc-tpl="28"] {
@@ -569,6 +569,11 @@ div.scp2 {
   width: 100%;
   aspect-ratio: 16 / 11;
 }
+@media (min-width: 1100px) and (hover: hover) and (pointer: fine) {
+  .ship {
+    aspect-ratio: 4 / 3;
+  }
+}
 .ship__stage {
   position: absolute;
   inset: 0;
@@ -591,36 +596,107 @@ div.scp2 {
 .ship__stage.is-live .ship__fallback {
   opacity: 0;
 }
-.ship__phrase {
+/* Teknik çizim köşe işaretleri */
+.ship::before {
+  content: "";
   position: absolute;
+  inset: 0;
+  pointer-events: none;
+  --c: color-mix(in srgb, var(--ink) 35%, transparent);
+  background:
+    linear-gradient(var(--c), var(--c)) left top / 14px 1px,
+    linear-gradient(var(--c), var(--c)) left top / 1px 14px,
+    linear-gradient(var(--c), var(--c)) right top / 14px 1px,
+    linear-gradient(var(--c), var(--c)) right top / 1px 14px,
+    linear-gradient(var(--c), var(--c)) left bottom / 14px 1px,
+    linear-gradient(var(--c), var(--c)) left bottom / 1px 14px,
+    linear-gradient(var(--c), var(--c)) right bottom / 14px 1px,
+    linear-gradient(var(--c), var(--c)) right bottom / 1px 14px;
+  background-repeat: no-repeat;
+}
+.ship__hud {
+  position: absolute;
+  inset: 0;
   z-index: 2;
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 10.5px;
+  pointer-events: none;
+  overflow: hidden;
+}
+.ship__leaders {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.ship__lead {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1;
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+.ship__lead--cta {
+  opacity: 0.55;
+  stroke-dasharray: 3 3;
+}
+.ship__dot {
+  fill: var(--accent);
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+.ship__halo {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1;
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+.ship__lead.is-on,
+.ship__dot.is-on {
+  opacity: 0.9;
+}
+.ship__halo.is-on {
+  opacity: 0.4;
+}
+.ship__label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding: 3px 7px 3px 8px;
+  border-left: 2px solid var(--accent);
+  background: color-mix(in srgb, var(--paper) 78%, transparent);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  font-size: 10px;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
+  line-height: 1.4;
   text-transform: uppercase;
   white-space: nowrap;
   color: var(--accent-ink);
   opacity: 0;
-  transform: translateY(4px);
-  transition: opacity 1.1s ease, transform 1.1s ease;
-  pointer-events: none;
+  transition: opacity 0.9s ease;
+  will-change: transform;
 }
-.ship__phrase::before {
-  content: "";
-  width: 6px;
-  height: 6px;
-  background: var(--accent);
-  flex: none;
+.ship__label.is-on {
+  opacity: 1;
 }
-.ship__phrase:empty {
-  display: none;
+.ship__note {
+  position: absolute;
+  right: 8px;
+  bottom: 6px;
+  z-index: 2;
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  opacity: 0.8;
 }
-.ship__phrase.is-on {
-  opacity: 0.9;
-  transform: none;
+@media (max-width: 480px) {
+  .ship__label {
+    font-size: 9px;
+    letter-spacing: 0.08em;
+  }
 }
 /* Gemi varken arkadaki büyük "2007" çizimle çakışmasın. */
 #hero:has(.ship) [data-dc-tpl="25"] {
@@ -629,12 +705,11 @@ div.scp2 {
 .ship__cta {
   position: absolute;
   z-index: 3;
-  left: 6%;
-  bottom: 9%;
+  left: 5%;
+  bottom: 8%;
   display: inline-flex;
-  flex-direction: column;
-  gap: 3px;
-  padding: 10px 14px;
+  align-items: center;
+  padding: 9px 16px;
   background: var(--accent);
   color: var(--color-bg);
   font-family: var(--font-heading);
@@ -644,31 +719,16 @@ div.scp2 {
   text-decoration: none;
   transition: background-color 0.25s ease, color 0.25s ease;
 }
-.ship__cta::before {
-  /* Düğmeden gemiye uzanan ince çizgi */
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: 100%;
-  width: 1px;
-  height: 28px;
-  background: var(--accent);
-}
-.ship__cta-s {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  opacity: 0.9;
-}
 .ship__cta:hover,
 .ship__cta:focus-visible {
   background: var(--ink);
   color: var(--paper);
 }
 @media (prefers-reduced-motion: reduce) {
-  .ship__phrase {
+  .ship__label,
+  .ship__lead,
+  .ship__dot,
+  .ship__halo {
     transition: none;
-    transform: none;
   }
 }

@@ -1,34 +1,47 @@
 /**
  * Blueprint gemi sahnesi (Three.js).
  *
- * Tel kafes bir dökme yük gemisi, şeffaf dalgalı bir denizde sol üstten
- * ~45° görülür. Baş taraf dalgaya çarpıyormuş gibi yavaşça kalkıp iner;
- * çevresinde dönen bir pusula halkası, yükselen küçük veri kareleri ve
- * baş dalgası çizgileri vardır.
+ * - Gemi: hull.ts'deki çizgiler; su altında kalan kısım soluklaşır (dalgayla birlikte),
+ *   boyuna ilerleyen bir tarama düzlemi geçtiği kesiti parlatır, iç yapı (makine
+ *   dairesi, perdeler) soluk "röntgen" tonunda görünür.
+ * - Deniz: çizgi ızgarası + dalga eş-yükselti çizgileri; geminin ilerleyişine göre
+ *   kayar, kıçta Kelvin izi, başta baş dalgası vardır.
+ * - Yazılar: geminin ilgili parçasına ince bir çizgiyle bağlı etiketler belirip söner.
  *
- * Hareket bilerek küçük ve yavaştır (kullanıcı geri bildirimi: kartlardaki
- * dönme mide bulandırıyordu). "Hareketi azalt" açıksa tek bir sabit kare çizilir.
- *
- * Gemi genel bir çizimdir; belirli bir geminin gerçek ölçülerini göstermez.
+ * Hareket bilerek küçük ve yavaştır. "Hareketi azalt" açıksa tek sabit kare çizilir.
+ * Gemi temsili bir çizimdir; belirli bir geminin ölçülerini göstermez.
  */
 import {
+  AdditiveBlending,
   BufferGeometry,
   Color,
   Float32BufferAttribute,
-  Fog,
   Group,
-  LineBasicMaterial,
   LineSegments,
+  Mesh,
+  NormalBlending,
   PerspectiveCamera,
+  PlaneGeometry,
   Scene,
+  ShaderMaterial,
+  Vector3,
   WebGLRenderer,
-  type BufferAttribute,
 } from "three";
+import { B, D, T, PROP, RADAR, buildShip, sternX, stemX, type Draw, type V3 } from "./hull.ts";
 
 export interface ShipColors {
   accent: string;
+  hot: string;
   ink: string;
   bg: string;
+  dark: boolean;
+}
+
+export interface Callout {
+  at: string;
+  text: string;
+  /** Büyük harf dönüşümü için (ör. İngilizce marka adı Türkçe sayfada) */
+  lang?: string;
 }
 
 export interface ShipHandle {
@@ -37,379 +50,536 @@ export interface ShipHandle {
   dispose(): void;
 }
 
-/* ---------------- ölçüler (sahne birimi) ---------------- */
+/* ---------------- gölgelendiriciler ---------------- */
 
-const D = 1.0; // güverte yüksekliği
-const T = 0.62; // su çekimi
-const B = 1.7; // genişlik
-const MID_FWD = 2.4; // paralel gövdenin baş ucu
-const MID_AFT = -3.0; // paralel gövdenin kıç ucu
+const WAVE = /* glsl */ `
+float wave(vec2 p, float t) {
+  return 0.045 * sin(0.85 * p.x + 1.0 * t)
+       + 0.03 * sin(1.3 * p.y - 0.75 * t + 1.3)
+       + 0.016 * sin(2.1 * (0.6 * p.x + 0.8 * p.y) + 1.7 * t);
+}`;
 
-const xBow = (y: number): number => 4.75 + 0.32 * (y / D);
-const xStern = (y: number): number => -4.3 - 0.6 * Math.min(1, y / (0.45 * D));
+const LINE_VERT = /* glsl */ `
+attribute float aW;
+attribute float aK;
+uniform float uTime;
+uniform float uScan;
+uniform float uOffX;
+uniform float uScanOn;
+varying float vA;
+varying float vK;
+varying float vScan;
+varying float vWet;
+varying float vFade;
+${WAVE}
+void main() {
+  vec4 wp = modelMatrix * vec4(position, 1.0);
+  float h = wave(wp.xz, uTime);
+  vWet = smoothstep(0.015, -0.05, wp.y - h);
+  float sx = position.x + uOffX;
+  vScan = uScanOn * exp(-pow((sx - uScan) / 0.3, 2.0));
+  vA = aW;
+  vK = aK;
+  vec4 mv = viewMatrix * wp;
+  vFade = smoothstep(30.0, 15.0, -mv.z);
+  gl_Position = projectionMatrix * mv;
+}`;
 
-/** Gövdenin yarı genişliği: x boyuna, y yükseklik. */
-function halfBreadth(x: number, y: number): number {
-  const yy = Math.max(0, Math.min(1, y / D));
-  let hb = B / 2;
-  if (x > MID_FWD) {
-    const f = Math.min(1, (x - MID_FWD) / (xBow(y) - MID_FWD));
-    hb *= (1 - Math.pow(f, 1.7)) * (1 - f * (1 - yy) * 0.45);
-  } else if (x < MID_AFT) {
-    const g = Math.min(1, (MID_AFT - x) / (MID_AFT - xStern(y)));
-    hb *= (1 - 0.22 * g * g) * (1 - g * Math.pow(1 - yy, 2) * 0.85);
-  }
-  const bilge = yy < 0.12 ? 0.8 + 0.2 * (yy / 0.12) : 1;
-  return Math.max(0, hb * bilge);
+const LINE_FRAG = /* glsl */ `
+uniform vec3 uAccent;
+uniform vec3 uHot;
+uniform vec3 uGhost;
+uniform float uAlpha;
+varying float vA;
+varying float vK;
+varying float vScan;
+varying float vWet;
+varying float vFade;
+void main() {
+  vec3 base = mix(uAccent, uGhost, vK);
+  float a = vA * mix(1.0, 0.3, vWet) * vFade;
+  float s = vScan * (1.0 - 0.4 * vK);
+  vec3 col = mix(base, uHot, clamp(s, 0.0, 1.0));
+  a = min(1.0, a + s * 0.55 * (0.35 + vA));
+  gl_FragColor = vec4(col, a * uAlpha);
+}`;
+
+const SEA_VERT = /* glsl */ `
+uniform float uTime;
+varying vec2 vP;
+varying float vH;
+${WAVE}
+void main() {
+  vec4 wp = modelMatrix * vec4(position, 1.0);
+  float h = wave(wp.xz, uTime);
+  wp.y += h;
+  vP = position.xz;
+  vH = h;
+  gl_Position = projectionMatrix * viewMatrix * wp;
+}`;
+
+const SEA_FRAG = /* glsl */ `
+uniform vec3 uLine;
+uniform vec3 uAccent;
+uniform float uTime;
+uniform float uDip;
+uniform float uAlpha;
+uniform float uStern;
+uniform float uBow;
+varying vec2 vP;
+varying float vH;
+float gridLine(vec2 p, float cell) {
+  vec2 q = p / cell;
+  vec2 g = abs(fract(q - 0.5) - 0.5) / fwidth(q);
+  return 1.0 - min(min(g.x, g.y), 1.0);
 }
-
-/* ---------------- çizgi toplama ---------------- */
-
-/** Konum + "ıslak mı" bilgisi taşıyan çizgi listesi (LineSegments için çiftler). */
-class Lines {
-  pos: number[] = [];
-  wet: number[] = []; // her köşe için 0..1 (1 = su altında, soluk)
-  seg(a: [number, number, number], b: [number, number, number], wetA = 0, wetB = wetA): void {
-    this.pos.push(...a, ...b);
-    this.wet.push(wetA, wetB);
+float thin(float d, float wpx) {
+  return 1.0 - min(d / (fwidth(d) * wpx + 1e-5), 1.0);
+}
+void main() {
+  vec2 p = vP;
+  vec2 ps = p + vec2(uTime * 0.28, 0.0);
+  float r = length(p * vec2(0.8, 1.15));
+  float fade = smoothstep(8.8, 2.6, r);
+  float g = gridLine(ps, 0.5) * 0.45 + gridLine(ps, 2.5) * 0.55;
+  float hq = vH * 26.0;
+  float contour = (1.0 - min(abs(fract(hq) - 0.5) / fwidth(hq), 1.0)) * 0.3;
+  // Kelvin izi (kıçtan)
+  float dx = uStern - p.x;
+  float wake = 0.0;
+  if (dx > 0.0) {
+    float edge = abs(abs(p.y) - (0.28 + dx * 0.36));
+    wake = thin(edge, 1.4) * smoothstep(7.5, 0.4, dx);
+    float inside = 1.0 - smoothstep(0.0, 0.05, abs(p.y) - (0.28 + dx * 0.36));
+    float cr = (p.x + uTime * 0.9) / 0.5;
+    float crest = 1.0 - min(abs(fract(cr) - 0.5) / fwidth(cr), 1.0);
+    wake += crest * inside * 0.4 * smoothstep(6.0, 0.3, dx) * smoothstep(0.0, 0.8, dx);
+    wake += thin(abs(p.y), 1.2) * smoothstep(5.0, 0.0, dx) * 0.5;
   }
-  poly(pts: [number, number, number][], wetOf: (p: [number, number, number]) => number): void {
-    for (let i = 0; i < pts.length - 1; i++) {
-      const a = pts[i]!;
-      const b = pts[i + 1]!;
-      this.seg(a, b, wetOf(a), wetOf(b));
+  // Baş dalgası
+  float bx = uBow - p.x;
+  float bow = 0.0;
+  if (bx > -0.05) {
+    for (int i = 0; i < 3; i++) {
+      float o = float(i) * 0.22;
+      float e = abs(abs(p.y) - (0.08 + (bx - o) * 0.5));
+      bow += thin(e, 1.3) * step(o, bx) * smoothstep(3.6, 0.2, bx - o) * (1.0 - float(i) * 0.25);
     }
+    bow *= 0.35 + 0.65 * uDip;
   }
-  box(cx: number, cy: number, cz: number, sx: number, sy: number, sz: number): void {
-    const x0 = cx - sx / 2;
-    const x1 = cx + sx / 2;
-    const y0 = cy - sy / 2;
-    const y1 = cy + sy / 2;
-    const z0 = cz - sz / 2;
-    const z1 = cz + sz / 2;
-    const c: [number, number, number][] = [
-      [x0, y0, z0], [x1, y0, z0], [x1, y1, z0], [x0, y1, z0],
-      [x0, y0, z1], [x1, y0, z1], [x1, y1, z1], [x0, y1, z1],
-    ];
-    const e = [0, 1, 1, 2, 2, 3, 3, 0, 4, 5, 5, 6, 6, 7, 7, 4, 0, 4, 1, 5, 2, 6, 3, 7];
-    for (let i = 0; i < e.length; i += 2) this.seg(c[e[i]!]!, c[e[i + 1]!]!);
-  }
-}
+  float foam = clamp(wake * 0.75 + bow, 0.0, 1.0) * fade;
+  float a = (g + contour) * fade * 0.55;
+  vec3 col = mix(uLine, uAccent, foam);
+  gl_FragColor = vec4(col, max(a, foam * 0.85) * uAlpha);
+}`;
 
-const wetY = (p: [number, number, number]): number => (p[1] < T - 0.01 ? 1 : 0);
+/* ---------------- yardımcılar ---------------- */
 
-function buildHull(): Lines {
-  const L = new Lines();
-  const levels = [0, 0.06, 0.16, 0.3, 0.46, T, 0.8, D];
-
-  // Postalar (enine kesitler)
-  for (let x = -4.6; x <= 4.8; x += 0.4) {
-    const side = (s: 1 | -1): [number, number, number][] =>
-      levels
-        .filter((y) => x >= xStern(y) && x <= xBow(y))
-        .map((y) => [x, y, s * halfBreadth(x, y)] as [number, number, number]);
-    const port = side(1).reverse();
-    const stb = side(-1);
-    if (port.length < 2) continue;
-    L.poly([...port, ...stb], wetY);
-  }
-
-  // Su hatları ve güverte kenarı
-  for (const y of [0.06, 0.3, T, 0.82, D]) {
-    for (const s of [1, -1] as const) {
-      const pts: [number, number, number][] = [];
-      const x0 = xStern(y);
-      const x1 = xBow(y);
-      for (let i = 0; i <= 64; i++) {
-        const x = x0 + ((x1 - x0) * i) / 64;
-        pts.push([x, y, s * halfBreadth(x, y)]);
-      }
-      L.poly(pts, wetY);
-    }
-  }
-
-  // Omurga, baş bodoslama, kıç ayna
-  L.poly(
-    [
-      [xStern(0), 0, 0],
-      [xBow(0), 0, 0],
-    ],
-    () => 1,
-  );
-  const stem: [number, number, number][] = [];
-  const stern: [number, number, number][] = [];
-  for (let i = 0; i <= 10; i++) {
-    const y = (D * i) / 10;
-    stem.push([xBow(y), y, 0]);
-    stern.push([xStern(y), y, 0]);
-  }
-  L.poly(stem, wetY);
-  L.poly(stern, wetY);
-  // Ayna (transom) kenarı
-  L.seg([xStern(D), D, halfBreadth(xStern(D) + 0.001, D)], [xStern(D), D, -halfBreadth(xStern(D) + 0.001, D)]);
-
-  // Ambar kapakları
-  for (let i = 0; i < 7; i++) L.box(-2.2 + i * 0.93, D + 0.07, 0, 0.62, 0.14, B * 0.62);
-  // Baş kasara ve direk
-  L.box(4.35, D + 0.09, 0, 0.55, 0.18, B * 0.55);
-  L.seg([4.2, D + 0.18, 0], [4.2, D + 0.8, 0]);
-  L.seg([4.2, D + 0.62, -0.14], [4.2, D + 0.62, 0.14]);
-  // Köprüüstü, kaptan köşkü kanatları, baca
-  L.box(-4.1, D + 0.45, 0, 0.85, 0.9, B * 0.78);
-  L.box(-3.95, D + 0.94, 0, 0.45, 0.08, B * 1.04);
-  for (let k = 1; k <= 3; k++) {
-    const y = D + (0.9 * k) / 4;
-    L.seg([-3.675, y, -B * 0.39], [-3.675, y, B * 0.39]);
-  }
-  L.box(-4.55, D + 1.12, 0, 0.3, 0.45, 0.36);
-  L.seg([-4.0, D + 0.98, 0], [-4.0, D + 1.35, 0]);
-  return L;
-}
-
-function toGeometry(L: Lines): BufferGeometry {
+function toGeometry(dr: Draw): BufferGeometry {
   const g = new BufferGeometry();
-  g.setAttribute("position", new Float32BufferAttribute(L.pos, 3));
-  g.setAttribute("color", new Float32BufferAttribute(new Array(L.wet.length * 3).fill(1), 3));
-  g.userData.wet = L.wet;
+  g.setAttribute("position", new Float32BufferAttribute(dr.pos, 3));
+  g.setAttribute("aW", new Float32BufferAttribute(dr.w, 1));
+  g.setAttribute("aK", new Float32BufferAttribute(dr.k, 1));
   return g;
 }
 
-function paint(g: BufferGeometry, dry: Color, wet: Color): void {
-  const w = g.userData.wet as number[];
-  const col = g.getAttribute("color") as BufferAttribute;
-  const c = new Color();
-  for (let i = 0; i < w.length; i++) {
-    c.copy(dry).lerp(wet, w[i]!);
-    col.setXYZ(i, c.r, c.g, c.b);
-  }
-  col.needsUpdate = true;
+function lineGeometry(pos: number[], w: number[], kind: number): BufferGeometry {
+  const g = new BufferGeometry();
+  g.setAttribute("position", new Float32BufferAttribute(pos, 3));
+  g.setAttribute("aW", new Float32BufferAttribute(w, 1));
+  g.setAttribute("aK", new Float32BufferAttribute(new Array(w.length).fill(kind), 1));
+  return g;
 }
 
-/* ---------------- deniz ---------------- */
-
-const SEA = { extent: 9, step: 0.45 };
-
-function buildSea(): { geo: BufferGeometry; update: (t: number) => void } {
-  const n = Math.round((SEA.extent * 2) / SEA.step);
+/** Pusula halkası, pruva işareti, boy cetveli (posta aralıkları) ve genişlik ölçüsü. */
+function ringGeometry(): BufferGeometry {
   const pos: number[] = [];
-  const coord = (i: number): number => -SEA.extent + i * SEA.step;
-  // x yönü çizgileri
-  for (let j = 0; j <= n; j++)
-    for (let i = 0; i < n; i++) pos.push(coord(i), 0, coord(j), coord(i + 1), 0, coord(j));
-  // z yönü çizgileri
-  for (let i = 0; i <= n; i++)
-    for (let j = 0; j < n; j++) pos.push(coord(i), 0, coord(j), coord(i), 0, coord(j + 1));
-  const geo = new BufferGeometry();
-  const attr = new Float32BufferAttribute(pos, 3);
-  geo.setAttribute("position", attr);
-  const base = Float32Array.from(pos);
-  const update = (t: number): void => {
-    const a = attr.array as Float32Array;
-    for (let k = 0; k < a.length; k += 3) {
-      const x = base[k]!;
-      const z = base[k + 2]!;
-      a[k + 1] = 0.05 * Math.sin(0.9 * x + 1.05 * t) + 0.035 * Math.sin(1.25 * z - 0.8 * t);
-    }
-    attr.needsUpdate = true;
+  const w: number[] = [];
+  const add = (a: V3, b: V3, wt: number): void => {
+    pos.push(...a, ...b);
+    w.push(wt, wt);
   };
-  return { geo, update };
+  const R = 6.9;
+  for (let i = 0; i < 180; i++) {
+    const a0 = (i / 180) * Math.PI * 2;
+    const a1 = ((i + 1) / 180) * Math.PI * 2;
+    add([R * Math.cos(a0), 0, R * Math.sin(a0)], [R * Math.cos(a1), 0, R * Math.sin(a1)], 0.5);
+  }
+  for (let deg = 0; deg < 360; deg += 5) {
+    const a = (deg * Math.PI) / 180;
+    const len = deg % 90 === 0 ? 0.5 : deg % 30 === 0 ? 0.32 : 0.14;
+    add([R * Math.cos(a), 0, R * Math.sin(a)], [(R - len) * Math.cos(a), 0, (R - len) * Math.sin(a)], deg % 30 === 0 ? 0.6 : 0.35);
+  }
+  add([R + 0.05, 0, 0], [R + 0.4, 0, -0.14], 0.8);
+  add([R + 0.05, 0, 0], [R + 0.4, 0, 0.14], 0.8);
+  const z = B / 2 + 0.95;
+  const xs = sternX(D);
+  const xb = stemX(D);
+  add([xs, 0, z], [xb, 0, z], 0.5);
+  for (let x = Math.ceil(xs * 4) / 4; x <= xb; x += 0.25) {
+    const major = Math.abs(x - Math.round(x)) < 1e-3;
+    add([x, 0, z], [x, 0, z + (major ? 0.18 : 0.08)], major ? 0.55 : 0.3);
+  }
+  for (const x of [xs, xb]) add([x, 0, z - 0.15], [x, 0, z + 0.25], 0.6);
+  const bx = xb + 0.8;
+  add([bx, 0, -B / 2], [bx, 0, B / 2], 0.5);
+  for (const zz of [-B / 2, B / 2]) add([bx - 0.12, 0, zz], [bx + 0.12, 0, zz], 0.6);
+  return lineGeometry(pos, w, 1);
 }
 
-/* ---------------- çevre şekilleri ---------------- */
-
-function buildRing(): BufferGeometry {
+/** Tarama düzlemi: gemi kesitini saran çerçeve + köşe işaretleri. */
+function scanGeometry(): BufferGeometry {
+  const y0 = -0.25;
+  const y1 = D + 1.75;
+  const z = B / 2 + 0.35;
+  const c = 0.14;
   const pos: number[] = [];
-  const R = 6.4;
-  const seg = 160;
-  for (let i = 0; i < seg; i++) {
-    const a0 = (i / seg) * Math.PI * 2;
-    const a1 = ((i + 1) / seg) * Math.PI * 2;
-    pos.push(R * Math.cos(a0), 0, R * Math.sin(a0), R * Math.cos(a1), 0, R * Math.sin(a1));
-  }
-  for (let d = 0; d < 360; d += 5) {
-    const a = (d * Math.PI) / 180;
-    const len = d % 30 === 0 ? 0.42 : 0.18;
-    pos.push(R * Math.cos(a), 0, R * Math.sin(a), (R - len) * Math.cos(a), 0, (R - len) * Math.sin(a));
-  }
-  // kesikli iç halka
-  const r = 5.7;
-  for (let i = 0; i < 90; i += 2) {
-    const a0 = (i / 90) * Math.PI * 2;
-    const a1 = ((i + 1) / 90) * Math.PI * 2;
-    pos.push(r * Math.cos(a0), 0, r * Math.sin(a0), r * Math.cos(a1), 0, r * Math.sin(a1));
-  }
-  const g = new BufferGeometry();
-  g.setAttribute("position", new Float32BufferAttribute(pos, 3));
-  return g;
-}
-
-/** Geminin yanında boy ölçü çizgisi (sayı yok, sadece çizim dili). */
-function buildDimension(): BufferGeometry {
-  const z = B / 2 + 0.75;
-  const pos = [
-    xStern(D), 0.02, z, -0.35, 0.02, z,
-    0.35, 0.02, z, xBow(D), 0.02, z,
-    xStern(D), 0.02, z - 0.15, xStern(D), 0.02, z + 0.15,
-    xBow(D), 0.02, z - 0.15, xBow(D), 0.02, z + 0.15,
-  ];
-  const g = new BufferGeometry();
-  g.setAttribute("position", new Float32BufferAttribute(pos, 3));
-  return g;
-}
-
-/** Baş dalgası: pruvadan iki yana açılan kısa çizgiler. */
-function buildBowWave(): BufferGeometry {
-  const pos: number[] = [];
-  for (const s of [1, -1]) {
-    for (let k = 0; k < 3; k++) {
-      const o = k * 0.22;
-      pos.push(xBow(T) - 0.1 - o, T, s * (0.05 + o * 0.9), xBow(T) - 0.9 - o * 1.6, T, s * (0.55 + o * 1.4));
+  const w: number[] = [];
+  const add = (a: V3, b: V3, wt: number): void => {
+    pos.push(...a, ...b);
+    w.push(wt, wt);
+  };
+  add([0, y0, -z], [0, y0, z], 0.35);
+  add([0, y1, -z], [0, y1, z], 0.35);
+  add([0, y0, -z], [0, y1, -z], 0.2);
+  add([0, y0, z], [0, y1, z], 0.2);
+  for (const [yy, dy] of [[y0, c], [y1, -c]] as const)
+    for (const [zz, dz] of [[-z, c], [z, -c]] as const) {
+      add([0, yy, zz], [0, yy + dy, zz], 0.9);
+      add([0, yy, zz], [0, yy, zz + dz], 0.9);
     }
-  }
-  const g = new BufferGeometry();
-  g.setAttribute("position", new Float32BufferAttribute(pos, 3));
-  return g;
+  add([0, T, -z - 0.2], [0, T, z + 0.2], 0.5);
+  return lineGeometry(pos, w, 0);
 }
 
-interface Floater {
-  line: LineSegments;
-  mat: LineBasicMaterial;
-  x: number;
-  z: number;
-  phase: number;
-}
-
-function square(size: number): BufferGeometry {
-  const h = size / 2;
-  const pos = [-h, -h, 0, h, -h, 0, h, -h, 0, h, h, 0, h, h, 0, -h, h, 0, -h, h, 0, -h, -h, 0];
-  const g = new BufferGeometry();
-  g.setAttribute("position", new Float32BufferAttribute(pos, 3));
-  return g;
-}
+const SVG_NS = "http://www.w3.org/2000/svg";
 
 /* ---------------- sahne ---------------- */
 
-export function createShipScene(host: HTMLElement, colors: ShipColors, motion: boolean): ShipHandle | null {
+export function createShipScene(
+  stage: HTMLElement,
+  hud: HTMLElement,
+  cta: HTMLElement | null,
+  colors: ShipColors,
+  callouts: Callout[],
+  motionOn: boolean,
+): ShipHandle | null {
   let renderer: WebGLRenderer;
   try {
     renderer = new WebGLRenderer({ antialias: true, alpha: true, powerPreference: "low-power" });
   } catch {
     return null;
   }
+  let motion = motionOn;
   renderer.setClearColor(0x000000, 0);
   const canvas = renderer.domElement;
   canvas.setAttribute("aria-hidden", "true");
-  host.appendChild(canvas);
+  stage.appendChild(canvas);
 
   const scene = new Scene();
-  const fog = new Fog(0xffffff, 12, 24);
-  scene.fog = fog;
-
-  const camera = new PerspectiveCamera(26, 1, 0.1, 100);
-  // Sol üstten ~45° bakış; baş sağ alta, izleyiciye doğru.
+  const camera = new PerspectiveCamera(24, 1, 0.1, 100);
   camera.position.set(8, 9, 12);
-  camera.lookAt(0, 0, 0);
-  camera.fov = 25;
+  camera.lookAt(0, 0.35, 0);
 
   const world = new Group();
   world.rotation.y = -0.35;
   scene.add(world);
 
-  // Gemi
+  const geo = buildShip();
+  const shared = {
+    uTime: { value: 0 },
+    uScan: { value: -3 },
+    uScanOn: { value: 1 },
+    uAccent: { value: new Color() },
+    uHot: { value: new Color() },
+    uGhost: { value: new Color() },
+    uAlpha: { value: 0 },
+  };
+  const lineMat = (offX: number, own: Record<string, { value: number }> = {}): ShaderMaterial =>
+    new ShaderMaterial({
+      uniforms: { ...shared, uOffX: { value: offX }, ...own },
+      vertexShader: LINE_VERT,
+      fragmentShader: LINE_FRAG,
+      transparent: true,
+      depthWrite: false,
+    });
+
   const ship = new Group();
-  const hullGeo = toGeometry(buildHull());
-  const hullMat = new LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.95, fog: true });
-  ship.add(new LineSegments(hullGeo, hullMat));
-  const waveGeo = buildBowWave();
-  const waveMat = new LineBasicMaterial({ transparent: true, opacity: 0, fog: true });
-  ship.add(new LineSegments(waveGeo, waveMat));
   world.add(ship);
+  const mainGeo = toGeometry(geo.main);
+  const mainMat = lineMat(0);
+  ship.add(new LineSegments(mainGeo, mainMat));
 
-  // Deniz
-  const sea = buildSea();
-  const seaMat = new LineBasicMaterial({ transparent: true, opacity: 0.5, fog: true });
-  world.add(new LineSegments(sea.geo, seaMat));
+  const propGroup = new Group();
+  propGroup.position.set(PROP.x, PROP.y, 0);
+  const propGeo = toGeometry(geo.prop);
+  const propMat = lineMat(PROP.x);
+  propGroup.add(new LineSegments(propGeo, propMat));
+  ship.add(propGroup);
 
-  // Pusula halkası ve ölçü çizgisi
-  const ringGeo = buildRing();
-  const ringMat = new LineBasicMaterial({ transparent: true, opacity: 0.55, fog: true });
+  const radarGroup = new Group();
+  radarGroup.position.set(RADAR.x, RADAR.y + 0.02, 0);
+  const radarGeo = toGeometry(geo.radar);
+  const radarMat = lineMat(RADAR.x);
+  radarGroup.add(new LineSegments(radarGeo, radarMat));
+  ship.add(radarGroup);
+
+  const scanAlpha = { value: 0 };
+  const scanGeo = scanGeometry();
+  const scanMat = lineMat(0, { uScanOn: { value: 0 }, uAlpha: scanAlpha });
+  const scan = new LineSegments(scanGeo, scanMat);
+  ship.add(scan);
+
+  const ringGeo = ringGeometry();
+  const ringMat = lineMat(0, { uScanOn: { value: 0 } });
   const ring = new LineSegments(ringGeo, ringMat);
-  ring.position.y = 0.02;
+  ring.position.y = 0.01;
   world.add(ring);
-  const dimGeo = buildDimension();
-  const dimMat = new LineBasicMaterial({ transparent: true, opacity: 0.5, fog: true });
-  world.add(new LineSegments(dimGeo, dimMat));
 
-  // Yükselen veri kareleri
-  const sqGeo = square(0.2);
-  const floaters: Floater[] = [];
-  const seeds = [
-    [-2.6, 2.2], [1.4, 2.6], [3.6, -2.1], [-1.2, -2.8], [4.8, 1.3], [-4.2, -1.4], [0.6, -3.6],
-  ] as const;
-  seeds.forEach(([x, z], i) => {
-    const mat = new LineBasicMaterial({ transparent: true, opacity: 0, fog: true });
-    const line = new LineSegments(sqGeo, mat);
-    line.position.set(x, 0, z);
-    world.add(line);
-    floaters.push({ line, mat, x, z, phase: i / seeds.length });
+  const seaGeo = new PlaneGeometry(22, 22, 200, 200);
+  seaGeo.rotateX(-Math.PI / 2);
+  const seaDip = { value: 0 };
+  const seaLine = { value: new Color() };
+  const seaMat = new ShaderMaterial({
+    uniforms: {
+      uTime: shared.uTime,
+      uAlpha: shared.uAlpha,
+      uAccent: shared.uAccent,
+      uLine: seaLine,
+      uDip: seaDip,
+      uStern: { value: -4.1 },
+      uBow: { value: stemX(T) },
+    },
+    vertexShader: SEA_VERT,
+    fragmentShader: SEA_FRAG,
+    transparent: true,
+    depthWrite: false,
   });
+  const sea = new Mesh(seaGeo, seaMat);
+  sea.renderOrder = -1;
+  world.add(sea);
 
   const applyColors = (c: ShipColors): void => {
     const accent = new Color().setStyle(c.accent);
     const ink = new Color().setStyle(c.ink);
     const bg = new Color().setStyle(c.bg);
-    fog.color.copy(bg);
-    paint(hullGeo, accent, accent.clone().lerp(bg, 0.62));
-    waveMat.color.copy(accent);
-    seaMat.color.copy(ink).lerp(bg, 0.72);
-    ringMat.color.copy(ink).lerp(bg, 0.55);
-    dimMat.color.copy(accent).lerp(bg, 0.35);
-    floaters.forEach((f) => f.mat.color.copy(accent));
+    shared.uAccent.value.copy(accent);
+    shared.uHot.value.setStyle(c.hot);
+    shared.uGhost.value.copy(ink).lerp(bg, c.dark ? 0.35 : 0.45);
+    seaLine.value.copy(ink).lerp(bg, c.dark ? 0.6 : 0.68);
+    const blend = c.dark ? AdditiveBlending : NormalBlending;
+    [mainMat, propMat, radarMat, scanMat, ringMat].forEach((m) => {
+      m.blending = blend;
+      m.needsUpdate = true;
+    });
   };
   applyColors(colors);
 
-  /* boyut */
+  /* ---------- etiketler (HTML + SVG çizgiler) ---------- */
+  const svg = document.createElementNS(SVG_NS, "svg");
+  svg.setAttribute("class", "ship__leaders");
+  svg.setAttribute("aria-hidden", "true");
+  hud.appendChild(svg);
+
+  interface Label {
+    anchor: Vector3;
+    el: HTMLSpanElement;
+    path: SVGPathElement;
+    dot: SVGCircleElement;
+    halo: SVGCircleElement;
+    born: number;
+    on: boolean;
+  }
+  const labels: Label[] = callouts
+    .filter((c) => geo.anchors[c.at])
+    .map((c) => {
+      const el = document.createElement("span");
+      el.className = "ship__label";
+      el.textContent = c.text;
+      if (c.lang) el.lang = c.lang;
+      el.setAttribute("aria-hidden", "true");
+      hud.appendChild(el);
+      const path = document.createElementNS(SVG_NS, "path");
+      path.setAttribute("class", "ship__lead");
+      const halo = document.createElementNS(SVG_NS, "circle");
+      halo.setAttribute("r", "7");
+      halo.setAttribute("class", "ship__halo");
+      const dot = document.createElementNS(SVG_NS, "circle");
+      dot.setAttribute("r", "2.5");
+      dot.setAttribute("class", "ship__dot");
+      svg.append(path, halo, dot);
+      const a = geo.anchors[c.at]!;
+      return { anchor: new Vector3(a[0], a[1], a[2]), el, path, dot, halo, born: -1e9, on: false };
+    });
+  const sternPt = new Vector3(-5, 0.9, 0);
+  const bowPt = new Vector3(5, 0.9, 0);
+
+  let W = 1;
+  let H = 1;
+  const tmp = new Vector3();
+  const project = (v: Vector3): [number, number] => {
+    tmp.copy(v).applyMatrix4(ship.matrixWorld).project(camera);
+    return [((tmp.x + 1) / 2) * W, ((1 - tmp.y) / 2) * H];
+  };
+
+  const setLabelVisible = (l: Label, on: boolean): void => {
+    l.on = on;
+    const m = on ? "add" : "remove";
+    l.el.classList[m]("is-on");
+    l.path.classList[m]("is-on");
+    l.dot.classList[m]("is-on");
+    l.halo.classList[m]("is-on");
+  };
+
+  /**
+   * Etiketler geminin iki yanındaki boş üçgenlere yerleşir: gemi ekseninin (kıç→baş)
+   * normali yönünde, ankraj noktasının bulunduğu tarafa itilir; alt köşedeki
+   * "Proje" düğmesinin üstünde kalır.
+   */
+  const placeLabels = (): void => {
+    const [sx, sy] = project(sternPt);
+    const [bx, by] = project(bowPt);
+    let ax = bx - sx;
+    let ay = by - sy;
+    const al = Math.hypot(ax, ay) || 1;
+    ax /= al;
+    ay /= al;
+    const nx = -ay;
+    const ny = ax;
+    const small = W < 420;
+    const ctaTop = cta ? cta.offsetTop - 8 : H - 12;
+    const ctaRight = cta ? cta.offsetLeft + cta.offsetWidth + 8 : 0;
+    const placed: [number, number, number, number][] = [];
+    labels.forEach((l, i) => {
+      if (!l.on && !l.el.classList.contains("is-on")) return;
+      const [px, py] = project(l.anchor);
+      const side0 = (px - sx) * nx + (py - sy) * ny;
+      const side = Math.abs(side0) < 6 ? (i % 2 ? 1 : -1) : Math.sign(side0);
+      const reach = (small ? 46 : 74) + Math.max(0, 30 - Math.abs(side0));
+      const ex = px + nx * side * reach;
+      let ey = py + ny * side * reach;
+      const hdir = nx * side >= 0 ? 1 : -1;
+      const lw = l.el.offsetWidth;
+      const lh = l.el.offsetHeight;
+      const hx = ex + hdir * 12;
+      let lx = hdir > 0 ? hx + 3 : hx - 3 - lw;
+      lx = Math.min(W - lw - 4, Math.max(4, lx));
+      const maxY = lx < ctaRight ? ctaTop - lh / 2 : H - lh / 2 - 18;
+      ey = Math.min(maxY, Math.max(lh / 2 + 6, ey));
+      // Başka bir etiketle çakışıyorsa dikeyde kaydır.
+      for (const [ox, oy, ow, oh] of placed) {
+        if (lx < ox + ow + 6 && lx + lw + 6 > ox && Math.abs(ey - oy) < (lh + oh) / 2 + 6) {
+          const down = ey >= oy ? 1 : -1;
+          const ny2 = oy + down * ((lh + oh) / 2 + 8);
+          ey = ny2 > maxY || ny2 < lh / 2 + 6 ? oy - down * ((lh + oh) / 2 + 8) : ny2;
+        }
+      }
+      placed.push([lx, ey, lw, lh]);
+      l.el.style.transform = `translate(${lx.toFixed(1)}px, ${(ey - lh / 2).toFixed(1)}px)`;
+      l.path.setAttribute("d", `M${px.toFixed(1)} ${py.toFixed(1)}L${ex.toFixed(1)} ${ey.toFixed(1)}L${hx.toFixed(1)} ${ey.toFixed(1)}`);
+      for (const c of [l.dot, l.halo]) {
+        c.setAttribute("cx", px.toFixed(1));
+        c.setAttribute("cy", py.toFixed(1));
+      }
+    });
+  };
+
+  // Aynı anda en fazla iki etiket; her biri ~4,4 sn görünür.
+  let order = 0;
+  let lastSpawn = -1e9;
+  const LIFE = 4.4;
+  const GAP = 2.3;
+  const cycleLabels = (t: number): void => {
+    labels.forEach((l) => {
+      if (l.on && t - l.born > LIFE) setLabelVisible(l, false);
+    });
+    if (t - lastSpawn >= GAP && labels.length && labels.filter((l) => l.on).length < 2) {
+      for (let i = 0; i < labels.length; i++) {
+        const l = labels[order % labels.length]!;
+        order += 1;
+        if (!l.on) {
+          l.born = t;
+          setLabelVisible(l, true);
+          break;
+        }
+      }
+      lastSpawn = t;
+    }
+  };
+
+  /* ---------- kare ---------- */
+  let lastT = 1.6;
+  const pose = (t: number): void => {
+    shared.uTime.value = t;
+    // Baş kalkıp iner (~1,7°, ~10 sn), hafif dalıp çıkma ve yalpa.
+    const pitch = 0.03 * Math.sin(0.62 * t);
+    ship.rotation.z = pitch;
+    ship.rotation.x = 0.012 * Math.sin(0.41 * t + 0.6);
+    ship.position.y = -T + 0.03 * Math.sin(0.62 * t + 1.2);
+    seaDip.value = Math.max(0, -pitch / 0.03);
+    propGroup.rotation.x = -t * 2.2;
+    radarGroup.rotation.y = t * 0.9;
+    ring.rotation.y = t * 0.015;
+  };
+  const setScan = (x: number, on: number): void => {
+    shared.uScan.value = x;
+    shared.uScanOn.value = on;
+    scan.position.x = x;
+    scan.visible = on > 0.01;
+    scanAlpha.value = shared.uAlpha.value * on;
+  };
+  const render = (): void => {
+    renderer.render(scene, camera);
+    placeLabels();
+  };
+  const draw = (t: number): void => {
+    lastT = t;
+    pose(t);
+    // Tarama düzlemi kıçtan başa (~11 sn), 2 sn ara
+    const cyc = (t % 13) / 11;
+    const u = Math.min(1, cyc);
+    setScan(-5.4 + 10.9 * (u * u * (3 - 2 * u)), cyc <= 1 ? Math.pow(Math.sin(Math.PI * u), 0.4) : 0);
+    render();
+  };
+  const still = (): void => {
+    shared.uAlpha.value = 1;
+    labels.forEach((l, i) => setLabelVisible(l, i < 2));
+    pose(1.6);
+    setScan(-3.05, 1); // makine dairesi vurgulu
+    render();
+  };
+
+  /* ---------- boyut ---------- */
+  let running = false;
   const resize = (): void => {
-    const w = Math.max(1, host.clientWidth);
-    const h = Math.max(1, host.clientHeight);
+    W = Math.max(1, stage.clientWidth);
+    H = Math.max(1, stage.clientHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-    renderer.setSize(w, h, false);
-    camera.aspect = w / h;
-    // Dar kutuda geminin tamamı sığsın.
+    renderer.setSize(W, H, false);
+    camera.aspect = W / H;
+    // Geminin tamamı (kıçtaki radar direğinden bulb başa) kadraja sığsın.
+    camera.fov = camera.aspect < 1.25 ? 33 : 26;
     camera.updateProjectionMatrix();
   };
   resize();
-  const ro = new ResizeObserver(resize);
-  ro.observe(host);
-
-  /* kare */
-  const draw = (t: number): void => {
-    // Yavaş ve küçük hareket: baş kalkıp iner, gemi hafif yükselir/alçalır.
-    const pitch = 0.034 * Math.sin(0.62 * t);
-    ship.rotation.z = pitch;
-    ship.rotation.x = 0.01 * Math.sin(0.41 * t);
-    ship.position.y = -T + 0.028 * Math.sin(0.62 * t + 1.1);
-    // Baş aşağı inerken baş dalgası belirir.
-    const dip = Math.max(0, -pitch / 0.034);
-    waveMat.opacity = 0.15 + 0.7 * dip;
-    sea.update(t);
-    ring.rotation.y = t * 0.04;
-    floaters.forEach((f) => {
-      const p = (t / 9 + f.phase) % 1;
-      f.line.position.y = 0.15 + p * 2.4;
-      f.line.rotation.y = -world.rotation.y; // izleyiciye dönük
-      f.mat.opacity = Math.sin(p * Math.PI) * 0.75;
-    });
-    renderer.render(scene, camera);
-  };
+  const ro = new ResizeObserver(() => {
+    resize();
+    if (!running) {
+      if (motion) draw(lastT);
+      else still();
+    }
+  });
+  ro.observe(stage);
 
   let raf = 0;
-  let running = false;
   let visible = true;
-  const t0 = performance.now();
+  const t0 = performance.now() - 1600;
   const loop = (now: number): void => {
     if (!running) return;
-    draw((now - t0) / 1000);
+    const t = (now - t0) / 1000;
+    shared.uAlpha.value = Math.min(1, (t - 1.6) / 1.2);
+    cycleLabels(t);
+    draw(t);
     raf = requestAnimationFrame(loop);
   };
   const start = (): void => {
@@ -427,32 +597,36 @@ export function createShipScene(host: HTMLElement, colors: ShipColors, motion: b
     if (visible) start();
     else stop();
   });
-  io.observe(host);
+  io.observe(stage);
   const onVis = (): void => (document.hidden ? stop() : start());
   document.addEventListener("visibilitychange", onVis);
-
   const onLost = (e: Event): void => {
     e.preventDefault();
     stop();
-    host.classList.remove("is-live");
+    stage.classList.remove("is-live");
+    hud.classList.remove("is-live");
   };
   canvas.addEventListener("webglcontextlost", onLost);
 
-  draw(1.6); // ilk kare (hareket kapalıysa sabit kalır)
-  host.classList.add("is-live");
-  start();
+  stage.classList.add("is-live");
+  hud.classList.add("is-live");
+  if (motion) start();
+  else still();
 
   return {
     setColors(c) {
       applyColors(c);
-      if (!running) draw(1.6);
+      if (!running) {
+        if (motion) draw(lastT);
+        else still();
+      }
     },
     setMotion(on) {
       motion = on;
       if (on) start();
       else {
         stop();
-        draw(1.6);
+        still();
       }
     },
     dispose() {
@@ -461,10 +635,12 @@ export function createShipScene(host: HTMLElement, colors: ShipColors, motion: b
       ro.disconnect();
       document.removeEventListener("visibilitychange", onVis);
       canvas.removeEventListener("webglcontextlost", onLost);
-      [hullGeo, waveGeo, sea.geo, ringGeo, dimGeo, sqGeo].forEach((g) => g.dispose());
-      [hullMat, waveMat, seaMat, ringMat, dimMat, ...floaters.map((f) => f.mat)].forEach((m) => m.dispose());
+      [mainGeo, propGeo, radarGeo, scanGeo, ringGeo, seaGeo].forEach((g) => g.dispose());
+      [mainMat, propMat, radarMat, scanMat, ringMat, seaMat].forEach((m) => m.dispose());
       renderer.dispose();
       canvas.remove();
+      svg.remove();
+      labels.forEach((l) => l.el.remove());
     },
   };
 }
