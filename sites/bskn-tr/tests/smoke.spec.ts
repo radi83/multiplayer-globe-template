@@ -77,7 +77,21 @@ for (const p of PAGES) {
       await expect(card).toHaveAttribute("aria-expanded", "true");
     });
 
+    test("page declares its own color scheme (no forced dark)", async ({ page }) => {
+      await page.goto(p.path);
+      await expect(page.locator('meta[name="color-scheme"]')).toHaveAttribute("content", "light dark");
+    });
+
+    test("follows OS dark mode when no preference is saved", async ({ browser }) => {
+      const ctx = await browser.newContext({ colorScheme: "dark" });
+      const pg = await ctx.newPage();
+      await pg.goto(p.path);
+      await expect(pg.locator("body")).toHaveAttribute("data-theme", "dark");
+      await ctx.close();
+    });
+
     test("theme toggle persists", async ({ page }) => {
+      await page.emulateMedia({ colorScheme: "light" });
       await page.goto(p.path);
       await expect(page.locator("body")).toHaveAttribute("data-theme", "light");
       await page.locator("[data-theme-toggle]").click();
