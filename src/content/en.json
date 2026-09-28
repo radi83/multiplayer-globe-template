@@ -3,9 +3,20 @@
     "lang": "en",
     "locale": "en_US",
     "title": "BMMS — Maritime Engineering Knowledge System",
-    "description": "BMMS — an information system project that links maritime engineering knowledge to its sources in a traceable, reviewable way.",
+    "description": "A research project linking maritime regulations, technical documents and engineering evidence to their source, revision and context in one traceable chain.",
     "ogTitle": "BMMS — Maritime Engineering Knowledge System",
-    "ogDescription": "Every engineering conclusion should be traceable back to its source."
+    "ogDescription": "Every engineering conclusion should be traceable back to its source.",
+    "projectDescription": "A research and development project that connects maritime regulations, technical documents and engineering evidence in a single traceable chain. When the basis cannot be established, it records this explicitly instead of producing a confident answer.",
+    "keywords": [
+      "maritime engineering",
+      "source traceability",
+      "regulatory applicability",
+      "engineering evidence",
+      "knowledge system",
+      "MARPOL",
+      "SOLAS",
+      "IACS"
+    ]
   },
   "brand": {
     "name": "BMMS",

@@ -1,11 +1,22 @@
 {
   "meta": {
     "lang": "tr",
-    "title": "BMMS — Maritime Engineering Knowledge System",
-    "description": "BMMS — denizcilik mühendisliği bilgisini kaynaklarıyla ilişkilendiren, izlenebilir ve denetlenebilir bir bilgi sistemi projesi.",
-    "ogTitle": "BMMS — Maritime Engineering Knowledge System",
+    "locale": "tr_TR",
+    "title": "BMMS — Denizcilik Mühendisliği Bilgi Sistemi",
+    "description": "BMMS; denizcilik kurallarını, teknik belgeleri ve mühendislik kanıtlarını kaynağı, revizyonu ve bağlamıyla izlenebilir biçimde ilişkilendiren araştırma projesi.",
+    "ogTitle": "BMMS — Denizcilik Mühendisliği Bilgi Sistemi",
     "ogDescription": "Her mühendislik sonucu kaynağına kadar izlenebilmeli.",
-    "locale": "tr_TR"
+    "projectDescription": "Denizcilik kurallarını, teknik belgeleri ve mühendislik kanıtlarını izlenebilir tek bir zincirde ilişkilendirmeyi amaçlayan araştırma ve geliştirme projesi. Dayanak kurulamadığında kesin cevap üretmek yerine bunu açıkça kaydeder.",
+    "keywords": [
+      "denizcilik mühendisliği",
+      "kaynak izlenebilirliği",
+      "düzenleyici uygulanabilirlik",
+      "mühendislik kanıtı",
+      "bilgi sistemi",
+      "MARPOL",
+      "SOLAS",
+      "IACS"
+    ]
   },
   "brand": {
     "name": "BMMS",

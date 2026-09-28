@@ -178,3 +178,40 @@ test("hareket kapalıyken de dünya hatasız çizilir", async ({ browser }) => {
   expect(errors).toEqual([]);
   await ctx.close();
 });
+
+test.describe("SEO", () => {
+  test("başlık, açıklama ve yapılandırılmış veri her dilde doğru", async ({ page }) => {
+    for (const [path, lang, title] of [
+      ["/", "tr", "Denizcilik Mühendisliği Bilgi Sistemi"],
+      ["/en/", "en", "Maritime Engineering Knowledge System"],
+    ] as const) {
+      await page.goto(path);
+      await expect(page).toHaveTitle(new RegExp(title));
+      const desc = await page.locator('meta[name="description"]').getAttribute("content");
+      expect(desc?.length ?? 0).toBeGreaterThan(80);
+      expect(desc?.length ?? 999).toBeLessThanOrEqual(160);
+      const raw = await page.locator('script[type="application/ld+json"]').textContent();
+      const data = JSON.parse(raw ?? "{}") as { "@graph": { "@type": string; inLanguage?: unknown; email?: string }[] };
+      const types = data["@graph"].map((n) => n["@type"]);
+      expect(types).toEqual(["WebSite", "ResearchProject", "WebPage"]);
+      expect(data["@graph"][2]?.inLanguage).toBe(lang);
+      expect(data["@graph"][1]?.email).toBe("c@bskn.tr");
+      await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", `https://bskn.net${path}`);
+    }
+  });
+
+  test("robots.txt, sitemap.xml ve ikonlar yayında", async ({ request }) => {
+    const robots = await request.get("/robots.txt");
+    expect(robots.ok()).toBe(true);
+    expect(await robots.text()).toContain("Sitemap: https://bskn.net/sitemap.xml");
+    const sitemap = await request.get("/sitemap.xml");
+    expect(sitemap.ok()).toBe(true);
+    const xml = await sitemap.text();
+    expect(xml).toContain("<loc>https://bskn.net/</loc>");
+    expect(xml).toContain("<loc>https://bskn.net/en/</loc>");
+    expect(xml).toContain('hreflang="x-default"');
+    for (const f of ["/apple-touch-icon.png", "/icon-192.png", "/icon-512.png", "/site.webmanifest", "/og-image.jpg"]) {
+      expect((await request.get(f)).ok(), f).toBe(true);
+    }
+  });
+});
