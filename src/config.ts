@@ -30,3 +30,13 @@ export const CONTACT: ContactConfig = {
  * Sosyal ağ önizleme görseli ve kanonik bağlantı için mutlak adres gerekir.
  */
 export const SITE_URL = "https://bskn.net";
+
+/**
+ * Arama motoru doğrulama kodları (Google Search Console, Bing Webmaster).
+ * Yalnızca kodun kendisini yazın (content="..." içindeki değer).
+ * Boş bırakılan alan sayfaya eklenmez.
+ */
+export const SEARCH_VERIFICATION = {
+  google: "",
+  bing: "",
+};

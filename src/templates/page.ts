@@ -424,29 +424,98 @@ function footer(c: Content): string {
 /* Dışa açık                                                          */
 /* ------------------------------------------------------------------ */
 
-export function renderHead(c: Content, siteUrl: string, lang: Lang): string {
+export interface HeadOptions {
+  siteUrl: string;
+  contact: ContactConfig;
+  verification: { google: string; bing: string };
+}
+
+/** <script type="application/ld+json"> içinde güvenli JSON ("</script>" kaçışı). */
+const jsonLd = (data: unknown): string => JSON.stringify(data).replace(/</g, "\\u003c");
+
+/**
+ * Yapılandırılmış veri (schema.org): site, araştırma projesi ve bu sayfa.
+ * Yalnızca sayfada zaten yer alan bilgiler kullanılır; kuruluş tarihi, ekip
+ * veya ödül gibi doğrulanmamış alanlar eklenmez.
+ */
+function structuredData(c: Content, lang: Lang, o: HeadOptions): string {
   const m = c.meta;
-  const url = (l: Lang): string => `${siteUrl}${LANG_PATH[l]}`;
+  const home = `${o.siteUrl}/`;
+  const page = `${o.siteUrl}${LANG_PATH[lang]}`;
+  const project: Record<string, unknown> = {
+    "@type": "ResearchProject",
+    "@id": `${home}#project`,
+    name: "BMMS — Maritime Engineering Knowledge System",
+    alternateName: "BMMS",
+    description: m.projectDescription,
+    url: home,
+    logo: `${o.siteUrl}/icon-512.png`,
+    keywords: m.keywords.join(", "),
+  };
+  if (o.contact.email) project["email"] = o.contact.email;
+  if (o.contact.phone) project["telephone"] = o.contact.phone.replace(/\s+/g, "");
+  return jsonLd({
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": `${home}#website`,
+        url: home,
+        name: "BMMS",
+        inLanguage: ["tr", "en"],
+        publisher: { "@id": `${home}#project` },
+      },
+      project,
+      {
+        "@type": "WebPage",
+        "@id": `${page}#webpage`,
+        url: page,
+        name: m.title,
+        description: m.description,
+        inLanguage: lang,
+        isPartOf: { "@id": `${home}#website` },
+        about: { "@id": `${home}#project` },
+        primaryImageOfPage: { "@type": "ImageObject", url: `${o.siteUrl}/og-image.jpg`, width: 1200, height: 630 },
+      },
+    ],
+  });
+}
+
+export function renderHead(c: Content, lang: Lang, o: HeadOptions): string {
+  const m = c.meta;
+  const url = (l: Lang): string => `${o.siteUrl}${LANG_PATH[l]}`;
   const other: Lang = lang === "tr" ? "en" : "tr";
   const otherLocale = other === "tr" ? "tr_TR" : "en_US";
-  return join([
+  const tags = [
+    `<title>${esc(m.title)}</title>`,
+    `<meta name="description" content="${esc(m.description)}">`,
+    `<meta name="robots" content="index, follow, max-image-preview:large">`,
     `<link rel="canonical" href="${esc(url(lang))}">`,
     `<link rel="alternate" hreflang="tr" href="${esc(url("tr"))}">`,
     `<link rel="alternate" hreflang="en" href="${esc(url("en"))}">`,
     `<link rel="alternate" hreflang="x-default" href="${esc(url("tr"))}">`,
-    `<title>${esc(m.title)}</title>`,
-    `<meta name="description" content="${esc(m.description)}">`,
+    `<link rel="apple-touch-icon" href="${esc(o.siteUrl)}/apple-touch-icon.png">`,
+    `<link rel="manifest" href="${esc(o.siteUrl)}/site.webmanifest">`,
     `<meta property="og:type" content="website">`,
+    `<meta property="og:site_name" content="BMMS">`,
     `<meta property="og:title" content="${esc(m.ogTitle)}">`,
     `<meta property="og:description" content="${esc(m.ogDescription)}">`,
     `<meta property="og:url" content="${esc(url(lang))}">`,
     `<meta property="og:locale" content="${esc(m.locale)}">`,
     `<meta property="og:locale:alternate" content="${otherLocale}">`,
-    `<meta property="og:image" content="${esc(siteUrl)}/og-image.jpg">`,
+    `<meta property="og:image" content="${esc(o.siteUrl)}/og-image.jpg">`,
     `<meta property="og:image:width" content="1200">`,
     `<meta property="og:image:height" content="630">`,
+    `<meta property="og:image:alt" content="${esc(m.ogTitle)}">`,
     `<meta name="twitter:card" content="summary_large_image">`,
-  ]);
+    `<meta name="twitter:title" content="${esc(m.ogTitle)}">`,
+    `<meta name="twitter:description" content="${esc(m.ogDescription)}">`,
+    `<meta name="twitter:image" content="${esc(o.siteUrl)}/og-image.jpg">`,
+  ];
+  if (o.verification.google) tags.push(`<meta name="google-site-verification" content="${esc(o.verification.google)}">`);
+  if (o.verification.bing) tags.push(`<meta name="msvalidate.01" content="${esc(o.verification.bing)}">`);
+  tags.push(`<script type="application/ld+json">${structuredData(c, lang, o)}</script>`);
+  return join(tags);
 }
 
 export function renderBody(c: Content, cfg: ContactConfig, lang: Lang): string {

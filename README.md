@@ -75,9 +75,11 @@ docs/                         Tasarım, içerik kaynakları, yayın
 | Küre içinde beliren kelimeler | `src/content/tr.json` ve `en.json` → `hero.globeWords` |
 | Cümle/kelime rengi, boyutu, süresi, aynı anda kaç tane | `src/scenes/globe/phrases.ts` → `PHRASE_STYLE`, `WORD_STYLE` |
 | Kaydırma sahneleri | `src/motion/timelines.ts` |
+| Arama motoru doğrulama kodu | `src/config.ts` → `SEARCH_VERIFICATION` |
 
 ## Dokümanlar
 
 - [Tasarım ve hareket kuralları](docs/DESIGN.md)
 - [İçerik kaynakları ve doğrulama](docs/CONTENT_SOURCES.md)
 - [Yayın (Cloudflare) ve geri alma](docs/DEPLOY.md)
+- [SEO ve Search Console](docs/SEO.md)
