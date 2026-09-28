@@ -60,8 +60,8 @@ for (const p of PAGES) {
       await page.goto(p.path);
       const card = page.locator('#kariyer [data-dc-tpl="67"]').nth(8);
       await card.scrollIntoViewIfNeeded();
-      // Tıklanabilir olduğu belli: fotoğraf + "Detay +" sekmesi görünür.
-      await expect(card.locator(".peek")).toBeVisible();
+      // Tıklanabilir olduğu belli: yılın solunda kırmızı "+" kutusu.
+      await expect(card.locator(".peek__plus")).toBeVisible();
       await expect(card).toHaveAttribute("aria-expanded", "false");
       await card.hover();
       await expect(card).toHaveAttribute("aria-expanded", "false"); // üzerine gelmek açmaz
