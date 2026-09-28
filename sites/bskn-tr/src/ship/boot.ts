@@ -57,6 +57,7 @@ export function bootShip(): void {
           readColors(),
           readCallouts(host.dataset.callouts),
           !reducedQuery.matches,
+          Array.from(document.querySelectorAll<HTMLElement>("#hero [data-dc-tpl='27'] > *")),
         );
         if (!handle) return;
         new MutationObserver(() => handle?.setColors(readColors())).observe(document.body, {

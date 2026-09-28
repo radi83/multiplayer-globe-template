@@ -732,3 +732,79 @@ div.scp2 {
     transition: none;
   }
 }
+
+/*
+ * Geniş ekranda (yan yana düzen) gemi ilk ekranın arka planına yayılır:
+ * isimin altından sağ kenara, ilk ekranın tüm yüksekliğine. Yazılar üstte sabit
+ * kalır; altlarına denk gelen çizgiler soluklaşır, yazıların etrafında zemin
+ * renginde hafif bir hale vardır. Dar ekranda gemi yazıların altında kendi kutusundadır.
+ */
+@media (min-width: 900px) {
+  #hero [data-dc-tpl="26"] {
+    position: static !important;
+  }
+  #hero [data-dc-tpl="44"] {
+    position: static !important;
+    animation: none !important;
+  }
+  #hero [data-dc-tpl="27"] {
+    position: relative;
+    z-index: 2;
+  }
+  #hero .ship {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 18%;
+    right: 0;
+    width: auto;
+    aspect-ratio: auto;
+    z-index: 0;
+    animation: shipIn 1.4s ease 0.3s both;
+  }
+  #hero .ship__stage {
+    -webkit-mask-image: linear-gradient(to right, rgb(0 0 0 / 0.3) 0%, rgb(0 0 0 / 0.55) 22%, #000 42%);
+    mask-image: linear-gradient(to right, rgb(0 0 0 / 0.3) 0%, rgb(0 0 0 / 0.55) 22%, #000 42%);
+  }
+  #hero .ship::before {
+    /* Köşe işaretleri yalnızca sağda (solda yazılar var) */
+    background:
+      linear-gradient(var(--c), var(--c)) right 14px top 14px / 14px 1px,
+      linear-gradient(var(--c), var(--c)) right 14px top 14px / 1px 14px,
+      linear-gradient(var(--c), var(--c)) right 14px bottom 14px / 14px 1px,
+      linear-gradient(var(--c), var(--c)) right 14px bottom 14px / 1px 14px;
+    background-repeat: no-repeat;
+  }
+  #hero .ship__cta {
+    left: auto;
+    right: 40px;
+    top: 36px;
+    bottom: auto;
+  }
+  #hero .ship__note {
+    right: 34px;
+    bottom: 18px;
+  }
+  #hero [data-dc-tpl="31"],
+  #hero [data-dc-tpl="36"],
+  #hero [data-dc-tpl="30"],
+  #hero [data-dc-tpl="43"] {
+    text-shadow:
+      0 0 2px var(--paper),
+      0 0 10px var(--paper),
+      0 0 18px var(--paper);
+  }
+}
+@keyframes shipIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #hero .ship {
+    animation: none;
+  }
+}

@@ -263,6 +263,7 @@ export function createShipScene(
   colors: ShipColors,
   callouts: Callout[],
   motionOn: boolean,
+  avoid: HTMLElement[] = [],
 ): ShipHandle | null {
   let renderer: WebGLRenderer;
   try {
@@ -447,8 +448,14 @@ export function createShipScene(
     const nx = -ay;
     const ny = ax;
     const small = W < 420;
-    const ctaTop = cta ? cta.offsetTop - 8 : H - 12;
-    const ctaRight = cta ? cta.offsetLeft + cta.offsetWidth + 8 : 0;
+    // Etiketlerin girmemesi gereken alanlar: sayfa yazıları ve "Proje" düğmesi.
+    const hr = hud.getBoundingClientRect();
+    const zones = [...avoid, ...(cta ? [cta] : [])]
+      .map((el) => {
+        const r = el.getBoundingClientRect();
+        return [r.left - hr.left - 8, r.top - hr.top - 6, r.right - hr.left + 8, r.bottom - hr.top + 6] as const;
+      })
+      .filter((z) => z[2] > 0 && z[0] < W && z[3] > 0 && z[1] < H);
     const placed: [number, number, number, number][] = [];
     labels.forEach((l, i) => {
       if (!l.on && !l.el.classList.contains("is-on")) return;
@@ -461,11 +468,22 @@ export function createShipScene(
       const hdir = nx * side >= 0 ? 1 : -1;
       const lw = l.el.offsetWidth;
       const lh = l.el.offsetHeight;
-      const hx = ex + hdir * 12;
-      let lx = hdir > 0 ? hx + 3 : hx - 3 - lw;
+      let lx = hdir > 0 ? ex + 15 : ex - 15 - lw;
       lx = Math.min(W - lw - 4, Math.max(4, lx));
-      const maxY = lx < ctaRight ? ctaTop - lh / 2 : H - lh / 2 - 18;
-      ey = Math.min(maxY, Math.max(lh / 2 + 6, ey));
+      const maxY = H - lh / 2 - 18;
+      const minY = lh / 2 + 6;
+      ey = Math.min(maxY, Math.max(minY, ey));
+      // Yasak alanla çakışıyorsa: önce sağına, olmazsa altına/üstüne taşı.
+      for (const [zl, zt, zr, zb] of zones) {
+        if (lx < zr && lx + lw > zl && ey + lh / 2 > zt && ey - lh / 2 < zb) {
+          if (zr + lw + 4 <= W) lx = zr;
+          else {
+            const down = zb + lh / 2;
+            const up = zt - lh / 2;
+            ey = down <= maxY && (Math.abs(down - ey) < Math.abs(up - ey) || up < minY) ? down : Math.max(minY, up);
+          }
+        }
+      }
       // Başka bir etiketle çakışıyorsa dikeyde kaydır.
       for (const [ox, oy, ow, oh] of placed) {
         if (lx < ox + ow + 6 && lx + lw + 6 > ox && Math.abs(ey - oy) < (lh + oh) / 2 + 6) {
@@ -475,6 +493,7 @@ export function createShipScene(
         }
       }
       placed.push([lx, ey, lw, lh]);
+      const hx = lx >= ex ? lx - 3 : lx + lw + 3;
       l.el.style.transform = `translate(${lx.toFixed(1)}px, ${(ey - lh / 2).toFixed(1)}px)`;
       l.path.setAttribute("d", `M${px.toFixed(1)} ${py.toFixed(1)}L${ex.toFixed(1)} ${ey.toFixed(1)}L${hx.toFixed(1)} ${ey.toFixed(1)}`);
       for (const c of [l.dot, l.halo]) {
