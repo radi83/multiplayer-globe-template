@@ -808,3 +808,15 @@ div.scp2 {
     animation: none;
   }
 }
+
+/*
+ * Tarayıcıya sitenin kendi açık/koyu temasını bildirir. Böylece Chrome/Edge'in
+ * "otomatik koyu mod"u sayfayı zorla karartmaz (karartınca gemi alanı ayrı
+ * renkte kalıyor, yazı haleleri beyaz görünüyordu).
+ */
+body[data-theme="light"] {
+  color-scheme: light;
+}
+body[data-theme="dark"] {
+  color-scheme: dark;
+}

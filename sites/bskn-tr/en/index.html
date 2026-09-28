@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
     <meta name="theme-color" content="#f3f2f2">
     <script>
       // Eski sitedeki gibi: görünür olunca beliren öğeler. JS yüklenmezse 2,5 sn sonra her şey görünür.
@@ -16,7 +17,17 @@
   </head>
   <body data-lang="en" data-theme="light">
     <script>
-      try { var p = JSON.parse(localStorage.getItem("mcb.prefs") || "{}"); if (p.dark) document.body.setAttribute("data-theme", "dark"); } catch (e) {}
+      // Kayıtlı tercih yoksa işletim sisteminin koyu/açık ayarına uyulur.
+      (function () {
+        var dark = false;
+        try {
+          var p = JSON.parse(localStorage.getItem("mcb.prefs") || "{}");
+          dark = typeof p.dark === "boolean" ? p.dark : matchMedia("(prefers-color-scheme: dark)").matches;
+        } catch (e) {
+          dark = matchMedia("(prefers-color-scheme: dark)").matches;
+        }
+        if (dark) document.body.setAttribute("data-theme", "dark");
+      })();
     </script>
     <!--BODY-->
   </body>
