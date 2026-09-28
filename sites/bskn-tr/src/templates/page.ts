@@ -34,6 +34,16 @@ const esc = (s: string): string =>
 const i = (s: string): string => `<span class="sc-interp">${esc(s)}</span>`;
 const r = (lang: Lang): string => (lang === "tr" ? "" : "../");
 
+/** WebGL yoksa görünen sabit blueprint gemi (yandan). Canlı sahne yüklenince gizlenir. */
+const SHIP_SVG = `<svg class="ship__fallback" viewBox="0 0 480 300" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.2">
+<path d="M40 170 L412 170 L446 150 L452 136 L60 136 L40 150 Z"/>
+<path d="M58 170 L60 196 L410 196 L440 172" stroke-opacity=".45"/>
+<path d="M50 160 L430 160" stroke-width="1.8"/>
+<g stroke-opacity=".8">${Array.from({ length: 7 }, (_, i) => `<rect x="${130 + i * 40}" y="128" width="28" height="8"/>`).join("")}</g>
+<path d="M66 136 L66 96 L104 96 L104 136 M60 96 L112 96 M60 90 L112 90 L112 96 M74 96 L74 72 L88 72 L88 96 M420 136 L420 108 M412 116 L428 116"/>
+<g stroke-opacity=".35">${Array.from({ length: 9 }, (_, i) => `<path d="M${10 + i * 8} ${206 + i * 10} Q ${240} ${200 + i * 10 - 6} ${470 - i * 8} ${206 + i * 10}"/>`).join("")}</g>
+</svg>`;
+
 /* ---------------- head ---------------- */
 
 export function renderHead(lang: Lang, siteUrl: string, verification: { google: string; bing: string }): string {
@@ -185,10 +195,15 @@ function hero(lang: Lang, c: Copy): string {
 </div>
 </div>
 <figure data-dc-tpl="44" style="margin: 0px; min-width: 0px; animation: 1s cubic-bezier(0.16, 0.8, 0.24, 1) 0.34s both mcbRise;">
-<div data-dc-tpl="45" style="position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; background: var(--surface); border: 2px solid var(--rule); animation: 1.15s cubic-bezier(0.2, 0.8, 0.2, 1) 0.4s both mcbImg;">
-<img alt="${esc(c.heroAlt)}" data-dc-tpl="46" data-par="0.13" src="${r(
-    lang,
-  )}img/bmms.webp" width="1200" height="675" fetchpriority="high" style="position: absolute; inset: -11% -2%; width: 104%; height: 122%; max-width: none; object-fit: cover;"/>
+<div class="ship" data-ship="" data-phrases="${esc(JSON.stringify(c.shipPhrases))}">
+<div class="ship__stage" data-ship-stage="" role="img" aria-label="${esc(c.shipLabel)}">${SHIP_SVG}</div>
+<span class="ship__phrase" data-ship-slot="" style="left: 2%; top: 8%;" aria-hidden="true"></span>
+<span class="ship__phrase" data-ship-slot="" style="right: 4%; top: 18%;" aria-hidden="true"></span>
+<span class="ship__phrase" data-ship-slot="" style="left: 44%; top: 4%;" aria-hidden="true"></span>
+<span class="ship__phrase" data-ship-slot="" style="right: 3%; top: 52%;" aria-hidden="true"></span>
+<a class="ship__cta" href="${PERSON.projectSite}${lang === "en" ? "/en/" : "/"}" hreflang="${lang}"><span class="ship__cta-t">${esc(
+    c.shipCta,
+  )}</span><span class="ship__cta-s">${esc(c.shipCtaSub)} →</span></a>
 </div>
 </figure>
 </div>

@@ -1,6 +1,7 @@
 import "./styles/modernist.css";
 import "./styles/page.css";
 import "./styles/fixes.css";
+import { bootShip } from "./ship/boot.ts";
 
 /*
  * Eski sitenin (Claude Design) davranışları, React çalışma zamanı olmadan:
@@ -236,6 +237,7 @@ initFilters();
 initReveal();
 initCards();
 initZoom();
+bootShip();
 frame();
 addEventListener("scroll", onScroll, { passive: true });
 addEventListener("resize", onScroll, { passive: true });

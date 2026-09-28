@@ -58,6 +58,8 @@ export default defineConfig({
   base: "./",
   plugins: [staticContent(), seoFiles()],
   build: {
+    // Gemi sahnesi (Three.js) sonradan yüklenen ayrı bir parçadır.
+    chunkSizeWarningLimit: 600,
     rollupOptions: {
       input: { tr: resolve(import.meta.dirname, "index.html"), en: resolve(import.meta.dirname, "en/index.html") },
     },
