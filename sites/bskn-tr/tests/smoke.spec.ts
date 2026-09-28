@@ -1,79 +1,96 @@
 import { expect, test } from "@playwright/test";
 
 const PAGES = [
-  { path: "/", lang: "tr", role: "Baş Mühendis", cv: "CV indir" },
-  { path: "/en/", lang: "en", role: "Chief Engineer", cv: "Download CV" },
+  { path: "/", lang: "tr", role: "Baş Mühendis" },
+  { path: "/en/", lang: "en", role: "Chief Engineer" },
 ] as const;
+
+const CARDS = '#kariyer [data-dc-tpl="66"]';
 
 for (const p of PAGES) {
   test.describe(`${p.lang} page`, () => {
-    test("renders content, no horizontal scroll, one-line name", async ({ page }) => {
+    test("renders, no horizontal scroll, one-line name, no Direction toggle", async ({ page }) => {
       const errors: string[] = [];
       page.on("pageerror", (e) => errors.push(e.message));
       await page.goto(p.path);
       await expect(page.locator("html")).toHaveAttribute("lang", p.lang);
+      await expect(page.locator("body")).toHaveAttribute("data-lang", p.lang);
       await expect(page.locator("h1")).toContainText("Murat Can");
-      await expect(page.locator(".post")).toHaveCount(17);
-      await expect(page.locator(".post--now")).toContainText(p.role);
+      await expect(page.locator(CARDS)).toHaveCount(17);
+      await expect(page.locator(CARDS).last()).toContainText(p.role);
       const [sw, iw] = await page.evaluate(() => [document.documentElement.scrollWidth, innerWidth]);
       expect(sw).toBeLessThanOrEqual(iw);
-      // İsim üst şeritte tek satırda kalmalı (eski sitede iPad'de 3 satıra bölünüyordu).
-      const brand = await page.locator(".brand__name").boundingBox();
-      expect(brand?.height ?? 99).toBeLessThan(36);
-      // Tasarım aracından kalan "Direction A/B" düğmesi olmamalı.
-      await expect(page.getByText(/direction/i)).toHaveCount(0);
+      // İsim tek satır (eski sitede iPad'de 3 satıra bölünüyordu).
+      const brand = await page.locator('[data-dc-tpl="10"]').boundingBox();
+      expect(brand?.height ?? 99).toBeLessThan(32);
+      await expect(page.locator('[data-dc-tpl="276"]')).toHaveCount(0);
+      await expect(page.getByText(/^(Yön|Direction)$/)).toHaveCount(0);
       expect(errors).toEqual([]);
     });
 
-    test("memberships fill their rows", async ({ page }) => {
+    test("card grids have no empty cells", async ({ page }) => {
       await page.goto(p.path);
-      const members = page.locator(".member");
-      await expect(members).toHaveCount(4);
-      const boxes = await members.evaluateAll((els) => els.map((e) => e.getBoundingClientRect().top));
-      const rows = new Map<number, number>();
-      boxes.forEach((t) => rows.set(Math.round(t), (rows.get(Math.round(t)) ?? 0) + 1));
-      const counts = [...rows.values()];
-      // Her satırda aynı sayıda kart: boş gri hücre kalmaz.
-      expect(new Set(counts).size).toBe(1);
+      for (const sel of ['[data-dc-tpl="122"]', '[data-dc-tpl="132"]']) {
+        const grid = page.locator(sel);
+        const gridBox = await grid.boundingBox();
+        const kids = await grid.locator(":scope > *").evaluateAll((els) =>
+          els.map((e) => {
+            const r = e.getBoundingClientRect();
+            return { top: Math.round(r.top), right: Math.round(r.right), left: Math.round(r.left) };
+          }),
+        );
+        // Her satırın son kartı ızgaranın sağ kenarına ulaşır → gri boşluk kalmaz.
+        const rows = new Map<number, number>();
+        kids.forEach((k) => rows.set(k.top, Math.max(rows.get(k.top) ?? 0, k.right)));
+        const right = Math.round((gridBox?.x ?? 0) + (gridBox?.width ?? 0));
+        for (const r of rows.values()) expect(Math.abs(right - r)).toBeLessThanOrEqual(6); // 2 px çerçeve + yuvarlama
+      }
     });
 
-    test("filters narrow the logbook", async ({ page }) => {
+    test("filter narrows the logbook", async ({ page }) => {
       await page.goto(p.path);
       await page.locator('[data-filter="capesize"]').click();
-      await expect(page.locator(".post:visible")).toHaveCount(1);
+      await expect(page.locator(`${CARDS}:visible`)).toHaveCount(1);
       await expect(page.locator('[data-filter="capesize"]')).toHaveAttribute("aria-pressed", "true");
       await page.locator('[data-filter="all"]').click();
-      await expect(page.locator(".post:visible")).toHaveCount(17);
+      await expect(page.locator(`${CARDS}:visible`)).toHaveCount(17);
+    });
+
+    test("card flips when scrolled into focus", async ({ page }) => {
+      await page.goto(p.path);
+      await page.locator(CARDS).nth(8).scrollIntoViewIfNeeded();
+      await page.evaluate(() => {
+        const c = document.querySelectorAll<HTMLElement>('#kariyer [data-dc-tpl="67"]')[8]!;
+        scrollTo(0, c.getBoundingClientRect().top + scrollY - innerHeight * 0.52 + c.offsetHeight / 2);
+      });
+      await expect(page.locator('[data-scroll-flip="1"]')).toHaveCount(1);
     });
 
     test("theme toggle persists", async ({ page }) => {
       await page.goto(p.path);
-      const before = await page.locator("html").getAttribute("data-theme");
+      await expect(page.locator("body")).toHaveAttribute("data-theme", "light");
       await page.locator("[data-theme-toggle]").click();
-      const after = await page.locator("html").getAttribute("data-theme");
-      expect(after).not.toBe(before);
+      await expect(page.locator("body")).toHaveAttribute("data-theme", "dark");
       await page.reload();
-      await expect(page.locator("html")).toHaveAttribute("data-theme", after ?? "");
+      await expect(page.locator("body")).toHaveAttribute("data-theme", "dark");
     });
 
-    test("links: CV, contact, language switch", async ({ page, request }) => {
+    test("CV, contact and language links", async ({ page, request }) => {
       await page.goto(p.path);
-      const cv = page.locator("a.cv");
-      await expect(cv).toBeVisible();
-      const res = await request.get(new URL((await cv.getAttribute("href")) ?? "", page.url()).toString());
+      const href = await page.locator(".nav [data-cv-download]").getAttribute("href");
+      const res = await request.get(new URL(href ?? "", page.url()).toString());
       expect(res.status()).toBe(200);
       expect(res.headers()["content-type"]).toContain("pdf");
       await expect(page.locator('a[href="tel:+905326591923"]')).toHaveCount(1);
-      await expect(page.locator('a[href="mailto:c@bskn.tr"]').first()).toBeVisible();
+      await expect(page.locator('a[href="mailto:c@bskn.tr"]')).toHaveCount(1);
       const other = p.lang === "tr" ? "en" : "tr";
-      await page.locator(`.lang a[hreflang="${other}"]`).click();
+      await page.locator(`[data-lang-switch] a[hreflang="${other}"]`).click();
       await expect(page.locator("html")).toHaveAttribute("lang", other);
     });
 
     test("SEO head", async ({ page }) => {
       await page.goto(p.path);
-      const canonical = await page.locator('link[rel="canonical"]').getAttribute("href");
-      expect(canonical).toBe(`https://bskn.tr${p.path}`);
+      expect(await page.locator('link[rel="canonical"]').getAttribute("href")).toBe(`https://bskn.tr${p.path}`);
       await expect(page.locator('link[hreflang="x-default"]')).toHaveCount(1);
       const desc = (await page.locator('meta[name="description"]').getAttribute("content")) ?? "";
       expect(desc.length).toBeGreaterThan(80);
@@ -84,16 +101,16 @@ for (const p of PAGES) {
   });
 }
 
-test("images load", async ({ page }) => {
+test("all images load", async ({ page }) => {
   await page.goto("/");
-  const srcs = await page.locator("img").evaluateAll((els) => els.map((e) => (e as HTMLImageElement).src));
-  for (const s of new Set(srcs)) {
-    const r = await page.request.get(s);
-    expect(r.status(), s).toBe(200);
-  }
+  const srcs = await page.locator("img[src]:not([src^='data:'])").evaluateAll((els) =>
+    els.map((e) => (e as HTMLImageElement).src),
+  );
+  expect(srcs.length).toBeGreaterThan(10);
+  for (const s of new Set(srcs)) expect((await page.request.get(s)).status(), s).toBe(200);
 });
 
-test("sitemap, robots and 404", async ({ request }) => {
+test("sitemap and robots", async ({ request }) => {
   expect((await request.get("/sitemap.xml")).status()).toBe(200);
   expect(await (await request.get("/robots.txt")).text()).toContain("Sitemap: https://bskn.tr/sitemap.xml");
 });

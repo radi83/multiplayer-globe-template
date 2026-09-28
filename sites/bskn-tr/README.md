@@ -1,13 +1,28 @@
 # bskn.tr — kariyer sitesi
 
 **Murat Can Başkan, Uzakyol Baş Mühendisi** için iki dilli (TR `/`, EN `/en/`)
-tek sayfalık kariyer sitesi. Aynı repodaki bskn.net (BMMS tanıtım sitesi)
-projesinden bağımsızdır; kendi paketi, derlemesi ve Cloudflare Worker'ı vardır.
+kariyer sitesi. Aynı repodaki bskn.net (BMMS tanıtım sitesi) projesinden
+bağımsızdır; kendi paketi, derlemesi ve Cloudflare Worker'ı vardır.
 
-- Tüm metin derleme sırasında statik HTML'e yazılır; JavaScript kapalıyken de okunur.
-- Açık / koyu tema (işletim sistemi tercihine uyar, seçim hatırlanır).
-- Kariyer listesi gemi tipine göre süzülür; "hareketi azalt" ayarına uyulur.
-- Sayılar (yıl, görev, gemi tipi, yeni inşa teslimi) içerikten hesaplanır.
+**Görünüm eski bskn.tr sitesiyle birebir aynıdır.** Eski site Claude Design ile
+yapılmıştı; elimizdeki kopya (59d204b7, dönen kartlı sürüm) çalışmayan bir
+"sayfa fotoğrafı" olduğu için aynı tasarım burada yeniden kuruldu:
+
+- Eski sitenin stil dosyaları aynen kullanılır: `src/styles/modernist.css`
+  (tasarım sistemi) ve `src/styles/page.css` (sayfa + dönen kartlar).
+- HTML aynı yapı ve satır içi stillerle üretilir (`data-dc-tpl` öznitelikleri
+  korunur, çünkü eski stiller onlara bağlıdır).
+- React çalışma zamanı yerine küçük bir betik (`src/main.ts`) aynı davranışları
+  sağlar: tema, filtre, kaydırınca dönen kartlar, belirme, sayaçlar, paralaks.
+
+Eski siteye göre yapılan düzeltmeler (`src/styles/fixes.css`):
+
+- İsim iPad'de 3 satıra bölünüyordu → tek satır.
+- Üyelik ve belge kartlarının altında boş gri hücreler kalıyordu → kaldırıldı.
+- Tasarım aracından kalan "Direction / Yön A–B" düğmesi kaldırıldı.
+- Telefonda üst şerit sayfayı yana taşırıyordu → düzeltildi.
+- İçerik güncel CV'ye göre güncellendi (yıllar, 17 görev, yeni sertifikalar,
+  IMarEST MIMarEST · IMarEng).
 
 ## Komutlar
 
@@ -24,12 +39,13 @@ npm run check      # tip denetimi + derleme + testler
 
 | Ne | Nerede |
 |---|---|
-| Görevler, sertifikalar, üyelikler, eğitim | `src/data.ts` |
+| Görevler, sertifikalar, üyelikler, uzmanlık | `src/data.ts` |
 | Menü, başlık ve düğme metinleri, SEO açıklamaları | `src/copy.ts` |
 | HTML şablonu | `src/templates/page.ts` |
-| Renkler ve yazı | `src/styles/base.css` (`:root` değişkenleri) |
-| Bölüm stilleri | `src/styles/sections.css` |
+| Renkler ve yazı (eski tasarım sistemi) | `src/styles/modernist.css` |
+| Düzeltmeler | `src/styles/fixes.css` |
 | Gemi fotoğrafları | `public/img/` (WebP, en fazla 1200 px) |
+| Belge / üyelik görselleri | `public/uploads/` — `src/data.ts` içindeki `img` adıyla aynı dosya konursa kartta "Belgeyi gör" çıkar |
 | CV | `public/cv/Murat_Can_Baskan_CV_EN.pdf` |
 | Site adresi, Search Console kodu | `src/config.ts` |
 

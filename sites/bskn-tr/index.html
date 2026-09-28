@@ -3,17 +3,21 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="color-scheme" content="light dark">
-    <meta name="theme-color" content="#F1F1EF" media="(prefers-color-scheme: light)">
-    <meta name="theme-color" content="#131313" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#f3f2f2">
     <script>
-      try{var t=localStorage.getItem("bskn-theme");if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t}catch(e){}
-      document.documentElement.classList.add("js");
+      // Eski sitedeki gibi: görünür olunca beliren öğeler. JS yüklenmezse 2,5 sn sonra her şey görünür.
+      if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        document.documentElement.setAttribute("data-anim", "");
+        setTimeout(function () { if (!window.__bskn) document.documentElement.removeAttribute("data-anim"); }, 2500);
+      }
     </script>
     <!--HEAD-->
     <script type="module" src="/src/main.ts"></script>
   </head>
-  <body>
+  <body data-lang="tr" data-theme="light">
+    <script>
+      try { var p = JSON.parse(localStorage.getItem("mcb.prefs") || "{}"); if (p.dark) document.body.setAttribute("data-theme", "dark"); } catch (e) {}
+    </script>
     <!--BODY-->
   </body>
 </html>
