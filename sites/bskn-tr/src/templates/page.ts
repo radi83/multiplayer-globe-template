@@ -213,11 +213,15 @@ ${items}
 </section>`;
 }
 
-function post(p: Post, lang: Lang, idx: number): string {
+/** Şirket adı Türkçe mi? (büyük harfte "i/İ" doğru olsun diye) */
+const orgLang = (org: string): Lang =>
+  /[çğıöşüÇĞİÖŞÜ]|Denizcilik|Tersane|sektör|girişim/.test(org) ? "tr" : "en";
+
+function post(p: Post, lang: Lang, idx: number, c: Copy): string {
   const ship = p.ship;
   // Büyük harfe çevrilen satırlarda doğru "i/İ" için: şirket adı Türkçe, gemi adı İngilizce kuralla.
   const orgLine = [
-    p.org ? `<span class="sc-interp" lang="tr">${esc(p.org)}</span>` : "",
+    p.org ? `<span class="sc-interp" lang="${orgLang(p.org)}">${esc(p.org)}</span>` : "",
     ship ? `<span class="sc-interp" lang="${p.shipLang ?? "en"}">${esc(ship)}</span>` : "",
   ]
     .filter(Boolean)
@@ -237,7 +241,7 @@ function post(p: Post, lang: Lang, idx: number): string {
     )
     .join("\n");
   return `<div data-dc-tpl="66" data-reveal="" data-type="${p.type}" style="transition-delay: ${Math.min(0.5, idx * 0.075)}s;">
-<div class="scp2" data-dc-tpl="67" tabindex="0" style="position: relative; display: block; width: 100%; text-align: left; border-top: 2px solid var(--rule); background: none; padding: calc(var(--leading)*0.9) 0 calc(var(--leading)*0.9) clamp(16px,3vw,40px);">
+<div class="scp2" data-dc-tpl="67" tabindex="0" role="button" aria-expanded="false" style="position: relative; display: block; width: 100%; text-align: left; border-top: 2px solid var(--rule); background: none; padding: calc(var(--leading)*0.9) 0 calc(var(--leading)*0.9) clamp(16px,3vw,40px);">
 <span aria-hidden="true" data-dc-tpl="68" style="position: absolute; left: 0px; top: calc(var(--leading)*0.9 + 6px); width: 10px; height: 10px; background: var(--accent); transform: scale(1) rotate(0deg); transition: transform 0.55s cubic-bezier(0.2, 0.7, 0.2, 1);"></span>
 <span data-dc-tpl="69" style="display: grid; grid-template-columns: minmax(128px, 13%) minmax(0px, 1fr); gap: clamp(12px, 2.4vw, 36px); align-items: start;">
 <span data-dc-tpl="70" style='font-family: var(--font-heading); font-weight: 800; font-size: ${yearSize}; line-height: 1.05; letter-spacing: -0.03em; color: var(--ink); white-space: nowrap; font-feature-settings: "tnum";'>${i(
@@ -252,8 +256,12 @@ function post(p: Post, lang: Lang, idx: number): string {
     p.short[lang],
   )}</span>
 </span>
+<span class="peek" aria-hidden="true">${
+    p.img ? `<img class="peek__thumb" src="${r(lang)}img/${p.img}" alt="" loading="lazy" decoding="async">` : ""
+  }<span class="peek__label">${esc(c.detail)}</span><span class="peek__plus">+</span></span>
 </span>
 <span data-dc-tpl="75" style="display: grid; grid-template-rows: 0fr;">
+<span class="peek-close" aria-hidden="true">× ${esc(c.closeCard)}</span>
 <span data-dc-tpl="76" style="display: block; overflow: hidden; min-height: 0px;">
 <span data-dc-tpl="77" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: var(--leading) clamp(20px,3vw,48px); padding: var(--leading) 0 var(--half);">
 <span data-dc-tpl="78" style="display: block; min-width: 0px;">
@@ -307,7 +315,7 @@ ${chips}
 </div>
 <div data-dc-tpl="63" style="position: relative; padding-left: 0px;">
 <div aria-hidden="true" data-dc-tpl="64" data-line="" style="position: absolute; left: 4px; top: 0px; bottom: 0px; width: 2px; background: var(--accent); transform-origin: center top; transform: scaleY(0);"></div>
-${CAREER.map((p, n) => post(p, lang, n)).join("\n")}
+${CAREER.map((p, n) => post(p, lang, n, c)).join("\n")}
 <div data-dc-tpl="88" style="border-top: 2px solid var(--rule);"></div>
 </div>
 <p style="margin: var(--half) 0 0; font-size: 11px; letter-spacing: 0.06em; color: var(--muted);">${esc(c.photoNote)}</p>

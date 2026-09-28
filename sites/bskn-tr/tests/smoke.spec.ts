@@ -56,14 +56,25 @@ for (const p of PAGES) {
       await expect(page.locator(`${CARDS}:visible`)).toHaveCount(17);
     });
 
-    test("card flips when scrolled into focus", async ({ page }) => {
+    test("card opens on click without rotation, closes again", async ({ page }) => {
       await page.goto(p.path);
-      await page.locator(CARDS).nth(8).scrollIntoViewIfNeeded();
-      await page.evaluate(() => {
-        const c = document.querySelectorAll<HTMLElement>('#kariyer [data-dc-tpl="67"]')[8]!;
-        scrollTo(0, c.getBoundingClientRect().top + scrollY - innerHeight * 0.52 + c.offsetHeight / 2);
-      });
-      await expect(page.locator('[data-scroll-flip="1"]')).toHaveCount(1);
+      const card = page.locator('#kariyer [data-dc-tpl="67"]').nth(8);
+      await card.scrollIntoViewIfNeeded();
+      // Tıklanabilir olduğu belli: fotoğraf + "Detay +" sekmesi görünür.
+      await expect(card.locator(".peek")).toBeVisible();
+      await expect(card).toHaveAttribute("aria-expanded", "false");
+      await card.hover();
+      await expect(card).toHaveAttribute("aria-expanded", "false"); // üzerine gelmek açmaz
+      await card.click();
+      await expect(card).toHaveAttribute("aria-expanded", "true");
+      await expect(card.locator('[data-dc-tpl="84"]')).toBeVisible();
+      const tf = await card.locator('[data-dc-tpl="75"]').evaluate((e) => getComputedStyle(e).transform);
+      expect(tf === "none" || !/matrix3d/.test(tf)).toBe(true);
+      await card.click();
+      await expect(card).toHaveAttribute("aria-expanded", "false");
+      await card.focus();
+      await page.keyboard.press("Enter");
+      await expect(card).toHaveAttribute("aria-expanded", "true");
     });
 
     test("theme toggle persists", async ({ page }) => {
