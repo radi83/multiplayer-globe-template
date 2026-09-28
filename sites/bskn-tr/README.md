@@ -20,8 +20,8 @@ Eski siteye göre yapılan düzeltmeler (`src/styles/fixes.css`):
 - İsim iPad'de 3 satıra bölünüyordu → tek satır.
 - Üyelik ve belge kartlarının altında boş gri hücreler kalıyordu → kaldırıldı.
 - Deneyim kartları artık dönmüyor (mide bulandırıyordu): tıklayınca doğrudan arka yüz
-  açılır; kartın sağındaki küçük gemi fotoğrafı + "Detay +" sekmesi tıklanabilir
-  olduğunu gösterir, ilk kartta "+" bir kez hafifçe halka yayar.
+  açılır; yılın solundaki kırmızı "+" kutusu tıklanabilir olduğunu gösterir,
+  ilk kartta "+" bir kez hafifçe halka yayar.
 - Tasarım aracından kalan "Direction / Yön A–B" düğmesi kaldırıldı.
 - Telefonda üst şerit sayfayı yana taşırıyordu → düzeltildi.
 - İçerik güncel CV'ye göre güncellendi (yıllar, 17 görev, yeni sertifikalar,
