@@ -55,13 +55,13 @@ de yer alır. CV güncellenince önce PDF'i `public/cv/` altına koyun, sonra
 
 ## Yayın (Cloudflare)
 
-Site, statik dosya sunan bir Cloudflare Worker'dır (`wrangler.json`, ad: `bskn-tr`).
+Site, statik dosya sunan bir Cloudflare Worker'dır (`wrangler.json`, ad: `bskntr`).
 Bir kez yapılacak kurulum:
 
 1. Cloudflare → **Workers & Pages → Create → Import a repository** →
    `radi83/multiplayer-globe-template`.
-2. **Project name:** `bskn-tr` · **Root directory:** `sites/bskn-tr` ·
-   **Build command:** `npm run build` · **Deploy command:** `npx wrangler deploy`.
+2. **Project name:** `bskntr` (Cloudflare `bskn-tr` adını kabul etmedi) · **Root directory:** boş bırakılır ·
+   **Build command:** `cd sites/bskn-tr && npm ci && npm run build` · **Deploy command:** `cd sites/bskn-tr && npx wrangler deploy` · **Preview command:** `cd sites/bskn-tr && npx wrangler versions upload` · **Enable Preview builds:** kapalı.
 3. İlk yayın bitince Worker'ın **Settings → Domains & Routes → Add → Custom domain**
    bölümüne `bskn.tr` (ve istenirse `www.bskn.tr`) eklenir. Alan adı şu an eski
    Pages projesine bağlıysa önce oradan kaldırılır.
