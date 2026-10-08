@@ -1,4 +1,4 @@
-**
+/**
  * data.ts + copy.ts → statik HTML (derleme anında).
  *
  * İşaretleme ve satır içi stiller eski bskn.tr sitesiyle (Claude Design, 59d204b7)
