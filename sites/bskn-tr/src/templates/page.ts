@@ -158,7 +158,7 @@ function nav(lang: Lang, c: Copy): string {
     "tr",
   )}${lk("en")}</span>
 <button class="scp1" data-dc-tpl="20" data-theme-toggle="" style="width: 34px; height: 34px; display: grid; place-items: center; border: 1px solid var(--rule); background: none; color: var(--ink); cursor: pointer; font-size: 14px; line-height: 1;" title="${c.theme}" aria-label="${c.theme}" type="button"><span class="sc-interp" data-theme-glyph="">☾</span></button>
-<a class="btn btn-primary" data-cv-download="1" data-dc-tpl="21" download="" href="${r(lang)}${${CV_PATH[lang]}}" style="white-space: nowrap;"><span class="sc-interp cv-long">${esc(
+<a class="btn btn-primary" data-cv-download="1" data-dc-tpl="21" download="" href="${r(lang)}cv/Murat_Can_Baskan_CV_Signature_White_${lang === "tr" ? "TR" : "EN"}.pdf" style="white-space: nowrap;"><span class="sc-interp cv-long">${esc(
     c.ctaCv,
   )}</span><span class="cv-short" aria-hidden="true">CV</span></a>
 </span></nav>`;
@@ -185,7 +185,7 @@ function hero(lang: Lang, c: Copy): string {
   )}</p>
 <div data-dc-tpl="38" style="animation: 0.9s cubic-bezier(0.16, 0.8, 0.24, 1) 0.58s both mcbRise; display: flex; flex-wrap: wrap; gap: 10px; align-items: center;">
 <a class="btn btn-primary" data-dc-tpl="39" href="#kariyer">${i(c.ctaCareer)}</a>
-<a class="btn btn-secondary" data-cv-download="1" data-dc-tpl="40" download="" href="${r(lang)}${${CV_PATH[lang]}}">${i(
+<a class="btn btn-secondary" data-cv-download="1" data-dc-tpl="40" download="" href="${r(lang)}cv/Murat_Can_Baskan_CV_Signature_White_${lang === "tr" ? "TR" : "EN"}.pdf">${i(
     c.ctaCv,
   )} — PDF</a>
 </div>
@@ -480,7 +480,7 @@ function contact(lang: Lang, c: Copy): string {
 <a class="scp3" data-dc-tpl="147" href="${PERSON.projectSite}${lang === "en" ? "/en/" : "/"}" style="${btn}">bskn.net</a>
 <a data-cv-download="1" data-dc-tpl="148" download="" href="${r(
     lang,
-  )}${${CV_PATH[lang]}}" style="display: inline-flex; align-items: center; padding: 13px 18px; background: var(--color-bg); color: var(--accent); font-family: var(--font-heading); font-weight: 800; font-size: 14px; letter-spacing: 0.02em;">${i(
+  )}cv/Murat_Can_Baskan_CV_Signature_White_${lang === "tr" ? "TR" : "EN"}.pdf" style="display: inline-flex; align-items: center; padding: 13px 18px; background: var(--color-bg); color: var(--accent); font-family: var(--font-heading); font-weight: 800; font-size: 14px; letter-spacing: 0.02em;">${i(
     c.ctaCv,
   )} — PDF</a>
 </div>
