@@ -238,8 +238,12 @@ function post(p: Post, lang: Lang, idx: number, c: Copy): string {
     .filter(Boolean)
     .join(" · ");
   const yearSize = p.years.length > 5 ? "clamp(16px, 1.7vw, 22px)" : "clamp(23px, 2.5vw, 32px)";
+  const mediaStyle =
+    p.id === "gemak"
+      ? "display: block; width: 100%; aspect-ratio: 16 / 10; box-sizing: border-box; object-fit: contain; object-position: center; background: #fff; padding: clamp(10px, 1.5vw, 18px); filter: none; transform: none;"
+      : "display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; background: var(--surface); filter: grayscale(1) contrast(1.08); transform: scale(1.12); transition: transform 1.1s cubic-bezier(0.2, 0.7, 0.2, 1), filter 0.5s;";
   const media = p.img
-    ? `<img alt="${esc(ship || p.org)}" data-dc-tpl="79" src="${r(lang)}img/${p.img}" loading="lazy" decoding="async" style="display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; background: var(--surface); filter: grayscale(1) contrast(1.08); transform: scale(1.12); transition: transform 1.1s cubic-bezier(0.2, 0.7, 0.2, 1), filter 0.5s;"/>`
+    ? `<img alt="${esc(ship || p.org)}" data-dc-tpl="79" src="${r(lang)}img/${p.img}" loading="lazy" decoding="async" style="${mediaStyle}"/>`
     : `<span data-dc-tpl="79" data-noimg="" style="display: grid; place-items: center; width: 100%; aspect-ratio: 16 / 10; background: var(--surface); font-family: var(--font-heading); font-weight: 800; font-size: clamp(22px, 2.4vw, 34px); letter-spacing: -0.02em; color: var(--muted);">${esc(
         ship,
       )}</span>`;
