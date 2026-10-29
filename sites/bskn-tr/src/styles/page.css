@@ -51,6 +51,38 @@ html[data-anim] [data-reveal]{opacity:0;transform:translateY(48px) scale(.988)}
   margin-bottom:clamp(10px,1.2vw,18px);
 }
 
+/* BMMS'nin 2020'deki başlangıcından bugünkü aktif girişim basamağına uzanan paralel kol. */
+#kariyer [data-bmms-branch]{
+  position:absolute;
+  inset:0 auto 0 0;
+  width:18px;
+  height:100%;
+  overflow:visible;
+  pointer-events:none;
+  z-index:5;
+}
+#kariyer [data-bmms-branch-path]{
+  fill:none;
+  stroke:var(--accent);
+  stroke-width:2;
+  stroke-linecap:round;
+  stroke-dasharray:3 7;
+  opacity:.82;
+  vector-effect:non-scaling-stroke;
+}
+#kariyer [data-post-id="bmms-current"] [data-dc-tpl="69"]{
+  border-color:var(--accent) !important;
+  background:color-mix(in srgb,var(--accent) 7%,var(--paper)) !important;
+  box-shadow:inset 4px 0 0 color-mix(in srgb,var(--accent) 70%,transparent);
+}
+#kariyer [data-post-id="bmms-current"] [data-dc-tpl="70"]{
+  color:var(--accent-ink) !important;
+  letter-spacing:.08em !important;
+}
+#kariyer [data-post-id="bmms-current"] [data-dc-tpl="68"]{
+  animation:mcbPulse 2.4s ease-in-out infinite;
+}
+
 #kariyer [data-dc-tpl="67"]{
   position:relative !important;
   display:block !important;
