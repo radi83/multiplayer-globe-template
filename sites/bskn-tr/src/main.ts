@@ -137,7 +137,30 @@ const bar = document.querySelector<HTMLElement>("[data-progress]");
 const pars = Array.from(document.querySelectorAll<HTMLElement>("[data-par]"));
 const cards = Array.from(document.querySelectorAll<HTMLElement>('#kariyer [data-dc-tpl="67"]'));
 const line = document.querySelector<HTMLElement>("[data-line]");
+const bmmsBranch = document.querySelector<SVGSVGElement>("[data-bmms-branch]");
+const bmmsBranchPath = document.querySelector<SVGPathElement>("[data-bmms-branch-path]");
 let queued = false;
+
+function updateBmmsBranch(): void {
+  if (!bmmsBranch || !bmmsBranchPath) return;
+  const wrap = bmmsBranch.parentElement;
+  const origin = document.querySelector<HTMLElement>('[data-post-id="bskn"]');
+  const target = document.querySelector<HTMLElement>('[data-post-id="bmms-current"]');
+  if (!wrap || !origin || !target || origin.hidden || target.hidden) {
+    bmmsBranch.style.display = "none";
+    return;
+  }
+  bmmsBranch.style.display = "block";
+  const wr = wrap.getBoundingClientRect();
+  const originY = origin.getBoundingClientRect().top - wr.top + 39;
+  const targetY = target.getBoundingClientRect().top - wr.top + 39;
+  const height = Math.max(1, wrap.offsetHeight);
+  bmmsBranch.setAttribute("viewBox", `0 0 18 ${height}`);
+  bmmsBranchPath.setAttribute(
+    "d",
+    `M 5 ${originY.toFixed(1)} C 13 ${originY.toFixed(1)}, 14 ${(originY - 24).toFixed(1)}, 14 ${(originY - 52).toFixed(1)} L 14 ${(targetY + 52).toFixed(1)} C 14 ${(targetY + 24).toFixed(1)}, 13 ${targetY.toFixed(1)}, 5 ${targetY.toFixed(1)}`,
+  );
+}
 
 function frame(): void {
   queued = false;
@@ -159,6 +182,7 @@ function frame(): void {
     const p = Math.max(0, Math.min(1, (vh * 0.72 - rc.top) / Math.max(1, rc.height)));
     line.style.transform = `scaleY(${p.toFixed(3)})`;
   }
+  updateBmmsBranch();
 }
 
 function onScroll(): void {

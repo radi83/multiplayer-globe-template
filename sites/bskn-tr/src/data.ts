@@ -20,10 +20,14 @@ export interface Post {
   role: T;
   /** Şirket adı; boşsa gösterilmez */
   org: string;
+  /** Kartta gösterilecek yerelleştirilmiş şirket/rol satırı. */
+  orgLabel?: T;
   /** "Armatör & şirket" sayısında kullanılan anahtar. Adı bilinmeyen işveren için boş. */
   orgKey: string;
   /** Gemi adları veya çalışma yeri */
   ship: string;
+  /** Kartta gösterilecek yerelleştirilmiş gemi/çalışma alanı satırı. */
+  shipLabel?: T;
   /** Gemi/yer adı Türkçe bir ifadeyse "tr" (büyük harf dönüşümü için) */
   shipLang?: Lang;
   /** Kartın ön yüzündeki kısa özet */
@@ -34,6 +38,8 @@ export interface Post {
   /** public/img altındaki görsel */
   img?: string;
   current?: boolean;
+  /** Yıl yerine gösterilen yerelleştirilmiş durum etiketi. */
+  status?: T;
 }
 
 export const PERSON = {
@@ -341,6 +347,34 @@ export const CAREER: Post[] = [
     current: true,
   },
 ];
+
+/**
+ * 2020'deki BSKN NET/BMMS başlangıcının bugüne uzanan paralel kolu.
+ * Normal görev sayıları ve deniz kariyeri istatistiklerine dahil edilmez.
+ */
+export const BMMS_CONTINUATION: Post = {
+  id: "bmms-current",
+  years: "",
+  status: t("DEVAM EDİYOR", "ONGOING"),
+  type: "shore",
+  role: t("BMMS — Denizcilik Teknolojileri Girişimi", "BMMS — Maritime Technology Venture"),
+  org: "BMMS",
+  orgLabel: t("Kurucu · Denizcilik Teknolojileri Girişimcisi", "Founder · Maritime Technology Entrepreneur"),
+  orgKey: "bskn",
+  ship: "BMMS",
+  shipLabel: t("Ar-Ge · Ürün doğrulama · Pilot hazırlığı", "R&D · Product validation · Pilot preparation"),
+  short: t(
+    "Ar-Ge, ürün doğrulama ve pilot hazırlığı; girişimcilik ve profesyonel kayıt süreçleriyle birlikte ilerliyor.",
+    "R&D, product validation and pilot preparation continue alongside entrepreneurship and professional-registration programmes.",
+  ),
+  long: t(
+    "Uzakyol Baş Mühendisliği ve gemi makineleri işletme tecrübesini kanıta dayalı mühendislik karar sistemlerine dönüştüren BMMS geliştiriliyor. İTÜ Çekirdek BİGG ve PRU ARISTTO Ön Kuluçka programlarına kabul edilen girişim, TÜBİTAK BİGG 1812 sürecinde ilerliyor. IMarEST üyeliği kapsamında IEng IMarEng profesyonel kayıt başvurusu resmî değerlendirme sürecindedir; ICP Paneli 20 Kasım 2026 için planlanmış olup sonraki aşama Professional Review Interview'dır.",
+    "BMMS is being developed to transform Ocean-Going Chief Engineer and marine-engineering experience into evidence-based engineering decision systems. Accepted into İTÜ Çekirdek BİGG and PRU ARISTTO Pre-Incubation, the venture is progressing through the TÜBİTAK BİGG 1812 process. Alongside IMarEST membership, the IEng IMarEng professional-registration application is in formal assessment; the ICP Panel is scheduled for 20 November 2026, followed by the Professional Review Interview.",
+  ),
+  tags: ["TÜBİTAK BİGG 1812", "İTÜ Çekirdek BİGG", "PRU ARISTTO", "IMarEST · IEng IMarEng"],
+  img: "bskn-net.webp",
+  current: true,
+};
 
 export interface SkillGroup {
   title: T;
