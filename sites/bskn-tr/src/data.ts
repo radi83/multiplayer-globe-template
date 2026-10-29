@@ -131,7 +131,7 @@ export const CAREER: Post[] = [
       "Drydock period on twin-screw controllable-pitch vessels: shaft maintenance, yard scheduling, team coordination and time planning. The period that showed what the engine room looks like from the yard side.",
     ),
     tags: ["Havuzlama", "Şaft", "Pervane"],
-    img: "gemak.webp",
+    img: "gemak tam.jpg",
   },
   {
     id: "alfalaval",
