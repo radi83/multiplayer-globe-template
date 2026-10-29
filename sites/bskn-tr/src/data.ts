@@ -428,21 +428,21 @@ export const CERTIFICATES: Credential[] = [
     title: "Cyber Security 101",
     when: t("Mind Tools for Business · Ekim 2026", "Mind Tools for Business · October 2026"),
     desc: t(
-      "Emerald Works tarafından verilen 20 dakikalık siber güvenlik eğitimi. 27 Ekim 2026 · Belge no 242864139.",
-      "20-minute cyber-security course by Emerald Works. 27 October 2026 · Certificate 242864139.",
+      "Emerald Works tarafından verilen siber güvenlik eğitimi. 27 Ekim 2026 · Belge no 242864139.",
+      "Cyber-security course by Emerald Works. 27 October 2026 · Certificate 242864139.",
     ),
     img: "cyber-security-101.webp",
   },
   {
     title: "Craft your 2026 CPD Plan",
     when: t("IMarEST · Ekim 2026", "IMarEST · October 2026"),
-    desc: t("Sürekli Mesleki Gelişim (CPD) planlama eğitimi. 22 Ekim 2026 · 30 dakika.", "Continuing Professional Development planning. 22 October 2026 · 30 minutes."),
+    desc: t("Sürekli Mesleki Gelişim (CPD) planlama eğitimi. 22 Ekim 2026.", "Continuing Professional Development planning. 22 October 2026."),
     img: "imarest-cpd-plan-2026.webp",
   },
   {
     title: "AI-Driven Solutions Across the Marine Industry",
     when: t("IMarEST · Ekim 2026", "IMarEST · October 2026"),
-    desc: t("Denizcilik sektöründe yapay zekâ odaklı çözümler eğitimi. 19 Ekim 2026 · 30 dakika.", "AI-driven solutions across the marine industry. 19 October 2026 · 30 minutes."),
+    desc: t("Denizcilik sektöründe yapay zekâ odaklı çözümler eğitimi. 19 Ekim 2026.", "AI-driven solutions across the marine industry. 19 October 2026."),
     img: "imarest-ai-marine-industry.webp",
   },
   {
