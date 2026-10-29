@@ -9,6 +9,7 @@ import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import {
   CAREER,
+  BMMS_CONTINUATION,
   CERTIFICATES,
   FLEET_NAME,
   MEMBERSHIPS,
@@ -229,15 +230,18 @@ const orgLang = (org: string): Lang =>
   /[çğıöşüÇĞİÖŞÜ]|Denizcilik|Tersane|sektör|girişim/.test(org) ? "tr" : "en";
 
 function post(p: Post, lang: Lang, idx: number, c: Copy): string {
-  const ship = p.ship;
+  const ship = p.shipLabel?.[lang] ?? p.ship;
+  const org = p.orgLabel?.[lang] ?? p.org;
+  const shipTextLang = p.shipLabel ? lang : (p.shipLang ?? "en");
   // Büyük harfe çevrilen satırlarda doğru "i/İ" için: şirket adı Türkçe, gemi adı İngilizce kuralla.
   const orgLine = [
-    p.org ? `<span class="sc-interp" lang="${orgLang(p.org)}">${esc(p.org)}</span>` : "",
-    ship ? `<span class="sc-interp" lang="${p.shipLang ?? "en"}">${esc(ship)}</span>` : "",
+    org ? `<span class="sc-interp" lang="${orgLang(org)}">${esc(org)}</span>` : "",
+    ship ? `<span class="sc-interp" lang="${shipTextLang}">${esc(ship)}</span>` : "",
   ]
     .filter(Boolean)
     .join(" · ");
-  const yearSize = p.years.length > 5 ? "clamp(16px, 1.7vw, 22px)" : "clamp(23px, 2.5vw, 32px)";
+  const yearLabel = p.status?.[lang] ?? p.years;
+  const yearSize = yearLabel.length > 5 ? "clamp(16px, 1.7vw, 22px)" : "clamp(23px, 2.5vw, 32px)";
   const mediaStyle =
     p.id === "gemak"
       ? "display: block; width: 100%; aspect-ratio: 16 / 10; box-sizing: border-box; object-fit: contain; object-position: center; background: #fff; padding: clamp(10px, 1.5vw, 18px); filter: none; transform: none;"
@@ -255,11 +259,11 @@ function post(p: Post, lang: Lang, idx: number, c: Copy): string {
         )}</span>`,
     )
     .join("\n");
-  return `<div data-dc-tpl="66" data-reveal="" data-type="${p.type}" style="transition-delay: ${Math.min(0.5, idx * 0.075)}s;">
+  return `<div data-dc-tpl="66" data-reveal="" data-type="${p.type}" data-post-id="${esc(p.id)}" style="transition-delay: ${Math.min(0.5, idx * 0.075)}s;">
 <div class="scp2" data-dc-tpl="67" tabindex="0" role="button" aria-expanded="false" style="position: relative; display: block; width: 100%; text-align: left; border-top: 2px solid var(--rule); background: none; padding: calc(var(--leading)*0.9) 0 calc(var(--leading)*0.9) clamp(16px,3vw,40px);">
 <span aria-hidden="true" data-dc-tpl="68" style="position: absolute; left: 0px; top: calc(var(--leading)*0.9 + 6px); width: 10px; height: 10px; background: var(--accent); transform: scale(1) rotate(0deg); transition: transform 0.55s cubic-bezier(0.2, 0.7, 0.2, 1);"></span>
 <span data-dc-tpl="69" style="display: grid; grid-template-columns: minmax(128px, 13%) minmax(0px, 1fr); gap: clamp(12px, 2.4vw, 36px); align-items: start;">
-<span data-dc-tpl="70" style='font-family: var(--font-heading); font-weight: 800; font-size: ${yearSize}; line-height: 1.05; letter-spacing: -0.03em; color: var(--ink); white-space: nowrap; font-feature-settings: "tnum";'>${i(p.years)}</span>
+<span data-dc-tpl="70" style='font-family: var(--font-heading); font-weight: 800; font-size: ${yearSize}; line-height: 1.05; letter-spacing: -0.03em; color: var(--ink); white-space: nowrap; font-feature-settings: "tnum";'>${i(yearLabel)}</span>
 <span data-dc-tpl="71" style="display: block; min-width: 0px;">
 <span data-dc-tpl="72" style="display: block; font-family: var(--font-heading); font-weight: 800; font-size: clamp(19px, 1.8vw, 24px); line-height: 1.14; letter-spacing: -0.02em; color: var(--ink);">${i(
     p.role[lang],
@@ -278,7 +282,7 @@ function post(p: Post, lang: Lang, idx: number, c: Copy): string {
 <span data-dc-tpl="78" style="display: block; min-width: 0px;">
 ${media}
 <span data-dc-tpl="80" style="display: flex; justify-content: space-between; gap: 12px; margin-top: 10px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);">
-<span data-dc-tpl="81" lang="${p.shipLang ?? "en"}">${i(ship || p.org)}</span>
+<span data-dc-tpl="81" lang="${shipTextLang}">${i(ship || org)}</span>
 <span data-dc-tpl="82">${i(TYPE_LABEL[p.type][lang])}</span>
 </span>
 </span>
@@ -325,7 +329,9 @@ function career(lang: Lang, c: Copy): string {
 ${chips}
 </div>
 <div data-dc-tpl="63" style="position: relative; padding-left: 0px;">
+<svg aria-hidden="true" data-bmms-branch="" preserveAspectRatio="none"><path data-bmms-branch-path=""></path></svg>
 <div aria-hidden="true" data-dc-tpl="64" data-line="" style="position: absolute; left: 4px; top: 0px; bottom: 0px; width: 2px; background: var(--accent); transform-origin: center top; transform: scaleY(0);"></div>
+${post(BMMS_CONTINUATION, lang, 0, c)}
 ${CAREER.map((p, n) => post(p, lang, n, c)).join("\n")}
 <div data-dc-tpl="88" style="border-top: 2px solid var(--rule);"></div>
 </div>
