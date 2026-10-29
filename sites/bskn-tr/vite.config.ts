@@ -1,3 +1,4 @@
+import { copyFileSync, mkdirSync } from "node:fs";
 import { resolve } from "node:path";
 import { defineConfig, type Plugin } from "vite";
 import { SITE_URL, SEARCH_VERIFICATION } from "./src/config.ts";
@@ -54,9 +55,34 @@ function seoFiles(): Plugin {
   };
 }
 
+/** Depo kokune yuklenen guncel CV PDF'lerini site ciktisina kopyalar. */
+function currentCvFiles(): Plugin {
+  return {
+    name: "bskn-current-cv-files",
+    apply: "build",
+    closeBundle() {
+      const cvDir = resolve(import.meta.dirname, "dist/cv");
+      const repoRoot = resolve(import.meta.dirname, "../..");
+      mkdirSync(cvDir, { recursive: true });
+      copyFileSync(
+        resolve(repoRoot, "Murat_Can_Baskan_CV_OnePage_TR.pdf"),
+        resolve(cvDir, "Murat_Can_Baskan_CV_Signature_White_TR.pdf"),
+      );
+      copyFileSync(
+        resolve(repoRoot, "Murat_Can_Baskan_CV_OnePage_EN.pdf"),
+        resolve(cvDir, "Murat_Can_Baskan_CV_Signature_White_EN.pdf"),
+      );
+      copyFileSync(
+        resolve(repoRoot, "Murat_Can_Baskan_CV_OnePage_EN.pdf"),
+        resolve(cvDir, "Murat_Can_Baskan_CV_EN.pdf"),
+      );
+    },
+  };
+}
+
 export default defineConfig({
   base: "./",
-  plugins: [staticContent(), seoFiles()],
+  plugins: [staticContent(), seoFiles(), currentCvFiles()],
   build: {
     // Gemi sahnesi (Three.js) sonradan yüklenen ayrı bir parçadır.
     chunkSizeWarningLimit: 600,
