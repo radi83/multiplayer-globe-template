@@ -1,8 +1,8 @@
 import { expect, test } from "@playwright/test";
 
 const PAGES = [
-  { path: "/", lang: "tr", role: "Baş Mühendis" },
-  { path: "/en/", lang: "en", role: "Chief Engineer" },
+  { path: "/", lang: "tr", role: "Baş Mühendis", current: "DEVAM EDİYOR" },
+  { path: "/en/", lang: "en", role: "Chief Engineer", current: "ONGOING" },
 ] as const;
 
 const CARDS = '#kariyer [data-dc-tpl="66"]';
@@ -16,7 +16,10 @@ for (const p of PAGES) {
       await expect(page.locator("html")).toHaveAttribute("lang", p.lang);
       await expect(page.locator("body")).toHaveAttribute("data-lang", p.lang);
       await expect(page.locator("h1")).toContainText("Murat Can");
-      await expect(page.locator(CARDS)).toHaveCount(17);
+      await expect(page.locator(CARDS)).toHaveCount(18);
+      await expect(page.locator(CARDS).first()).toContainText(p.current);
+      await expect(page.locator(CARDS).first()).toContainText("BMMS");
+      await expect(page.locator("[data-bmms-branch-path]")).toHaveAttribute("d", /^M /);
       await expect(page.locator(CARDS).last()).toContainText(p.role);
       const [sw, iw] = await page.evaluate(() => [document.documentElement.scrollWidth, innerWidth]);
       expect(sw).toBeLessThanOrEqual(iw);
@@ -53,7 +56,7 @@ for (const p of PAGES) {
       await expect(page.locator(`${CARDS}:visible`)).toHaveCount(1);
       await expect(page.locator('[data-filter="capesize"]')).toHaveAttribute("aria-pressed", "true");
       await page.locator('[data-filter="all"]').click();
-      await expect(page.locator(`${CARDS}:visible`)).toHaveCount(17);
+      await expect(page.locator(`${CARDS}:visible`)).toHaveCount(18);
     });
 
     test("card opens on click without rotation, closes again", async ({ page }) => {
