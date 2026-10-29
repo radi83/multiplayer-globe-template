@@ -459,6 +459,7 @@ export const CERTIFICATES: Credential[] = [
     title: "LSA & FFE Training",
     when: t("Delmar Academy · Ağustos 2026", "Delmar Academy · August 2026"),
     desc: t("Can kurtarma ve yangınla mücadele donanımı. Belge no DA-BST-M02-1034.", "Life-saving and fire-fighting equipment. Certificate DA-BST-M02-1034."),
+    img: "delmar-lsa-ffe.webp",
   },
   {
     title: "YÖKDİL İngilizce",
@@ -482,13 +483,13 @@ export const CERTIFICATES: Credential[] = [
     title: "OPRC Introduction",
     when: t("IMO onaylı", "IMO approved"),
     desc: t("Oil Pollution Preparedness, Response and Cooperation.", "Oil Pollution Preparedness, Response and Cooperation."),
-    img: "imo.jpeg",
+    img: "imo-oprc-introduction.webp",
   },
   {
     title: "MARPOL Annex V",
     when: t("IMO onaylı", "IMO approved"),
     desc: t("Gemilerden kaynaklanan kirliliğin önlenmesi.", "Prevention of pollution from ships."),
-    img: "imo.jpeg",
+    img: "imo-marpol-annex-v.webp",
   },
   {
     title: "Gavarnör & OMD",
