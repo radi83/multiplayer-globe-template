@@ -243,3 +243,14 @@ html[data-anim] [data-reveal]{opacity:0;transform:translateY(48px) scale(.988)}
     transition:none !important;
   }
 }
+
+/* GEMAK is a wide brand lockup, not a photographic crop. */
+#kariyer [data-dc-tpl="79"][src$="gemak tam.jpg"] {
+  box-sizing: border-box !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  padding: clamp(10px, 1.5vw, 18px) !important;
+  background: #fff !important;
+  filter: none !important;
+  transform: none !important;
+}
