@@ -254,11 +254,3 @@ html[data-anim] [data-reveal]{opacity:0;transform:translateY(48px) scale(.988)}
   filter: none !important;
   transform: none !important;
 }
-
-#kariyer [data-dc-tpl="78"]:has(> [data-dc-tpl="79"][src$="gemak tam.jpg"]) {
-  background: #fff url("/img/gemak tam.jpg") center / contain no-repeat !important;
-}
-
-#kariyer [data-dc-tpl="78"]:has(> [data-dc-tpl="79"][src$="gemak tam.jpg"]) > [data-dc-tpl="79"] {
-  opacity: 0 !important;
-}
