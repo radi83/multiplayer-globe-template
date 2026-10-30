@@ -13,7 +13,7 @@ test("metin JavaScript'ten bağımsız, statik HTML'de gelir", async ({ browser 
   const ctx = await browser.newContext({ javaScriptEnabled: false });
   const page = await ctx.newPage();
   await page.goto("/");
-  await expect(page.locator("h1")).toContainText("kaynağına kadar");
+  await expect(page.locator("h1")).toContainText("kanıt istihbaratı");
   await expect(page.locator("#ornek h2")).toBeVisible();
   await expect(page.locator(".globe__fallback")).toBeVisible();
   await ctx.close();
@@ -115,7 +115,7 @@ test.describe("İngilizce sayfa", () => {
     const page = await ctx.newPage();
     await page.goto("/en/");
     await expect(page.locator("html")).toHaveAttribute("lang", "en");
-    await expect(page.locator("h1")).toContainText("back to its source");
+    await expect(page.locator("h1")).toContainText("evidence intelligence");
     await expect(page.locator(".lang a[aria-current=page]")).toHaveText("EN");
     await ctx.close();
   });
@@ -149,7 +149,7 @@ test("dil düğmesi iki sayfa arasında gezer", async ({ page }) => {
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
   await page.locator(".lang a", { hasText: "TR" }).click();
   await expect(page).toHaveURL(/localhost:4173\/$/);
-  await expect(page.locator("h1")).toContainText("kaynağına kadar");
+  await expect(page.locator("h1")).toContainText("kanıt istihbaratı");
 });
 
 test("küre cümleleri sayfanın dilinde", async ({ page }) => {
@@ -182,8 +182,8 @@ test("hareket kapalıyken de dünya hatasız çizilir", async ({ browser }) => {
 test.describe("SEO", () => {
   test("başlık, açıklama ve yapılandırılmış veri her dilde doğru", async ({ page }) => {
     for (const [path, lang, title] of [
-      ["/", "tr", "Denizcilik Mühendisliği Bilgi Sistemi"],
-      ["/en/", "en", "Maritime Engineering Knowledge System"],
+      ["/", "tr", "Denizcilik Teknolojisi"],
+      ["/en/", "en", "Maritime Technology"],
     ] as const) {
       await page.goto(path);
       await expect(page).toHaveTitle(new RegExp(title));
