@@ -453,7 +453,8 @@ export const CERTIFICATES: Credential[] = [
   {
     title: "Türkiye’s Security Architecture in Our Century",
     when: t("Dış Politika Enstitüsü · Eylül 2026", "Foreign Policy Institute · September 2026"),
-    desc: t("14 Eylül 2026. Sertifika bekleniyor.", "14 September 2026. Certificate pending."),
+    desc: t("14 Eylül 2026. Belge no 26-2094.", "14 September 2026. Certificate no. 26-2094."),
+    img: "dpe-security-architecture-20260914.png",
   },
   {
     title: "LSA & FFE Training",
@@ -483,13 +484,13 @@ export const CERTIFICATES: Credential[] = [
     title: "OPRC Introduction",
     when: t("IMO onaylı", "IMO approved"),
     desc: t("Oil Pollution Preparedness, Response and Cooperation.", "Oil Pollution Preparedness, Response and Cooperation."),
-    img: "imo-oprc-introduction.webp?v=20261030",
+    img: "imo-oprc-introduction-20261031.jpg",
   },
   {
     title: "MARPOL Annex V",
     when: t("IMO onaylı", "IMO approved"),
     desc: t("Gemilerden kaynaklanan kirliliğin önlenmesi.", "Prevention of pollution from ships."),
-    img: "imo-marpol-annex-v.webp?v=20261030",
+    img: "imo-marpol-annex-v-20261031.jpg",
   },
   {
     title: "Gavarnör & OMD",
