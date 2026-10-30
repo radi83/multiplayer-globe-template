@@ -138,7 +138,10 @@ const pars = Array.from(document.querySelectorAll<HTMLElement>("[data-par]"));
 const cards = Array.from(document.querySelectorAll<HTMLElement>('#kariyer [data-dc-tpl="67"]'));
 const line = document.querySelector<HTMLElement>("[data-line]");
 const bmmsBranch = document.querySelector<SVGSVGElement>("[data-bmms-branch]");
+const bmmsBranchRail = document.querySelector<SVGPathElement>("[data-bmms-branch-rail]");
 const bmmsBranchPath = document.querySelector<SVGPathElement>("[data-bmms-branch-path]");
+const bmmsOrigin = document.querySelector<SVGCircleElement>("[data-bmms-origin]");
+const bmmsTarget = document.querySelector<SVGCircleElement>("[data-bmms-target]");
 let queued = false;
 
 function updateBmmsBranch(): void {
@@ -156,10 +159,15 @@ function updateBmmsBranch(): void {
   const targetY = target.getBoundingClientRect().top - wr.top + 39;
   const height = Math.max(1, wrap.offsetHeight);
   bmmsBranch.setAttribute("viewBox", `0 0 18 ${height}`);
-  bmmsBranchPath.setAttribute(
-    "d",
-    `M 5 ${originY.toFixed(1)} C 13 ${originY.toFixed(1)}, 14 ${(originY - 24).toFixed(1)}, 14 ${(originY - 52).toFixed(1)} L 14 ${(targetY + 52).toFixed(1)} C 14 ${(targetY + 24).toFixed(1)}, 13 ${targetY.toFixed(1)}, 5 ${targetY.toFixed(1)}`,
-  );
+  const route = `M 5 ${targetY.toFixed(1)} H 14 V ${originY.toFixed(1)} H 5`;
+  bmmsBranchRail?.setAttribute("d", route);
+  bmmsBranchPath.setAttribute("d", route);
+  for (const [node, y] of [[bmmsOrigin, originY], [bmmsTarget, targetY]] as const) {
+    node?.setAttribute("cx", "5");
+    node?.setAttribute("cy", y.toFixed(1));
+  }
+  const progress = reduced ? 1 : Math.max(0, Math.min(1, (innerHeight * .72 - (wr.top + targetY)) / Math.max(1, originY - targetY)));
+  bmmsBranchPath.style.strokeDashoffset = String(1 - progress);
 }
 
 function frame(): void {
