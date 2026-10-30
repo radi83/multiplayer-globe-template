@@ -1,0 +1,98 @@
+/* ============ BSKN · AR-GE, ekip ve programlar ============ */
+.axis-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1px;
+  border: 1px solid var(--line);
+  background: var(--line);
+}
+.axis-card,
+.member-card,
+.program-card {
+  position: relative;
+  background: var(--paper);
+  padding: clamp(20px, 2.7vw, 32px);
+}
+.axis-card { min-height: 230px; }
+.axis-card__code,
+.member-card__index,
+.program-card__index {
+  display: block;
+  margin-bottom: 28px;
+  color: var(--red);
+  font: 500 0.72rem/1 var(--f-mono);
+  letter-spacing: .14em;
+}
+.axis-card h3,
+.member-card h3,
+.program-card h3 {
+  font-size: 1.26rem;
+  line-height: 1.16;
+}
+.axis-card p,
+.member-card p,
+.program-card p {
+  margin-top: 12px;
+  color: var(--ink-2);
+  font-size: .96rem;
+}
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  border: 1px solid var(--line);
+  background: var(--line);
+}
+.member-card { min-height: 350px; }
+.member-card__role {
+  color: var(--ink) !important;
+  font: 600 .92rem/1.45 var(--f-mono);
+}
+.member-card__experience { font-weight: 600; }
+.team-formula {
+  margin-top: 22px;
+  padding: 16px 20px;
+  border-left: 3px solid var(--red);
+  background: var(--paper-2);
+  font: 600 clamp(1rem, .8rem + .5vw, 1.25rem)/1.4 var(--f-display);
+}
+.program-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  border: 1px solid var(--line);
+  background: var(--line);
+}
+.program-card { min-height: 210px; }
+.stage-note {
+  display: grid;
+  grid-template-columns: minmax(220px, .7fr) minmax(0, 1.5fr);
+  gap: 24px;
+  margin-top: 28px;
+  padding: clamp(20px, 3vw, 30px);
+  border: 1px solid var(--line);
+  background: var(--paper);
+}
+.stage-note span {
+  color: var(--red);
+  font: 600 .76rem/1.5 var(--f-mono);
+  letter-spacing: .1em;
+}
+.stage-note p { color: var(--ink-2); }
+
+@media (max-width: 1050px) {
+  .axis-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .axis-card:last-child { grid-column: 1 / -1; min-height: auto; }
+}
+@media (max-width: 760px) {
+  .team-grid,
+  .program-grid,
+  .stage-note { grid-template-columns: minmax(0, 1fr); }
+  .member-card { min-height: auto; }
+}
+@media (max-width: 520px) {
+  .axis-grid { grid-template-columns: minmax(0, 1fr); }
+  .axis-card:last-child { grid-column: auto; }
+  .axis-card,
+  .program-card { min-height: auto; }
+}
