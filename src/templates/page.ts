@@ -330,6 +330,82 @@ function principles(c: Content): string {
 </section>`;
 }
 
+function research(c: Content): string {
+  const r = c.research;
+  const axes = r.axes
+    .map(
+      (axis) => `<article class="axis-card">
+        <span class="axis-card__code">${esc(axis.code)}</span>
+        <h3>${esc(axis.title)}</h3>
+        <p>${esc(axis.text)}</p>
+      </article>`,
+    )
+    .join("");
+  return `
+<section class="sec sec--alt" id="arge" aria-labelledby="h-arge">
+  <div class="wrap">
+    <div class="sec-head">
+      ${sheet(r.sheet)}
+      <h2 id="h-arge">${esc(r.title)}</h2>
+      <p>${esc(r.intro)}</p>
+    </div>
+    <div class="axis-grid sec-body">${axes}</div>
+  </div>
+</section>`;
+}
+
+function team(c: Content): string {
+  const t = c.team;
+  const members = t.members
+    .map(
+      (member, index) => `<article class="member-card">
+        <span class="member-card__index">${String(index + 1).padStart(2, "0")}</span>
+        <h3>${esc(member.name)}</h3>
+        <p class="member-card__role">${esc(member.role)}</p>
+        <p class="member-card__experience">${esc(member.experience)}</p>
+        <p>${esc(member.scope)}</p>
+      </article>`,
+    )
+    .join("");
+  return `
+<section class="sec" id="ekip" aria-labelledby="h-ekip">
+  <div class="wrap">
+    <div class="sec-head">
+      ${sheet(t.sheet)}
+      <h2 id="h-ekip">${esc(t.title)}</h2>
+      <p>${esc(t.intro)}</p>
+    </div>
+    <div class="team-grid sec-body">${members}</div>
+    <p class="team-formula">${esc(t.formula)}</p>
+  </div>
+</section>`;
+}
+
+function programs(c: Content): string {
+  const p = c.programs;
+  const items = p.items
+    .map(
+      (item, index) => `<article class="program-card">
+        <span class="program-card__index">${String(index + 1).padStart(2, "0")}</span>
+        <h3>${esc(item.name)}</h3>
+        <p>${esc(item.status)}</p>
+      </article>`,
+    )
+    .join("");
+  return `
+<section class="sec sec--alt" id="programlar" aria-labelledby="h-programlar">
+  <div class="wrap">
+    <div class="sec-head">
+      ${sheet(p.sheet)}
+      <h2 id="h-programlar">${esc(p.title)}</h2>
+      <p>${esc(p.intro)}</p>
+    </div>
+    <div class="program-grid sec-body">${items}</div>
+    <div class="stage-note"><span>${esc(p.stage)}</span><p>${esc(p.honesty)}</p></div>
+  </div>
+</section>`;
+}
+
 function stages(c: Content): string {
   const s = c.stages;
   const cols = s.columns
@@ -461,7 +537,7 @@ function structuredData(c: Content, lang: Lang, o: HeadOptions): string {
         "@type": "WebSite",
         "@id": `${home}#website`,
         url: home,
-        name: "BMMS",
+        name: "BSKN",
         inLanguage: ["tr", "en"],
         publisher: { "@id": `${home}#project` },
       },
@@ -527,6 +603,9 @@ export function renderBody(c: Content, cfg: ContactConfig, lang: Lang): string {
     approach(c),
     demo(c),
     principles(c),
+    research(c),
+    team(c),
+    programs(c),
     stages(c),
     contact(c, cfg),
     `</main>`,
