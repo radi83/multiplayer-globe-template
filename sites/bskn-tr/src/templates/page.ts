@@ -329,7 +329,7 @@ function career(lang: Lang, c: Copy): string {
 ${chips}
 </div>
 <div data-dc-tpl="63" style="position: relative; padding-left: 0px;">
-<svg aria-hidden="true" data-bmms-branch="" preserveAspectRatio="none"><path data-bmms-branch-path=""></path></svg>
+<svg aria-hidden="true" data-bmms-branch="" preserveAspectRatio="none"><path data-bmms-branch-rail=""></path><path data-bmms-branch-path="" pathLength="1"></path><circle data-bmms-target="" r="2.8"></circle><circle data-bmms-origin="" r="3.4"></circle></svg>
 <div aria-hidden="true" data-dc-tpl="64" data-line="" style="position: absolute; left: 4px; top: 0px; bottom: 0px; width: 2px; background: var(--accent); transform-origin: center top; transform: scaleY(0);"></div>
 ${post(BMMS_CONTINUATION, lang, 0, c)}
 ${CAREER.map((p, n) => post(p, lang, n, c)).join("\n")}
