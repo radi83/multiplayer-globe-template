@@ -400,8 +400,7 @@ ${groups}
 
 function credentials(lang: Lang, c: Copy): string {
   const anyDoc = CERTIFICATES.some((x) => hasUpload(x.img)) || MEMBERSHIPS.some((m) => hasUpload(m.img));
-  const 400
-    = CERTIFICATES.map((certificate, index) => ({ certificate, index })).sort((a, b) => {
+  const orderedCertificates = CERTIFICATES.map((certificate, index) => ({ certificate, index })).sort((a, b) => {
     const previewDifference = Number(hasUpload(b.certificate.img)) - Number(hasUpload(a.certificate.img));
     return previewDifference || a.index - b.index;
   });
