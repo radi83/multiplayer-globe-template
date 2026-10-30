@@ -2,11 +2,11 @@
   "meta": {
     "lang": "tr",
     "locale": "tr_TR",
-    "title": "BMMS — Denizcilik Mühendisliği Bilgi Sistemi",
-    "description": "BMMS; denizcilik kurallarını, teknik belgeleri ve mühendislik kanıtlarını kaynağı, revizyonu ve bağlamıyla izlenebilir biçimde ilişkilendiren araştırma projesi.",
-    "ogTitle": "BMMS — Denizcilik Mühendisliği Bilgi Sistemi",
-    "ogDescription": "Her mühendislik sonucu kaynağına kadar izlenebilmeli.",
-    "projectDescription": "Denizcilik kurallarını, teknik belgeleri ve mühendislik kanıtlarını izlenebilir tek bir zincirde ilişkilendirmeyi amaçlayan araştırma ve geliştirme projesi. Dayanak kurulamadığında kesin cevap üretmek yerine bunu açıkça kaydeder.",
+    "title": "BSKN — Denizcilik Teknolojisi, Mühendislik ve Kanıt İstihbaratı",
+    "description": "BSKN; denizcilik mühendisliği, yazılım mimarisi ve yapay zekâyı kanıt-temelli karar destek sistemlerinde birleştiren teknoloji platformudur.",
+    "ogTitle": "BSKN — Denizcilik Teknolojisi, Mühendislik ve Kanıt İstihbaratı",
+    "ogDescription": "İki alan. Tek mühendislik sistemi.",
+    "projectDescription": "BSKN'nin merkezindeki BMMS, düzenleyici uygulanabilirlik ve kanıt istihbaratı için evidence-first ve provenance-first bir denizcilik mühendisliği karar destek sistemidir.",
     "keywords": [
       "denizcilik mühendisliği",
       "kaynak izlenebilirliği",
@@ -19,32 +19,28 @@
     ]
   },
   "brand": {
-    "name": "BMMS",
-    "full": "MARITIME ENGINEERING KNOWLEDGE SYSTEM",
-    "homeAria": "BMMS, sayfanın başı"
+    "name": "BSKN",
+    "full": "DENİZCİLİK TEKNOLOJİSİ · MÜHENDİSLİK · KANIT İSTİHBARATI",
+    "homeAria": "BSKN, sayfanın başı"
   },
   "skipLink": "İçeriğe geç",
   "navAria": "Sayfa bölümleri",
   "nav": [
     {
       "href": "#problem",
-      "label": "Problem"
+      "label": "BMMS"
     },
     {
-      "href": "#yaklasim",
-      "label": "Yaklaşım"
+      "href": "#arge",
+      "label": "AR-GE"
     },
     {
-      "href": "#ornek",
-      "label": "Örnek"
+      "href": "#ekip",
+      "label": "Ekip"
     },
     {
-      "href": "#ilkeler",
-      "label": "İlkeler"
-    },
-    {
-      "href": "#asama",
-      "label": "Aşama"
+      "href": "#programlar",
+      "label": "Programlar"
     },
     {
       "href": "#iletisim",
@@ -58,19 +54,19 @@
     "goal": "GELİŞTİRME HEDEFİ"
   },
   "hero": {
-    "sheet": "PAFTA 01 / 06",
-    "sheetTitle": "BMMS NEDİR?",
-    "titleHtml": "Her mühendislik sonucu <em>kaynağına kadar</em> izlenebilmeli.",
-    "lede": "BMMS, denizcilik kurallarını, teknik belgeleri ve mühendislik kanıtlarını izlenebilir tek bir zincirde ilişkilendirmek için geliştirilen bir bilgi sistemidir. Bir değerlendirmenin hangi kaynağa, hangi revizyona ve hangi bağlama dayandığını görünür kılar; dayanak kurulamadığında kesin bir cevap üretmek yerine bunu açıkça kaydeder.",
+    "sheet": "BSKN / DENİZCİLİK TEKNOLOJİ PLATFORMU",
+    "sheetTitle": "MERKEZ GİRİŞİM: BMMS",
+    "titleHtml": "Denizcilik mühendisliği, yazılım mimarisi ve <em>kanıt istihbaratı.</em>",
+    "lede": "BSKN; denizcilik mühendisliği saha deneyimini, yazılım mimarisi ve yapay zekâ ile birleştirerek denizcilik alanı için kanıt-temelli karar destek sistemleri geliştiren teknoloji ve girişim geliştirme platformudur.",
     "ctaPrimary": {
-      "href": "#yaklasim",
-      "label": "Yaklaşımı keşfet"
+      "href": "#problem",
+      "label": "BMMS’yi keşfet"
     },
     "ctaSecondary": {
-      "href": "#iletisim",
-      "label": "İletişime geç"
+      "href": "#ekip",
+      "label": "Ekibi tanıyın"
     },
-    "status": "AŞAMA: ARAŞTIRMA VE GELİŞTİRME · KONTROLLÜ PİLOT HAZIRLIĞI",
+    "status": "GÜNCEL AŞAMA: ÖN PİLOT AR-GE VE DOĞRULAMA",
     "globeAria": "Dönen tel kafes dünya çizimi: meridyenler, düğümler ve düğümler arasındaki bağlantı yayları. Kavramsal bir bilgi ağını temsil eder.",
     "globePhrases": [
       "Kaynak\n→ Sürüm\n→ Pasaj",
@@ -115,15 +111,15 @@
       }
     ],
     "titleblock": [
-      "BMMS · KONGRE TANITIMI",
-      "ÖLÇEKSİZ · KAVRAMSAL ŞEMA"
+      "BSKN · MARITIME TECHNOLOGY PLATFORM",
+      "BMMS · REGULATORY APPLICABILITY & EVIDENCE INTELLIGENCE"
     ]
   },
   "problem": {
-    "sheet": "PAFTA 02 / 06",
-    "sheetTitle": "PROBLEM",
-    "title": "Bilgi mevcut. Dayanağını bulmak zor.",
-    "intro": "Bir gemideki teknik bir soruyu yanıtlarken mühendis; kurallara, klas yayınlarına, üretici talimatlarına, bakım kayıtlarına ve servis raporlarına birlikte bakar. Zorluk yalnızca bilgiyi bulmak değildir. Bilginin kimden geldiğini, hangi sürüm olduğunu ve o durum için geçerli olup olmadığını da korumak gerekir.",
+    "sheet": "BMMS / ÜRÜN ODAĞI",
+    "sheetTitle": "MARITIME ENGINEERING KNOWLEDGE SYSTEM",
+    "title": "Bilgiyi bulmak yetmez. Uygulanabilir kanıt gerekir.",
+    "intro": "BMMS — Maritime Regulatory Applicability & Evidence Intelligence; bilgi bulmakla yetinmeyen, kaynak sürümü, otorite, uygulanabilirlik, kanıt yeterliliği ve yetkili insan kararı arasındaki ayrımları koruyan evidence-first ve provenance-first bir mühendislik karar destek sistemidir. Chatbot, PMS veya ERP değildir.",
     "issues": [
       {
         "tag": "DAĞINIKLIK",
@@ -452,9 +448,9 @@
   },
   "stages": {
     "sheet": "PAFTA 06 / 06",
-    "sheetTitle": "AŞAMA VE İLETİŞİM",
-    "title": "Proje nerede duruyor?",
-    "intro": "Aşağıdaki ayrım, projenin kendi görev ve karar kayıtlarına dayanır.",
+    "sheetTitle": "GÜNCEL AŞAMA",
+    "title": "Ön Pilot AR-GE ve Doğrulama",
+    "intro": "BMMS bugün araştırma, doğrulama ve kontrollü pilot hazırlığı aşamasındadır.",
     "columns": [
       {
         "kind": "done",
@@ -493,33 +489,33 @@
         "note": "Kabul edilmiş bir mimari yön, uygulama yetkisi anlamına gelmez."
       }
     ],
-    "honesty": "BMMS bir araştırma ve geliştirme projesidir. Üretimde kullanılan, sertifikalı ya da bir otorite tarafından onaylanmış bir sistem değildir."
+    "honesty": "BMMS; geniş ölçekli production deployment, akredite ürün, ticari başarı veya tamamlanmış müşteri pilotu olarak sunulmamaktadır."
   },
   "contact": {
     "sheet": "İŞ BİRLİĞİ",
-    "title": "Yöntemi birlikte sınayalım.",
-    "intro": "Projenin en çok ihtiyaç duyduğu şey eleştirel ve bağımsız bakıştır. Aşağıdaki başlıklarda akademik değerlendirme, araştırma katkısı ve iş birliği için görüşmeye açığız.",
+    "title": "Pilot ve stratejik iş birlikleri.",
+    "intro": "BMMS'nin araştırma ve kontrollü pilot hazırlığını, gerçek mühendislik bağlamında eleştirel biçimde sınayacak ortaklarla görüşmeye açığız.",
     "collab": [
       {
-        "title": "Akademik değerlendirme",
-        "text": "Epistemik ayrımların, belirsizlik temsilinin ve değerlendirme tasarımının eleştirel incelenmesi."
+        "title": "Operatörler ve teknik yönetim şirketleri",
+        "text": "Pilot ve tasarım ortaklığı; gerçekçi kullanım senaryoları ve kontrollü doğrulama."
       },
       {
-        "title": "Araştırma katkısı",
-        "text": "Belge yapısı çıkarımı, bilgi erişimi değerlendirmesi, kaynak izlenebilirliği ve insan ile yapay zekânın birlikte çalıştığı karar süreçleri."
+        "title": "Üniversiteler ve araştırmacılar",
+        "text": "Regülasyon, kanıt, insan kararı ve benchmark yöntemlerinin bağımsız incelenmesi."
       },
       {
-        "title": "Alan uzmanlığı",
-        "text": "Denizcilik mühendisliği, klas ve düzenleyici çerçeveler konusunda uzman görüşü."
+        "title": "Teknoloji ve bilgi ortakları",
+        "text": "Maritime-tech, teknik/regülasyon bilgisi ve stratejik teknoloji iş birlikleri."
       },
       {
-        "title": "Vaka tabanlı değerlendirme",
-        "text": "Zorluğu kalibre edilmiş, gerçekçi vaka senaryolarının birlikte geliştirilmesi."
+        "title": "Stratejik yatırımcılar",
+        "text": "Tohum öncesi aşamada, uzun vadeli maritime operational assurance yönünü destekleyen ortaklıklar."
       }
     ],
-    "bridge": "Kaynak izlenebilirliği, belirsizliğin açıkça gösterilmesi ve uzman kararının kayda geçirilmesi gibi yöntemsel sorular birçok disiplinde ortaktır. Farklı alanlardan gelen bakışlar da değerlidir.",
+    "bridge": "Uzun vadeli yön: Maritime Operational Assurance & Evidence Intelligence.",
     "label": "İLETİŞİM",
-    "lead": "Sunum sırasında ve sonrasında proje ekibiyle doğrudan görüşebilirsiniz.",
+    "lead": "Pilot, tasarım ve stratejik ortaklıklar için ekiple iletişime geçin.",
     "fieldName": "KİŞİ",
     "fieldEmail": "E-POSTA",
     "fieldPhone": "TELEFON",
@@ -532,8 +528,8 @@
   },
   "footer": {
     "lines": [
-      "Bu sayfa bir proje tanıtımıdır. Şekiller kavramsaldır; temsili senaryo gerçek kaynak alıntısı veya sistem çıktısı içermez.",
-      "Sağ alttaki düğmeyle sürekli animasyonları durdurabilirsiniz."
+      "BSKN · Denizcilik Teknolojisi · Mühendislik · Kanıt İstihbaratı",
+      "BMMS · Pre-Pilot R&D & Validation"
     ]
   },
   "motion": {
@@ -544,5 +540,78 @@
     "aria": "Dil seçimi / Language",
     "tr": "Türkçe",
     "en": "English"
+  },
+  "research": {
+    "sheet": "BSKN / AR-GE",
+    "title": "Beş araştırma ekseni. Tek güvence mantığı.",
+    "intro": "BMMS'nin araştırma programı, kaynaklardan yetkili insan kararına uzanan zincirin her halkasını ayrı bir doğrulama alanı olarak ele alır.",
+    "axes": [
+      {
+        "code": "R1",
+        "title": "Regulatory Intelligence",
+        "text": "Otorite, sürüm, yürürlük ve düzenleyici uygulanabilirlik."
+      },
+      {
+        "code": "R2",
+        "title": "Evidence Intelligence",
+        "text": "Kanıt şeması, köken, yeterlilik ve çatışma analizi."
+      },
+      {
+        "code": "R3",
+        "title": "Operational Assurance",
+        "text": "Mühendislik değerlendirmesini operasyonel güvenceye bağlama."
+      },
+      {
+        "code": "R4",
+        "title": "Human Review & Decision",
+        "text": "İnceleme, yetki ve kayıtlı insan kararı sınırları."
+      },
+      {
+        "code": "R5",
+        "title": "Benchmark & Validation",
+        "text": "Ön kayıtlı deneyler, kritik hata ölçümü ve terfi kapıları."
+      }
+    ]
+  },
+  "team": {
+    "sheet": "BSKN / EKİP",
+    "title": "İki alan. Tek mühendislik sistemi.",
+    "intro": "BMMS, Murat Can Başkan ve Cem Başar Başkan’ın denizcilik alan bilgisi ile yazılım mühendisliği deneyimini aynı çekirdek ekipte birleştirmesi üzerine geliştirilmektedir.",
+    "formula": "Denizcilik Mühendisliği × Yazılım Mimarisi",
+    "members": [
+      {
+        "name": "Murat Can Başkan",
+        "role": "Founder · Unlimited Chief Engineer · Maritime Technologist",
+        "experience": "Yaklaşık 20 yıllık denizcilik ve gemi mühendisliği saha deneyimi.",
+        "scope": "Maritime domain R&D, mühendislik problem tanımı, regülasyon/kanıt modeli, ürün vizyonu, pilot kullanım senaryoları ve assurance logic."
+      },
+      {
+        "name": "Cem Başar Başkan",
+        "role": "Co-Founder · Software Architect",
+        "experience": "Yaklaşık 10 yıllık profesyonel yazılım geliştirme ve yazılım mimarisi deneyimi.",
+        "scope": "Software architecture, system design, data architecture, AI integration architecture, teknik uygulama, ölçeklenebilirlik ve software R&D."
+      }
+    ]
+  },
+  "programs": {
+    "sheet": "BSKN / EKOSİSTEM VE PROGRAMLAR",
+    "title": "Doğrulama ve kontrollü pilot hazırlığı.",
+    "intro": "BSKN, girişim ve araştırma programları içinde BMMS'nin teknik, ürün ve pilot hazırlığını geliştirmektedir.",
+    "items": [
+      {
+        "name": "İTÜ Çekirdek BİGG 2026-2",
+        "status": "Program kabulü"
+      },
+      {
+        "name": "Piri Reis Üniversitesi ARISTTO",
+        "status": "Ön Kuluçka Programı"
+      },
+      {
+        "name": "TÜBİTAK 1812 BiGG Yatırım Programı",
+        "status": "Program süreci devam ediyor"
+      }
+    ],
+    "stage": "ÖN PİLOT AR-GE VE DOĞRULAMA",
+    "honesty": "BMMS bugün araştırma, doğrulama ve kontrollü pilot hazırlığı aşamasındadır. Geniş ölçekli production deployment, ürün akreditasyonu, ticari başarı veya tamamlanmış müşteri pilotu olarak sunulmamaktadır."
   }
 }

@@ -2,11 +2,11 @@
   "meta": {
     "lang": "en",
     "locale": "en_US",
-    "title": "BMMS — Maritime Engineering Knowledge System",
-    "description": "A research project linking maritime regulations, technical documents and engineering evidence to their source, revision and context in one traceable chain.",
-    "ogTitle": "BMMS — Maritime Engineering Knowledge System",
-    "ogDescription": "Every engineering conclusion should be traceable back to its source.",
-    "projectDescription": "A research and development project that connects maritime regulations, technical documents and engineering evidence in a single traceable chain. When the basis cannot be established, it records this explicitly instead of producing a confident answer.",
+    "title": "BSKN — Maritime Technology, Engineering & Evidence Intelligence",
+    "description": "BSKN combines maritime engineering, software architecture and AI to build evidence-based decision-support systems for the maritime domain.",
+    "ogTitle": "BSKN — Maritime Technology, Engineering & Evidence Intelligence",
+    "ogDescription": "Two domains. One engineering system.",
+    "projectDescription": "At the centre of BSKN, BMMS is an evidence-first and provenance-first maritime engineering decision-support system for regulatory applicability and evidence intelligence.",
     "keywords": [
       "maritime engineering",
       "source traceability",
@@ -19,32 +19,28 @@
     ]
   },
   "brand": {
-    "name": "BMMS",
-    "full": "MARITIME ENGINEERING KNOWLEDGE SYSTEM",
-    "homeAria": "BMMS, top of page"
+    "name": "BSKN",
+    "full": "MARITIME TECHNOLOGY · ENGINEERING · EVIDENCE INTELLIGENCE",
+    "homeAria": "BSKN, top of page"
   },
   "skipLink": "Skip to content",
   "navAria": "Page sections",
   "nav": [
     {
       "href": "#problem",
-      "label": "Problem"
+      "label": "BMMS"
     },
     {
-      "href": "#yaklasim",
-      "label": "Approach"
+      "href": "#arge",
+      "label": "R&D"
     },
     {
-      "href": "#ornek",
-      "label": "Example"
+      "href": "#ekip",
+      "label": "Team"
     },
     {
-      "href": "#ilkeler",
-      "label": "Principles"
-    },
-    {
-      "href": "#asama",
-      "label": "Status"
+      "href": "#programlar",
+      "label": "Programs"
     },
     {
       "href": "#iletisim",
@@ -58,19 +54,19 @@
     "goal": "DEVELOPMENT GOAL"
   },
   "hero": {
-    "sheet": "SHEET 01 / 06",
-    "sheetTitle": "WHAT IS BMMS?",
-    "titleHtml": "Every engineering conclusion should be traceable <em>back to its source</em>.",
-    "lede": "BMMS is an information system being developed to connect maritime regulations, technical documents and engineering evidence in a single traceable chain. It shows which source, which revision and which context an assessment rests on; when that basis cannot be established, it records this explicitly instead of producing a confident answer.",
+    "sheet": "BSKN / MARITIME TECHNOLOGY PLATFORM",
+    "sheetTitle": "CENTRAL VENTURE: BMMS",
+    "titleHtml": "Maritime engineering, software architecture and <em>evidence intelligence.</em>",
+    "lede": "BSKN is a technology and venture development platform combining maritime engineering practice, software architecture and AI to build evidence-based decision-support systems for the maritime domain.",
     "ctaPrimary": {
-      "href": "#yaklasim",
-      "label": "Explore the approach"
+      "href": "#problem",
+      "label": "Explore BMMS"
     },
     "ctaSecondary": {
-      "href": "#iletisim",
-      "label": "Get in touch"
+      "href": "#ekip",
+      "label": "Meet the team"
     },
-    "status": "STAGE: RESEARCH AND DEVELOPMENT · CONTROLLED PILOT PREPARATION",
+    "status": "CURRENT STAGE: PRE-PILOT R&D & VALIDATION",
     "globeAria": "Rotating wireframe globe: meridians, nodes and connecting arcs between nodes. It represents a conceptual knowledge network.",
     "globePhrases": [
       "Source\n→ Version\n→ Passage",
@@ -115,15 +111,15 @@
       }
     ],
     "titleblock": [
-      "BMMS · CONGRESS INTRODUCTION",
-      "NOT TO SCALE · CONCEPTUAL DIAGRAM"
+      "BSKN · MARITIME TECHNOLOGY PLATFORM",
+      "BMMS · REGULATORY APPLICABILITY & EVIDENCE INTELLIGENCE"
     ]
   },
   "problem": {
-    "sheet": "SHEET 02 / 06",
-    "sheetTitle": "PROBLEM",
-    "title": "The knowledge exists. Its basis is hard to find.",
-    "intro": "To answer a technical question about a ship, an engineer consults regulations, class publications, manufacturer instructions, maintenance records and service reports together. The difficulty is not only finding the information. It is also preserving who issued it, which version it is, and whether it applies to the case at hand.",
+    "sheet": "BMMS / PRODUCT FOCUS",
+    "sheetTitle": "MARITIME ENGINEERING KNOWLEDGE SYSTEM",
+    "title": "Finding information is not enough. Applicable evidence is required.",
+    "intro": "BMMS — Maritime Regulatory Applicability & Evidence Intelligence is an evidence-first and provenance-first engineering decision-support system. It preserves the distinctions between source version, authority, applicability, evidence sufficiency and authorised human decision. It is not a chatbot, PMS or ERP.",
     "issues": [
       {
         "tag": "FRAGMENTATION",
@@ -452,9 +448,9 @@
   },
   "stages": {
     "sheet": "SHEET 06 / 06",
-    "sheetTitle": "STATUS AND CONTACT",
-    "title": "Where does the project stand?",
-    "intro": "The breakdown below is based on the project's own task and decision records.",
+    "sheetTitle": "CURRENT STAGE",
+    "title": "Pre-Pilot R&D & Validation",
+    "intro": "BMMS is currently in research, validation and controlled pilot preparation.",
     "columns": [
       {
         "kind": "done",
@@ -493,33 +489,33 @@
         "note": "An accepted architecture direction is not an authorisation to implement."
       }
     ],
-    "honesty": "BMMS is a research and development project. It is not a production system, and it is not certified or approved by any authority."
+    "honesty": "BMMS is not presented as a broad production deployment, an accredited product, a commercial success or a completed customer pilot."
   },
   "contact": {
     "sheet": "COLLABORATION",
-    "title": "Let's test the method together.",
-    "intro": "What the project needs most is critical, independent scrutiny. We welcome conversations on academic review, research contributions and collaboration in the areas below.",
+    "title": "Pilot and strategic partnerships.",
+    "intro": "We welcome partners who can critically test BMMS research and controlled pilot readiness in real engineering contexts.",
     "collab": [
       {
-        "title": "Academic review",
-        "text": "Critical examination of the epistemic distinctions, the representation of uncertainty and the evaluation design."
+        "title": "Operators and technical managers",
+        "text": "Pilot and design partnerships, realistic use cases and controlled validation."
       },
       {
-        "title": "Research contribution",
-        "text": "Document structure extraction, information retrieval evaluation, source traceability and decision processes in which humans and AI work together."
+        "title": "Universities and researchers",
+        "text": "Independent review of regulatory, evidence, human-decision and benchmark methods."
       },
       {
-        "title": "Domain expertise",
-        "text": "Expert input on maritime engineering, classification and regulatory frameworks."
+        "title": "Technology and information partners",
+        "text": "Maritime-tech, technical and regulatory information, and strategic technology partnerships."
       },
       {
-        "title": "Case-based evaluation",
-        "text": "Jointly developing realistic case scenarios with calibrated difficulty."
+        "title": "Strategic investors",
+        "text": "Pre-seed partnerships aligned with the long-term maritime operational assurance direction."
       }
     ],
-    "bridge": "Methodological questions such as source traceability, making uncertainty explicit and recording expert decisions are shared across many disciplines. Perspectives from other fields are valuable too.",
+    "bridge": "Long-term direction: Maritime Operational Assurance & Evidence Intelligence.",
     "label": "CONTACT",
-    "lead": "You are welcome to speak with the project team during and after the presentation.",
+    "lead": "Contact the team for pilot, design and strategic partnerships.",
     "fieldName": "NAME",
     "fieldEmail": "EMAIL",
     "fieldPhone": "PHONE",
@@ -532,8 +528,8 @@
   },
   "footer": {
     "lines": [
-      "This page is a project introduction. Figures are conceptual; the representative scenario contains no real source quotations or system output.",
-      "Use the button at the bottom right to pause continuous animation."
+      "BSKN · Maritime Technology · Engineering · Evidence Intelligence",
+      "BMMS · Pre-Pilot R&D & Validation"
     ]
   },
   "motion": {
@@ -544,5 +540,78 @@
     "aria": "Dil seçimi / Language",
     "tr": "Türkçe",
     "en": "English"
+  },
+  "research": {
+    "sheet": "BSKN / R&D",
+    "title": "Five research axes. One assurance logic.",
+    "intro": "The BMMS research programme treats every link from source material to authorised human decision as a distinct validation problem.",
+    "axes": [
+      {
+        "code": "R1",
+        "title": "Regulatory Intelligence",
+        "text": "Authority, version, effective date and regulatory applicability."
+      },
+      {
+        "code": "R2",
+        "title": "Evidence Intelligence",
+        "text": "Evidence schemas, provenance, sufficiency and conflict analysis."
+      },
+      {
+        "code": "R3",
+        "title": "Operational Assurance",
+        "text": "Connecting engineering assessment to operational assurance."
+      },
+      {
+        "code": "R4",
+        "title": "Human Review & Decision",
+        "text": "Review, authority and recorded human-decision boundaries."
+      },
+      {
+        "code": "R5",
+        "title": "Benchmark & Validation",
+        "text": "Pre-registered experiments, critical-failure metrics and promotion gates."
+      }
+    ]
+  },
+  "team": {
+    "sheet": "BSKN / TEAM",
+    "title": "Two domains. One engineering system.",
+    "intro": "BMMS is being developed by Murat Can Başkan and Cem Başar Başkan, bringing maritime domain knowledge and software engineering depth into one core team.",
+    "formula": "Maritime Engineering × Software Architecture",
+    "members": [
+      {
+        "name": "Murat Can Başkan",
+        "role": "Founder · Unlimited Chief Engineer · Maritime Technologist",
+        "experience": "Nearly 20 years of maritime and marine-engineering field experience.",
+        "scope": "Maritime domain R&D, engineering problem definition, regulatory and evidence models, product vision, pilot use-case design and assurance logic."
+      },
+      {
+        "name": "Cem Başar Başkan",
+        "role": "Co-Founder · Software Architect",
+        "experience": "Nearly 10 years of professional software development and architecture experience.",
+        "scope": "Software architecture, system design, data architecture, AI integration architecture, technical implementation, scalability and software R&D."
+      }
+    ]
+  },
+  "programs": {
+    "sheet": "BSKN / ECOSYSTEM & PROGRAMMES",
+    "title": "Validation and controlled pilot preparation.",
+    "intro": "BSKN develops the technical, product and pilot readiness of BMMS through venture and research programmes.",
+    "items": [
+      {
+        "name": "İTÜ Çekirdek BİGG 2026-2",
+        "status": "Accepted to the programme"
+      },
+      {
+        "name": "Piri Reis University ARISTTO",
+        "status": "Pre-incubation programme"
+      },
+      {
+        "name": "TÜBİTAK 1812 BiGG Investment Programme",
+        "status": "Programme process ongoing"
+      }
+    ],
+    "stage": "PRE-PILOT R&D & VALIDATION",
+    "honesty": "BMMS is currently in research, validation and controlled pilot preparation. It is not presented as a broad production deployment, an accredited product, a commercial success or a completed customer pilot."
   }
 }
