@@ -483,13 +483,13 @@ export const CERTIFICATES: Credential[] = [
     title: "OPRC Introduction",
     when: t("IMO onaylı", "IMO approved"),
     desc: t("Oil Pollution Preparedness, Response and Cooperation.", "Oil Pollution Preparedness, Response and Cooperation."),
-    img: "imo-oprc-introduction.webp",
+    img: "imo-oprc-introduction.webp?v=20261030",
   },
   {
     title: "MARPOL Annex V",
     when: t("IMO onaylı", "IMO approved"),
     desc: t("Gemilerden kaynaklanan kirliliğin önlenmesi.", "Prevention of pollution from ships."),
-    img: "imo-marpol-annex-v.webp",
+    img: "imo-marpol-annex-v.webp?v=20261030",
   },
   {
     title: "Gavarnör & OMD",
