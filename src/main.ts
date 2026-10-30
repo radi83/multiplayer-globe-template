@@ -25,6 +25,7 @@ import "./styles/approach.css";
 import "./styles/demo.css";
 import "./styles/principles.css";
 import "./styles/stages.css";
+import "./styles/platform.css";
 import "./styles/contact.css";
 import "./styles/motion.css";
 
