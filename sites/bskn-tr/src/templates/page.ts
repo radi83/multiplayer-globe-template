@@ -28,7 +28,7 @@ import { NUMBER_WORDS, copyFor, type Copy } from "../copy.ts";
 export const LANG_PATH: Record<Lang, string> = { tr: "/", en: "/en/" };
 
 const PUBLIC = fileURLToPath(new URL("../../public/", import.meta.url));
-const hasUpload = (f?: string): f is string => !!f && existsSync(PUBLIC + "uploads/" + f);
+const hasUpload = (f?: string): f is string => !!f && existsSync(PUBLIC + "uploads/" + f.split("?", 1)[0]);
 
 const esc = (s: string): string =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -400,7 +400,12 @@ ${groups}
 
 function credentials(lang: Lang, c: Copy): string {
   const anyDoc = CERTIFICATES.some((x) => hasUpload(x.img)) || MEMBERSHIPS.some((m) => hasUpload(m.img));
-  const certs = CERTIFICATES.map((x) => {
+  const 400
+    = CERTIFICATES.map((certificate, index) => ({ certificate, index })).sort((a, b) => {
+    const previewDifference = Number(hasUpload(b.certificate.img)) - Number(hasUpload(a.certificate.img));
+    return previewDifference || a.index - b.index;
+  });
+  const certs = orderedCertificates.map(({ certificate: x }) => {
     const doc = hasUpload(x.img);
     const tag = doc ? "button" : "div";
     const attrs = doc
