@@ -453,7 +453,7 @@ ${
           m.role[lang],
         )}"`
       : "";
-    return `<${tag} class="scp2" data-dc-tpl="134" data-reveal=""${attrs} style="appearance: none; cursor: pointer; border: 0px; text-align: left; background: var(--paper); padding: 18px 16px; display: flex; flex-direction: column; gap: 6px;">
+    return `<${tag} class="scp2 membership-card" data-dc-tpl="134" data-reveal=""${attrs} style="appearance: none; cursor: pointer; border: 0px; text-align: left; background: var(--paper); padding: 18px 16px; display: flex; flex-direction: column; gap: 6px;">
 <span data-dc-tpl="135" style="display: flex; align-items: center; gap: 9px;">
 <span aria-hidden="true" data-dc-tpl="136" style="width: 8px; height: 8px; background: var(--accent); flex: 0 0 auto;"></span>
 <span data-dc-tpl="137" style="font-family: var(--font-heading); font-weight: 800; font-size: 16px; letter-spacing: -0.01em; color: var(--ink);">${i(
@@ -464,6 +464,7 @@ ${
       /[a-z][A-Z]/.test(m.role[lang]) ? "none" : "uppercase"
     }; color: var(--accent-ink);">${i(m.role[lang])}</span>
 <span data-dc-tpl="139" style="display: block; font-size: 13px; line-height: 1.45; color: var(--muted);">${i(m.name[lang])}</span>
+${doc ? `<span class="open-cue membership-open-cue" aria-hidden="true">+</span>` : ""}
 </${tag}>`;
   }).join("\n");
   return `<section data-dc-tpl="115" id="belgeler" style="border-top: 2px solid var(--rule);">

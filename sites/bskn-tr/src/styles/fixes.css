@@ -186,6 +186,15 @@ div.scp2 {
 .certificate-open-cue {
   margin-left: auto;
 }
+.membership-card {
+  position: relative;
+  padding-right: 44px !important;
+}
+.membership-open-cue {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+}
 [data-skill]:hover,
 [data-skill]:focus-visible {
   color: var(--ink) !important;
