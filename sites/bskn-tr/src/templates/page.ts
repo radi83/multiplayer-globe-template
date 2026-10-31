@@ -47,12 +47,12 @@ const SHIP_SVG = `<svg class="ship__fallback" viewBox="0 0 480 300" aria-hidden=
 
 /** Filo galerisinde her kategori için kariyer kayıtlarındaki temsili görsel. */
 const FLEET_IMAGE: Record<Exclude<VesselType, "shore">, string> = {
-  tanker: "gan-sure.webp",
-  bulk: "densa-sea-lion.webp",
-  capesize: "beks-leo.webp",
-  roro: "dfds.webp",
-  power: "karpowership.webp",
-  yard: "gemak.webp",
+  tanker: "fleet-blueprints/tanker.webp",
+  bulk: "fleet-blueprints/bulk-carrier.webp",
+  capesize: "fleet-blueprints/capesize.webp",
+  roro: "fleet-blueprints/ro-ro.webp",
+  power: "fleet-blueprints/powership.webp",
+  yard: "fleet-blueprints/shipyard-drydock.webp",
 };
 
 /* ---------------- head ---------------- */

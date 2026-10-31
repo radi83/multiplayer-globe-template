@@ -116,7 +116,7 @@ for (const p of PAGES) {
       await expect(page.locator("[data-fleet-modal-title]")).toHaveText(
         p.lang === "tr" ? "Ürün & ham petrol tankeri" : "Product & crude oil tanker",
       );
-      await expect(page.locator("[data-fleet-modal-image]")).toHaveAttribute("src", /gan-sure\.webp$/);
+      await expect(page.locator("[data-fleet-modal-image]")).toHaveAttribute("src", /fleet-blueprints\/tanker\.webp$/);
       await page.locator("[data-fleet-close]").click();
       await expect(modal).toBeHidden();
     });
