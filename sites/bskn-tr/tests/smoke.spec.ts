@@ -104,6 +104,23 @@ for (const p of PAGES) {
       await expect(modal).toBeHidden();
     });
 
+    test("fleet categories open localized burgundy blueprint panels", async ({ page }) => {
+      await page.goto(p.path);
+      const cards = page.locator("#filo [data-fleet-card]");
+      await expect(cards).toHaveCount(6);
+      await expect(cards.locator("img")).toHaveCount(0);
+
+      await cards.first().click();
+      const modal = page.locator("[data-fleet-modal]");
+      await expect(modal).toBeVisible();
+      await expect(page.locator("[data-fleet-modal-title]")).toHaveText(
+        p.lang === "tr" ? "Ürün & ham petrol tankeri" : "Product & crude oil tanker",
+      );
+      await expect(page.locator("[data-fleet-modal-image]")).toHaveAttribute("src", /gan-sure\.webp$/);
+      await page.locator("[data-fleet-close]").click();
+      await expect(modal).toBeHidden();
+    });
+
     test("page declares its own color scheme (no forced dark)", async ({ page }) => {
       await page.goto(p.path);
       await expect(page.locator('meta[name="color-scheme"]')).toHaveAttribute("content", "light dark");

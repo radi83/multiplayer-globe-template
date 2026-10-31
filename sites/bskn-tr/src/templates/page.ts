@@ -45,6 +45,16 @@ const SHIP_SVG = `<svg class="ship__fallback" viewBox="0 0 480 300" aria-hidden=
 <g stroke-opacity=".35">${Array.from({ length: 9 }, (_, i) => `<path d="M${10 + i * 8} ${206 + i * 10} Q ${240} ${200 + i * 10 - 6} ${470 - i * 8} ${206 + i * 10}"/>`).join("")}</g>
 </svg>`;
 
+/** Filo galerisinde her kategori için kariyer kayıtlarındaki temsili görsel. */
+const FLEET_IMAGE: Record<Exclude<VesselType, "shore">, string> = {
+  tanker: "gan-sure.webp",
+  bulk: "densa-sea-lion.webp",
+  capesize: "beks-leo.webp",
+  roro: "dfds.webp",
+  power: "karpowership.webp",
+  yard: "gemak.webp",
+};
+
 /* ---------------- head ---------------- */
 
 export function renderHead(lang: Lang, siteUrl: string, verification: { google: string; bing: string }): string {
@@ -341,17 +351,20 @@ ${CAREER.map((p, n) => post(p, lang, n, c)).join("\n")}
 
 function fleet(lang: Lang, c: Copy): string {
   const rows = fleetRanges()
-    .map(
-      (f) => `<div data-dc-tpl="97" style="display: grid; grid-template-columns: 14px minmax(0px, 1fr) auto; gap: clamp(12px, 2vw, 28px); align-items: baseline; padding: var(--half) 0; border-top: 1px solid var(--rule);">
-<span aria-hidden="true" data-dc-tpl="98" style="width: 10px; height: 10px; background: var(--accent); align-self: center;"></span>
-<span data-dc-tpl="99" style="font-family: var(--font-heading); font-weight: 800; font-size: clamp(16px, 1.6vw, 20px); letter-spacing: -0.015em;">${i(
-        FLEET_NAME[f.type][lang],
-      )}</span>
-<span data-dc-tpl="100" style='font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); font-feature-settings: "tnum"; white-space: nowrap;'>${i(
+    .map((f) => {
+      const title = FLEET_NAME[f.type][lang];
+      const image = `${r(lang)}img/${FLEET_IMAGE[f.type]}`;
+      return `<button type="button" data-fleet-card="" data-fleet-title="${esc(title)}" data-fleet-range="${esc(
         f.range,
-      )}</span>
-</div>`,
-    )
+      )}" data-fleet-image="${image}" aria-haspopup="dialog" data-dc-tpl="97">
+<span class="fleet-card__dot" aria-hidden="true"></span>
+<span class="fleet-card__copy">
+<span data-dc-tpl="99">${i(title)}</span>
+<span data-dc-tpl="100">${i(f.range)}</span>
+</span>
+<span class="fleet-card__open" aria-hidden="true">↗</span>
+</button>`;
+    })
     .join("\n");
   return `<section data-dc-tpl="89" id="filo" style="border-top: 2px solid var(--rule);">
 <div data-dc-tpl="90" style="max-width: 1440px; margin: 0px auto; padding: calc(var(--leading)*2.4) var(--edge);">
@@ -362,7 +375,6 @@ function fleet(lang: Lang, c: Copy): string {
 </div>
 <div data-dc-tpl="95" style="min-width: 0px;">
 ${rows}
-<div data-dc-tpl="101" style="border-top: 1px solid var(--rule);"></div>
 </div>
 </div>
 </div>
@@ -528,6 +540,20 @@ ${contact(lang, c)}
 <h2 id="skill-banner-title" data-skill-modal-title=""></h2>
 <p id="skill-banner-desc" data-skill-modal-desc=""></p>
 <button type="button" data-skill-close="" aria-label="${esc(c.close)}">${esc(c.close)}</button>
+</article>
+</div>
+<div data-fleet-modal="" hidden role="dialog" aria-modal="true" aria-labelledby="fleet-modal-title">
+<article data-fleet-blueprint="">
+<img data-fleet-modal-image="" src="data:," alt="">
+<span class="fleet-blueprint__grid" aria-hidden="true"></span>
+<span class="fleet-blueprint__line fleet-blueprint__line--top" aria-hidden="true"></span>
+<span class="fleet-blueprint__line fleet-blueprint__line--bottom" aria-hidden="true"></span>
+<div class="fleet-blueprint__copy">
+<span data-fleet-kicker="">${i(c.fleetKicker)}</span>
+<h2 id="fleet-modal-title" data-fleet-modal-title=""></h2>
+<p data-fleet-modal-range=""></p>
+</div>
+<button type="button" data-fleet-close="" aria-label="${esc(c.close)}">${esc(c.close)}</button>
 </article>
 </div>`;
 }

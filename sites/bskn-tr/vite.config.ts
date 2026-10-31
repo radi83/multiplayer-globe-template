@@ -90,6 +90,6 @@ export default defineConfig({
       input: { tr: resolve(import.meta.dirname, "index.html"), en: resolve(import.meta.dirname, "en/index.html") },
     },
   },
-  server: { watch: { ignored: ["**/test-results/**"] } },
+  server: { allowedHosts: ["terminal.local"], watch: { ignored: ["**/test-results/**"] } },
 });
 
