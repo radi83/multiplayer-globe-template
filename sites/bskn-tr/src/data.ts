@@ -388,128 +388,107 @@ export interface SkillGroup {
 
 export const SKILLS: SkillGroup[] = [
   {
-    title: t("Ana makine & tahrik", "Main engine & propulsion"),
+    title: t("Makine ve tersane", "Machinery & shipyard"),
     items: [
       {
-        title: t("MAN B&W ME-B", "MAN B&W ME-B"),
+        title: t("Gemi Makine Operasyonları", "Marine Engineering Operations"),
         desc: t(
-          "ME-B ana makinelerinde işletme, performans takibi, planlı bakım ve sistematik arıza teşhisi.",
-          "Operation, performance monitoring, planned maintenance and systematic fault diagnosis on MAN B&W ME-B main engines.",
+          "Ana ve yardımcı makineler, kazanlar, yakıt–yağlama sistemleri, pompalar, kompresörler, soğutma ve HVAC dâhil makine dairesi operasyonlarının emniyetli ve verimli yönetimi. Kararlar; üretici limitleri, klas ve bayrak gereklilikleri, bakım verileri ve gerçek operasyon koşulları birlikte değerlendirilerek alınır.",
+          "Safe and efficient management of engine-room operations, including propulsion, auxiliary machinery, boilers, fuel and lubrication systems, pumps, compressors, refrigeration and HVAC. Decisions are based on OEM limits, class and flag requirements, maintenance data and actual operating conditions.",
         ),
       },
       {
-        title: t("MAN B&W ME-C", "MAN B&W ME-C"),
+        title: t("Bakım, Arıza Analizi ve Güvenilirlik", "Maintenance, Troubleshooting & Reliability"),
         desc: t(
-          "Elektronik kontrollü ME-C ana makinelerinde yakıt enjeksiyonu, egzoz valfi kontrolü, performans ve bakım yönetimi.",
-          "Fuel injection, exhaust-valve control, performance and maintenance management on electronically controlled ME-C main engines.",
+          "Bakım faaliyetlerinin ekipman kritikliğine göre önceliklendirilmesi; arızalarda semptom yerine kök nedene odaklanılması. Overhaul, tolerans kontrolü, kondisyon değerlendirmesi ve bakım sonrası doğrulama; üretici dokümantasyonu ve operasyonel trendler üzerinden yürütülür.",
+          "Maintenance is prioritised according to equipment criticality, with troubleshooting focused on root cause rather than symptom correction. Overhaul, tolerance verification, condition assessment and post-maintenance validation are performed against OEM documentation and operational trends.",
         ),
       },
       {
-        title: t("Dört zamanlı ana makine", "Four-stroke main engine"),
+        title: t("Ana ve Yardımcı Makine Overhaul Yönetimi", "Main & Auxiliary Machinery Overhaul Management"),
         desc: t(
-          "Dört zamanlı dizel makinelerde silindir kapağı, yakıt sistemi, turboşarj, yağlama ve genel bakım operasyonları.",
-          "Cylinder-head, fuel-system, turbocharger, lubrication and general maintenance operations on four-stroke diesel engines.",
+          "Ana makine ve jeneratörlerin büyük bakımlarında söküm, ölçüm, parça değerlendirmesi, yenileme, montaj ve devreye alma süreçlerinin teknik yönetimi. Kritik komponentler üretici toleransları ve kayıtlı ölçümler üzerinden değerlendirilir.",
+          "Technical management of major overhauls of main engines and generator sets, covering dismantling, measurement, component assessment, renewal, reassembly and recommissioning. Critical components are evaluated against OEM tolerances and recorded measurements.",
         ),
       },
       {
-        title: t("Buhar türbini & ana kazan", "Steam turbine & main boiler"),
+        title: t("Dry Dock ve Tersane Operasyonları", "Dry Dock & Shipyard Operations"),
         desc: t(
-          "Buhar üretimi, ana kazan yanma kontrolü, besi suyu yönetimi ve buhar türbini yardımcı sistemlerinin işletilmesi.",
-          "Steam generation, main-boiler combustion control, feed-water management and operation of steam-turbine auxiliary systems.",
+          "Dry dock kapsamının hazırlanması, iş paketlerinin yönetimi, tersane–servis–gemi koordinasyonu ve teslim süreçlerinin teknik kontrolü. Makine, boru, sea valve, shaft line ve klas survey işleri; süre, maliyet, kalite ve operasyonel risk birlikte gözetilerek yönetilir.",
+          "Technical management of dry-dock scope, work packages, shipyard coordination, service providers and final handover. Machinery, piping, sea valves, shaft-line work and class survey items are controlled against schedule, cost, quality and operational risk.",
         ),
       },
       {
-        title: t("Şaft & pervane bakımı", "Shaft & propeller work"),
+        title: t("Yeni İnşa ve Devreye Alma", "Newbuilding & Commissioning"),
         desc: t(
-          "Şaft hattı, yataklar, sızdırmazlık elemanları ve pervane üzerinde havuzlama, ölçüm ve bakım çalışmaları.",
-          "Dry-docking, measurement and maintenance work on shaft lines, bearings, seals and propellers.",
+          "Yeni inşa gemilerde makine sistemlerinin teknik kontrolü, commissioning, harbour ve sea trial, performans testleri, punch list ve teslim öncesi doğrulama süreçlerinin yönetimi. Kabul kriteri yalnızca sistemin çalışması değil, tasarım amacı ve operasyonel güvenilirliğin sağlanmasıdır.",
+          "Technical supervision of machinery systems on newbuild vessels, including commissioning, harbour and sea trials, performance testing, punch-list control and pre-delivery verification. Acceptance is based on design intent, compliance and operational reliability—not functionality alone.",
         ),
       },
     ],
   },
   {
-    title: t("Kargo & yardımcı sistemler", "Cargo & auxiliary systems"),
+    title: t("Yakıt, enerji ve tedarik", "Fuel, energy & supply"),
     items: [
       {
-        title: t("FRAMO kargo pompa sistemi", "FRAMO cargo pumping"),
+        title: t("Yakıt, Yağlama ve Bunker Yönetimi", "Fuel, Lubrication & Bunker Management"),
         desc: t(
-          "Hidrolik güç ünitesi, dalgıç kargo pompaları, operasyon takibi ve FRAMO sistemlerinde arıza teşhisi.",
-          "Hydraulic power units, submerged cargo pumps, operational monitoring and fault diagnosis in FRAMO systems.",
+          "Bunker operasyonları, yakıt transferi, tank yönetimi, purifier performansı ve viscosity–temperature kontrolünün teknik yönetimi. Yakıt analizleri; cat fines, sulphur, density, water, flash point ve compatibility gibi parametreler üzerinden makine güvenilirliği ve MARPOL uyumu açısından değerlendirilir.",
+          "Technical management of bunkering, fuel transfer, tank operations, purifier performance and viscosity–temperature control. Fuel analysis is assessed for parameters such as catalytic fines, sulphur, density, water, flash point and compatibility to protect machinery reliability and MARPOL compliance.",
         ),
       },
       {
-        title: t("İnert gaz sistemi", "Inert gas system"),
+        title: t("Enerji Verimliliği ve Performans Yönetimi", "Energy Efficiency & Performance Management"),
         desc: t(
-          "Oksijen oranı ve tank basıncı kontrolü; deck seal, alarmlar ve emniyet donanımlarının işletme ve bakımı.",
-          "Control of oxygen content and tank pressure, including operation and maintenance of deck seals, alarms and safety devices.",
+          "Ana makine yükü, özgül yakıt tüketimi, yardımcı güç ihtiyacı ve geminin operasyon profili üzerinden enerji performansının izlenmesi. Amaç; emniyet ve güvenilirlikten ödün vermeden yakıt tüketimini ve gereksiz enerji kayıplarını azaltmaktır.",
+          "Monitoring of energy performance through main-engine load, specific fuel consumption, auxiliary power demand and vessel operating profile. The objective is to reduce fuel consumption and avoidable energy losses without compromising safety or reliability.",
         ),
       },
       {
-        title: t("Alfa Laval separatör", "Alfa Laval separators"),
+        title: t("Emisyon ve Çevre Mevzuatı", "Emissions & Environmental Compliance"),
         desc: t(
-          "Yakıt ve yağ separatörlerinde bowl bakımı, otomasyon, ayar, performans kontrolü ve arıza giderme.",
-          "Bowl maintenance, automation, adjustment, performance checks and troubleshooting on fuel and lubricating-oil separators.",
+          "MARPOL Annex VI, sulphur limitleri, NOx, EEXI ve CII gerekliliklerinin gemi operasyonlarına teknik entegrasyonu. SCR, scrubber ve fuel switching uygulamalarında operasyonel uygunluk, kayıt bütünlüğü ve ekipman performansı birlikte değerlendirilir.",
+          "Technical integration of MARPOL Annex VI, sulphur limits, NOx requirements, EEXI and CII into vessel operations. SCR, scrubber and fuel-switching systems are evaluated through operational compliance, record integrity and equipment performance.",
         ),
       },
       {
-        title: t("Vinç hidroliği", "Crane hydraulics"),
+        title: t("Teknik Satın Alma, Yedek Parça ve Bütçe", "Technical Procurement, Spares & Budget Management"),
         desc: t(
-          "Hidrolik pompalar, valf blokları, silindirler ve devrelerde basınç, kirlilik, kaçak ve arıza kontrolü.",
-          "Pressure, contamination, leakage and fault control across hydraulic pumps, valve blocks, cylinders and circuits.",
-        ),
-      },
-      {
-        title: t("Gavarnör & Oil Mist Detector", "Governor & Oil Mist Detector"),
-        desc: t(
-          "Devir kontrolü, aşırı hız koruması ve krank karteri yağ sisi izleme sistemlerinde test, ayar ve arıza teşhisi.",
-          "Testing, adjustment and fault diagnosis for speed control, overspeed protection and crankcase oil-mist monitoring systems.",
+          "Yedek parça ve servis ihtiyaçlarının ekipman kritikliğine, bakım planına ve operasyonel riske göre yönetilmesi. Teknik teklifler; fiyatın yanında uygunluk, kalite, teslim süresi ve lifecycle etkisi üzerinden değerlendirilir.",
+          "Management of spare-parts and service requirements according to equipment criticality, maintenance planning and operational risk. Technical proposals are assessed on suitability, quality, lead time and lifecycle impact—not price alone.",
         ),
       },
     ],
   },
   {
-    title: t("Yönetim & uygunluk", "Management & compliance"),
+    title: t("Denetim ve yönetim", "Inspection & management"),
     items: [
       {
-        title: t("ISM & klas sörveyleri", "ISM & class surveys"),
+        title: t("Klas, Bayrak ve Denetim Hazırlığı", "Class, Flag & Inspection Readiness"),
         desc: t(
-          "Planlı bakım ve operasyon kanıtlarının hazırlanması; iç/dış denetimler, klas sörveyleri ve bulgu kapatma süreçleri.",
-          "Preparation of maintenance and operational evidence for audits, class surveys and structured close-out of findings.",
+          "Klas, bayrak, PSC ve şirket denetimleri öncesinde makine sistemlerinin teknik hazırlığının sağlanması. Alarm, trip, emergency equipment ve kritik koruma fonksiyonları yalnızca kayıt üzerinden değil, gerçek fonksiyon ve kanıt üzerinden doğrulanır.",
+          "Technical preparation of machinery systems for class, flag, PSC and internal inspections. Alarm, trip, emergency and critical protection functions are verified through actual functionality and supporting evidence, not documentation alone.",
         ),
       },
       {
-        title: t("RightShip denetimi", "RightShip inspection"),
+        title: t("Emniyet Kritik Sistemler ve Risk Yönetimi", "Safety-Critical Systems & Risk Management"),
         desc: t(
-          "Dökme yük gemilerinde RightShip gereklilikleri, makine dairesi hazırlığı, kanıt sunumu ve eksikliklerin kapatılması.",
-          "RightShip requirements for bulk carriers, engine-room readiness, evidence presentation and close-out of deficiencies.",
+          "Blackout, propulsion loss, flooding, fire ve machinery protection gibi yüksek etkili senaryolarda sistem bütünlüğünün korunmasına yönelik teknik yaklaşım. Emergency generator, fire pump, quick-closing valve, remote stop ve shutdown/interlock fonksiyonlarının güvenilirliği düzenli olarak doğrulanır.",
+          "Engineering management of high-consequence scenarios including blackout, loss of propulsion, flooding, fire and machinery-protection events. Emergency generators, fire pumps, quick-closing valves, remote stops and shutdown/interlock functions are routinely verified for reliability.",
         ),
       },
       {
-        title: t("Yeni inşa devralma", "New-build takeover"),
+        title: t("Teknik Liderlik ve Makine Dairesi Yönetimi", "Technical Leadership & Engine-Room Management"),
         desc: t(
-          "Devreye alma, deniz tecrübesi, punch list, teknik doküman, yedek parça ve planlı bakım sisteminin teslim alınması.",
-          "Commissioning, sea trials, punch lists and takeover of technical documentation, spares and planned-maintenance systems.",
+          "Çok uluslu makine personelinin görev, yetkinlik ve operasyonel risk temelinde yönetilmesi. Watchkeeping, permit-to-work, LOTO, bakım planlaması ve teknik eğitim süreçleri; emniyet kültürü ve ekipman güvenilirliğini birlikte geliştirecek şekilde yapılandırılır.",
+          "Management of multinational engine-room teams based on responsibility, competence and operational risk. Watchkeeping, permit-to-work, LOTO, maintenance planning and technical training are structured to strengthen both safety culture and machinery reliability.",
         ),
       },
       {
-        title: t("VLSFO yakıt yönetimi", "VLSFO fuel management"),
+        title: t("Denizcilik Teknolojileri ve Karar Destek Sistemleri", "Maritime Technology & Engineering Decision Support"),
         desc: t(
-          "Uyumluluk ve stabilite, tank ayrımı, sıcaklık-viskozite kontrolü, separatör ayarları ve güvenli yakıt geçişi.",
-          "Compatibility and stability, tank segregation, temperature-viscosity control, separator settings and safe fuel changeover.",
-        ),
-      },
-      {
-        title: t("MARPOL Annex V", "MARPOL Annex V"),
-        desc: t(
-          "Çöp yönetim planı, ayrıştırma, kayıt defteri, gemide depolama ve liman kabul tesislerine teslim süreçleri.",
-          "Garbage-management plans, segregation, record books, onboard storage and delivery to port reception facilities.",
-        ),
-      },
-      {
-        title: t("Karbon yakalama", "Carbon capture"),
-        desc: t(
-          "Gemide karbon yakalama süreçlerinin makine sistemlerine entegrasyonu; enerji, alan, depolama ve emniyet etkileri.",
-          "Integration of onboard carbon-capture processes with machinery systems, including energy, space, storage and safety impacts.",
+          "Regülasyon, üretici dokümantasyonu, klas kuralları, bakım kayıtları ve operasyonel kanıtların mühendislik karar destek sistemlerinde birleştirilmesi. Yapay zekânın rolü mühendislik kararını ikame etmek değil; kaynak izlenebilirliğini, kanıt kalitesini ve teknik inceleme hızını artırmaktır.",
+          "Integration of regulations, OEM documentation, classification requirements, maintenance records and operational evidence into engineering decision-support systems. The role of AI is not to replace engineering judgement, but to improve traceability, evidence quality and technical review speed.",
         ),
       },
     ],

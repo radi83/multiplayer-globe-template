@@ -84,15 +84,17 @@ for (const p of PAGES) {
       await page.goto(p.path);
       const section = page.locator("#uzmanlik");
       const triggers = section.locator("[data-skill]");
-      await expect(triggers).toHaveCount(16);
+      await expect(triggers).toHaveCount(13);
       const before = await section.boundingBox();
 
       await triggers.first().click();
       const modal = page.locator("[data-skill-modal]");
       await expect(modal).toBeVisible();
-      await expect(page.locator("[data-skill-modal-title]")).toHaveText("MAN B&W ME-B");
+      await expect(page.locator("[data-skill-modal-title]")).toHaveText(
+        p.lang === "tr" ? "Gemi Makine Operasyonları" : "Marine Engineering Operations",
+      );
       await expect(page.locator("[data-skill-modal-desc]")).toContainText(
-        p.lang === "tr" ? "planlı bakım" : "planned maintenance",
+        p.lang === "tr" ? "Ana ve yardımcı makineler" : "Safe and efficient management",
       );
 
       const after = await section.boundingBox();
