@@ -362,7 +362,7 @@ function fleet(lang: Lang, c: Copy): string {
 <span data-dc-tpl="99">${i(title)}</span>
 <span data-dc-tpl="100">${i(f.range)}</span>
 </span>
-<span class="fleet-card__open" aria-hidden="true">↗</span>
+<span class="open-cue fleet-card__open" aria-hidden="true">+</span>
 </button>`;
     })
     .join("\n");
@@ -394,6 +394,7 @@ ${g.items
     )}" aria-haspopup="dialog" data-dc-tpl="112" style="appearance: none; width: 100%; display: flex; gap: 10px; align-items: baseline; margin: 0px; padding: 9px 0px; border: 0px; border-top: 1px solid var(--rule); background: transparent; font: inherit; font-size: 15px; line-height: var(--leading); text-align: left; color: var(--muted); cursor: pointer;">
 <span aria-hidden="true" data-dc-tpl="113" style="width: 6px; height: 6px; background: var(--accent); flex: 0 0 auto; transform: translateY(-2px);"></span>
 <span data-dc-tpl="114">${i(it.title[lang])}</span>
+<span class="open-cue skill-open-cue" aria-hidden="true">+</span>
 </button>`,
   )
   .join("\n")}
@@ -437,8 +438,8 @@ function credentials(lang: Lang, c: Copy): string {
 ${
   doc
     ? `<span class="scp0" data-dc-tpl="128" style="display: flex; align-items: center; gap: 8px; margin-top: auto; padding-top: 12px; font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); transition: color 0.3s;">
-<span aria-hidden="true" data-dc-tpl="129" style="width: 8px; height: 8px; background: var(--accent); flex: 0 0 auto;"></span>
 <span data-dc-tpl="130">${i(c.seeDoc)}</span>
+<span class="open-cue certificate-open-cue" aria-hidden="true">+</span>
 </span>`
     : ""
 }
@@ -542,17 +543,12 @@ ${contact(lang, c)}
 <button type="button" data-skill-close="" aria-label="${esc(c.close)}">${esc(c.close)}</button>
 </article>
 </div>
-<div data-fleet-modal="" hidden role="dialog" aria-modal="true" aria-labelledby="fleet-modal-title">
+<div data-fleet-modal="" hidden role="dialog" aria-modal="true" aria-label="${esc(c.fleetTitle)}">
 <article data-fleet-blueprint="">
 <img data-fleet-modal-image="" src="data:," alt="">
 <span class="fleet-blueprint__grid" aria-hidden="true"></span>
 <span class="fleet-blueprint__line fleet-blueprint__line--top" aria-hidden="true"></span>
 <span class="fleet-blueprint__line fleet-blueprint__line--bottom" aria-hidden="true"></span>
-<div class="fleet-blueprint__copy">
-<span data-fleet-kicker="">${i(c.fleetKicker)}</span>
-<h2 id="fleet-modal-title" data-fleet-modal-title=""></h2>
-<p data-fleet-modal-range=""></p>
-</div>
 <button type="button" data-fleet-close="" aria-label="${esc(c.close)}">${esc(c.close)}</button>
 </article>
 </div>`;

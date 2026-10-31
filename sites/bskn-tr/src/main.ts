@@ -303,10 +303,8 @@ function initSkillBanner(): void {
 function initFleetGallery(): void {
   const box = document.querySelector<HTMLElement>("[data-fleet-modal]");
   const image = document.querySelector<HTMLImageElement>("[data-fleet-modal-image]");
-  const title = document.querySelector<HTMLElement>("[data-fleet-modal-title]");
-  const range = document.querySelector<HTMLElement>("[data-fleet-modal-range]");
   const close = document.querySelector<HTMLButtonElement>("[data-fleet-close]");
-  if (!box || !image || !title || !range || !close) return;
+  if (!box || !image || !close) return;
 
   let opener: HTMLElement | null = null;
   const hide = (): void => {
@@ -317,8 +315,6 @@ function initFleetGallery(): void {
   document.querySelectorAll<HTMLElement>("[data-fleet-card]").forEach((card) => {
     card.addEventListener("click", () => {
       opener = card;
-      title.textContent = card.dataset.fleetTitle ?? "";
-      range.textContent = card.dataset.fleetRange ?? "";
       image.src = card.dataset.fleetImage ?? "data:,";
       image.alt = card.dataset.fleetTitle ?? "";
       box.hidden = false;

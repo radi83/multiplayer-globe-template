@@ -113,7 +113,10 @@ for (const p of PAGES) {
       await cards.first().click();
       const modal = page.locator("[data-fleet-modal]");
       await expect(modal).toBeVisible();
-      await expect(page.locator("[data-fleet-modal-title]")).toHaveText(
+      await expect(modal).toHaveAttribute("aria-label", p.lang === "tr" ? "Çalışılan gemi tipleri" : "Vessel types worked");
+      await expect(page.locator("[data-fleet-modal-title]")).toHaveCount(0);
+      await expect(page.locator("[data-fleet-modal-image]")).toHaveAttribute(
+        "alt",
         p.lang === "tr" ? "Ürün & ham petrol tankeri" : "Product & crude oil tanker",
       );
       await expect(page.locator("[data-fleet-modal-image]")).toHaveAttribute("src", /fleet-blueprints\/tanker\.webp$/);
