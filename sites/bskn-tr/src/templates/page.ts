@@ -377,10 +377,12 @@ function skills(lang: Lang, c: Copy): string {
     )}</h3>
 ${g.items
   .map(
-    (it) => `<p data-dc-tpl="112" style="display: flex; gap: 10px; align-items: baseline; margin: 0px; padding: 9px 0px; border-top: 1px solid var(--rule); font-size: 15px; line-height: var(--leading); color: var(--muted);">
+    (it) => `<button type="button" data-skill="" data-skill-title="${esc(it.title[lang])}" data-skill-desc="${esc(
+      it.desc[lang],
+    )}" aria-haspopup="dialog" data-dc-tpl="112" style="appearance: none; width: 100%; display: flex; gap: 10px; align-items: baseline; margin: 0px; padding: 9px 0px; border: 0px; border-top: 1px solid var(--rule); background: transparent; font: inherit; font-size: 15px; line-height: var(--leading); text-align: left; color: var(--muted); cursor: pointer;">
 <span aria-hidden="true" data-dc-tpl="113" style="width: 6px; height: 6px; background: var(--accent); flex: 0 0 auto; transform: translateY(-2px);"></span>
-<span data-dc-tpl="114">${i(it[lang])}</span>
-</p>`,
+<span data-dc-tpl="114">${i(it.title[lang])}</span>
+</button>`,
   )
   .join("\n")}
 </div>`,
@@ -519,5 +521,13 @@ ${contact(lang, c)}
 </footer></main></div></div>
 <div data-zoom="" hidden role="dialog" aria-modal="true" aria-label="${c.seeDoc}"><figure><img alt="" src="data:," data-zoom-img=""><figcaption><span data-zoom-title=""></span><button type="button" data-zoom-close="">${
     c.close
-  }</button></figcaption></figure></div>`;
+  }</button></figcaption></figure></div>
+<div data-skill-modal="" hidden role="dialog" aria-modal="true" aria-labelledby="skill-banner-title" aria-describedby="skill-banner-desc">
+<article data-skill-banner="">
+<span data-skill-kicker="">${i(c.skillsKicker)}</span>
+<h2 id="skill-banner-title" data-skill-modal-title=""></h2>
+<p id="skill-banner-desc" data-skill-modal-desc=""></p>
+<button type="button" data-skill-close="" aria-label="${esc(c.close)}">${esc(c.close)}</button>
+</article>
+</div>`;
 }

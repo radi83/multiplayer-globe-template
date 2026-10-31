@@ -80,6 +80,28 @@ for (const p of PAGES) {
       await expect(card).toHaveAttribute("aria-expanded", "true");
     });
 
+    test("expertise opens a localized banner without resizing the section", async ({ page }) => {
+      await page.goto(p.path);
+      const section = page.locator("#uzmanlik");
+      const triggers = section.locator("[data-skill]");
+      await expect(triggers).toHaveCount(16);
+      const before = await section.boundingBox();
+
+      await triggers.first().click();
+      const modal = page.locator("[data-skill-modal]");
+      await expect(modal).toBeVisible();
+      await expect(page.locator("[data-skill-modal-title]")).toHaveText("MAN B&W ME-B");
+      await expect(page.locator("[data-skill-modal-desc]")).toContainText(
+        p.lang === "tr" ? "planlı bakım" : "planned maintenance",
+      );
+
+      const after = await section.boundingBox();
+      expect(Math.round(after?.width ?? 0)).toBe(Math.round(before?.width ?? 0));
+      expect(Math.round(after?.height ?? 0)).toBe(Math.round(before?.height ?? 0));
+      await page.locator("[data-skill-close]").click();
+      await expect(modal).toBeHidden();
+    });
+
     test("page declares its own color scheme (no forced dark)", async ({ page }) => {
       await page.goto(p.path);
       await expect(page.locator('meta[name="color-scheme"]')).toHaveAttribute("content", "light dark");

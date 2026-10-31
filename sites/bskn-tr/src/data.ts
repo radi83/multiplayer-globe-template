@@ -376,41 +376,142 @@ export const BMMS_CONTINUATION: Post = {
   current: true,
 };
 
+export interface SkillItem {
+  title: T;
+  desc: T;
+}
+
 export interface SkillGroup {
   title: T;
-  items: T[];
+  items: SkillItem[];
 }
 
 export const SKILLS: SkillGroup[] = [
   {
     title: t("Ana makine & tahrik", "Main engine & propulsion"),
     items: [
-      t("MAN B&W ME-B", "MAN B&W ME-B"),
-      t("MAN B&W ME-C", "MAN B&W ME-C"),
-      t("Dört zamanlı ana makine", "Four-stroke main engine"),
-      t("Buhar türbini & ana kazan", "Steam turbine & main boiler"),
-      t("Şaft & pervane bakımı", "Shaft & propeller work"),
+      {
+        title: t("MAN B&W ME-B", "MAN B&W ME-B"),
+        desc: t(
+          "ME-B ana makinelerinde işletme, performans takibi, planlı bakım ve sistematik arıza teşhisi.",
+          "Operation, performance monitoring, planned maintenance and systematic fault diagnosis on MAN B&W ME-B main engines.",
+        ),
+      },
+      {
+        title: t("MAN B&W ME-C", "MAN B&W ME-C"),
+        desc: t(
+          "Elektronik kontrollü ME-C ana makinelerinde yakıt enjeksiyonu, egzoz valfi kontrolü, performans ve bakım yönetimi.",
+          "Fuel injection, exhaust-valve control, performance and maintenance management on electronically controlled ME-C main engines.",
+        ),
+      },
+      {
+        title: t("Dört zamanlı ana makine", "Four-stroke main engine"),
+        desc: t(
+          "Dört zamanlı dizel makinelerde silindir kapağı, yakıt sistemi, turboşarj, yağlama ve genel bakım operasyonları.",
+          "Cylinder-head, fuel-system, turbocharger, lubrication and general maintenance operations on four-stroke diesel engines.",
+        ),
+      },
+      {
+        title: t("Buhar türbini & ana kazan", "Steam turbine & main boiler"),
+        desc: t(
+          "Buhar üretimi, ana kazan yanma kontrolü, besi suyu yönetimi ve buhar türbini yardımcı sistemlerinin işletilmesi.",
+          "Steam generation, main-boiler combustion control, feed-water management and operation of steam-turbine auxiliary systems.",
+        ),
+      },
+      {
+        title: t("Şaft & pervane bakımı", "Shaft & propeller work"),
+        desc: t(
+          "Şaft hattı, yataklar, sızdırmazlık elemanları ve pervane üzerinde havuzlama, ölçüm ve bakım çalışmaları.",
+          "Dry-docking, measurement and maintenance work on shaft lines, bearings, seals and propellers.",
+        ),
+      },
     ],
   },
   {
     title: t("Kargo & yardımcı sistemler", "Cargo & auxiliary systems"),
     items: [
-      t("FRAMO kargo pompa sistemi", "FRAMO cargo pumping"),
-      t("İnert gaz sistemi", "Inert gas system"),
-      t("Alfa Laval separatör", "Alfa Laval separators"),
-      t("Vinç hidroliği", "Crane hydraulics"),
-      t("Gavarnör & Oil Mist Detector", "Governor & Oil Mist Detector"),
+      {
+        title: t("FRAMO kargo pompa sistemi", "FRAMO cargo pumping"),
+        desc: t(
+          "Hidrolik güç ünitesi, dalgıç kargo pompaları, operasyon takibi ve FRAMO sistemlerinde arıza teşhisi.",
+          "Hydraulic power units, submerged cargo pumps, operational monitoring and fault diagnosis in FRAMO systems.",
+        ),
+      },
+      {
+        title: t("İnert gaz sistemi", "Inert gas system"),
+        desc: t(
+          "Oksijen oranı ve tank basıncı kontrolü; deck seal, alarmlar ve emniyet donanımlarının işletme ve bakımı.",
+          "Control of oxygen content and tank pressure, including operation and maintenance of deck seals, alarms and safety devices.",
+        ),
+      },
+      {
+        title: t("Alfa Laval separatör", "Alfa Laval separators"),
+        desc: t(
+          "Yakıt ve yağ separatörlerinde bowl bakımı, otomasyon, ayar, performans kontrolü ve arıza giderme.",
+          "Bowl maintenance, automation, adjustment, performance checks and troubleshooting on fuel and lubricating-oil separators.",
+        ),
+      },
+      {
+        title: t("Vinç hidroliği", "Crane hydraulics"),
+        desc: t(
+          "Hidrolik pompalar, valf blokları, silindirler ve devrelerde basınç, kirlilik, kaçak ve arıza kontrolü.",
+          "Pressure, contamination, leakage and fault control across hydraulic pumps, valve blocks, cylinders and circuits.",
+        ),
+      },
+      {
+        title: t("Gavarnör & Oil Mist Detector", "Governor & Oil Mist Detector"),
+        desc: t(
+          "Devir kontrolü, aşırı hız koruması ve krank karteri yağ sisi izleme sistemlerinde test, ayar ve arıza teşhisi.",
+          "Testing, adjustment and fault diagnosis for speed control, overspeed protection and crankcase oil-mist monitoring systems.",
+        ),
+      },
     ],
   },
   {
     title: t("Yönetim & uygunluk", "Management & compliance"),
     items: [
-      t("ISM & klas sörveyleri", "ISM & class surveys"),
-      t("RightShip denetimi", "RightShip inspection"),
-      t("Yeni inşa devralma", "New-build takeover"),
-      t("VLSFO yakıt yönetimi", "VLSFO fuel management"),
-      t("MARPOL Annex V", "MARPOL Annex V"),
-      t("Karbon yakalama", "Carbon capture"),
+      {
+        title: t("ISM & klas sörveyleri", "ISM & class surveys"),
+        desc: t(
+          "Planlı bakım ve operasyon kanıtlarının hazırlanması; iç/dış denetimler, klas sörveyleri ve bulgu kapatma süreçleri.",
+          "Preparation of maintenance and operational evidence for audits, class surveys and structured close-out of findings.",
+        ),
+      },
+      {
+        title: t("RightShip denetimi", "RightShip inspection"),
+        desc: t(
+          "Dökme yük gemilerinde RightShip gereklilikleri, makine dairesi hazırlığı, kanıt sunumu ve eksikliklerin kapatılması.",
+          "RightShip requirements for bulk carriers, engine-room readiness, evidence presentation and close-out of deficiencies.",
+        ),
+      },
+      {
+        title: t("Yeni inşa devralma", "New-build takeover"),
+        desc: t(
+          "Devreye alma, deniz tecrübesi, punch list, teknik doküman, yedek parça ve planlı bakım sisteminin teslim alınması.",
+          "Commissioning, sea trials, punch lists and takeover of technical documentation, spares and planned-maintenance systems.",
+        ),
+      },
+      {
+        title: t("VLSFO yakıt yönetimi", "VLSFO fuel management"),
+        desc: t(
+          "Uyumluluk ve stabilite, tank ayrımı, sıcaklık-viskozite kontrolü, separatör ayarları ve güvenli yakıt geçişi.",
+          "Compatibility and stability, tank segregation, temperature-viscosity control, separator settings and safe fuel changeover.",
+        ),
+      },
+      {
+        title: t("MARPOL Annex V", "MARPOL Annex V"),
+        desc: t(
+          "Çöp yönetim planı, ayrıştırma, kayıt defteri, gemide depolama ve liman kabul tesislerine teslim süreçleri.",
+          "Garbage-management plans, segregation, record books, onboard storage and delivery to port reception facilities.",
+        ),
+      },
+      {
+        title: t("Karbon yakalama", "Carbon capture"),
+        desc: t(
+          "Gemide karbon yakalama süreçlerinin makine sistemlerine entegrasyonu; enerji, alan, depolama ve emniyet etkileri.",
+          "Integration of onboard carbon-capture processes with machinery systems, including energy, space, storage and safety impacts.",
+        ),
+      },
     ],
   },
 ];

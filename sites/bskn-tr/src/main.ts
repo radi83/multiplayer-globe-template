@@ -264,11 +264,46 @@ function initZoom(): void {
   });
 }
 
+/* ---------- Uzmanlık bilgi bannerı ---------- */
+
+function initSkillBanner(): void {
+  const box = document.querySelector<HTMLElement>("[data-skill-modal]");
+  const title = document.querySelector<HTMLElement>("[data-skill-modal-title]");
+  const desc = document.querySelector<HTMLElement>("[data-skill-modal-desc]");
+  const close = document.querySelector<HTMLButtonElement>("[data-skill-close]");
+  if (!box || !title || !desc || !close) return;
+
+  let opener: HTMLElement | null = null;
+  const hide = (): void => {
+    box.hidden = true;
+    opener?.focus();
+  };
+
+  document.querySelectorAll<HTMLElement>("[data-skill]").forEach((el) => {
+    el.addEventListener("click", () => {
+      opener = el;
+      title.textContent = el.dataset.skillTitle ?? "";
+      desc.textContent = el.dataset.skillDesc ?? "";
+      box.hidden = false;
+      close.focus();
+    });
+  });
+
+  close.addEventListener("click", hide);
+  box.addEventListener("click", (event) => {
+    if (event.target === box) hide();
+  });
+  addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !box.hidden) hide();
+  });
+}
+
 initTheme();
 initFilters();
 initReveal();
 initCards();
 initZoom();
+initSkillBanner();
 bootShip();
 frame();
 addEventListener("scroll", onScroll, { passive: true });
