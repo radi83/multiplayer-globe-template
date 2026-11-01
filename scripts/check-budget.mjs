@@ -20,7 +20,7 @@ const BUDGET = {
 
 const html = readFileSync(join(DIST, "index.html"), "utf8");
 if (html.includes('id="detail-layer"')) {
-  const names = ["profile-systems", "marine-engineering-digital-twin", "fleet-operational-field", "bmms-evidence-lineage", "team-murat-can-baskan", "team-cem-basar-baskan", "team-duo", "entrepreneurship-innovation", "professional-network", "certifications-expertise", "projects-technology", "contact-signal"];
+  const names = ["profile-systems", "marine-technology", "fleet-operational-field", "bmms-evidence-lineage", "team-murat-can-baskan", "team-cem-basar-baskan", "team-duo", "entrepreneurship-innovation", "professional-network", "certifications-expertise", "projects-technology", "contact-signal"];
   const missing = names.flatMap((name) => ["png", "webp"].map((ext) => `assets/bskn/${name}.${ext}`)).filter((path) => !existsSync(join(DIST, path)));
   const failures = [];
   if (missing.length) failures.push(`missing approved assets: ${missing.join(", ")}`);

@@ -18,7 +18,7 @@ test("each card opens above unchanged Bento geometry with its approved visual", 
   const original = await boxes();
   const visuals = [
     "profile-systems",
-    "marine-engineering-digital-twin",
+    "marine-technology",
     "fleet-operational-field",
     "bmms-evidence-lineage",
     "team-duo",
