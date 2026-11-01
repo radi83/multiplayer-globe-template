@@ -49,32 +49,32 @@
     .card-trigger:hover .plus { transform:translateY(-2px); }
     .card-trigger[aria-expanded="true"] .plus { font-size:0; }
     .card-trigger[aria-expanded="true"] .plus::after { content:"×"; font-size:16px; }
-    .detail-layer { position:absolute; z-index:4; inset:0; display:grid; grid-template-columns:minmax(0,1fr) minmax(220px,.82fr); align-items:center; gap:clamp(20px,4vw,54px); padding:clamp(24px,4vw,54px); overflow:auto; opacity:0; transform:translateY(8px); visibility:hidden; pointer-events:none; transition:opacity 360ms var(--ease),transform 360ms var(--ease),visibility 0s linear 360ms; }
-    .detail-layer::before { content:""; position:absolute; z-index:-1; inset:0; background:rgba(241,239,233,.58); pointer-events:none; }
-    .detail-layer.is-visible { opacity:1; transform:translateY(0); visibility:visible; pointer-events:auto; transition:opacity 360ms var(--ease),transform 360ms var(--ease),visibility 0s; }
+    .detail-layer { --anchor-y:50vh; position:fixed; z-index:40; inset:0; display:grid; grid-template-columns:minmax(0,1fr) minmax(280px,.9fr); align-items:center; gap:clamp(28px,5vw,72px); padding:clamp(32px,6vw,90px); overflow:auto; background:rgba(12,27,40,.84); color:#fff; opacity:0; visibility:hidden; pointer-events:none; cursor:zoom-out; transition:opacity 360ms var(--ease),visibility 0s linear 360ms; }
+    .detail-layer.is-visible { opacity:1; visibility:visible; pointer-events:auto; transition:opacity 360ms var(--ease),visibility 0s; }
     .stage.is-open .bento { pointer-events:none; }
-    .detail-copy { max-width:580px; }
+    .detail-copy,.detail-media { transform:translateY(calc(var(--anchor-y) - 50vh)); transition:transform 360ms var(--ease); }
+    .detail-copy { max-width:610px; cursor:default; }
     .detail-copy h2 { margin:9px 40px 12px 0; font-size:clamp(25px,3vw,40px); font-weight:540; letter-spacing:-.05em; line-height:1.08; }
-    .detail-copy>p { max-width:560px; margin:0; color:#465560; font-size:13px; line-height:1.75; }
-    .facts { display:flex; flex-wrap:wrap; gap:10px 24px; margin:21px 0 0; padding:14px 0 0; border-top:1px solid var(--line); list-style:none; }
-    .facts li { min-width:95px; } .facts span { display:block; color:var(--muted); font-size:8px; letter-spacing:.13em; text-transform:uppercase; }
+    .detail-copy>p { max-width:580px; margin:0; color:rgba(255,255,255,.86); font-size:14px; line-height:1.75; }
+    .detail-layer .overline { color:#d9a8b2; }
+    .facts { display:flex; flex-wrap:wrap; gap:10px 24px; margin:21px 0 0; padding:14px 0 0; border-top:1px solid rgba(255,255,255,.25); list-style:none; }
+    .facts li { min-width:95px; } .facts span { display:block; color:rgba(255,255,255,.62); font-size:8px; letter-spacing:.13em; text-transform:uppercase; }
     .facts strong { display:block; margin-top:5px; font-size:11px; font-weight:600; }
-    .close-layer { position:absolute; z-index:2; top:16px; right:16px; width:27px; height:27px; display:grid; place-items:center; border:0; border-radius:5px; background:var(--burgundy); color:white; font-size:19px; line-height:1; cursor:pointer; }
     .detail-media { min-width:0; align-self:center; }
     .detail-media .slot { display:block; width:100%; height:clamp(220px,32vw,410px); margin:0; opacity:.96; }
     .detail-media .slot img { display:block; width:100%; height:100%; object-fit:contain; object-position:center; }
     .topics { display:flex; flex-wrap:wrap; gap:7px 16px; margin-top:18px; }
-    .topic { padding:3px 0; border:0; border-bottom:1px solid transparent; background:transparent; color:var(--muted); font-size:10px; letter-spacing:.04em; cursor:pointer; }
-    .topic:hover,.topic[aria-pressed="true"] { color:var(--burgundy); border-bottom-color:var(--burgundy); }
-    .support-copy { min-height:38px; margin:10px 0 0; color:#465560; font-size:11px; line-height:1.6; }
+    .topic { padding:3px 0; border:0; border-bottom:1px solid transparent; background:transparent; color:rgba(255,255,255,.65); font-size:10px; letter-spacing:.04em; cursor:pointer; }
+    .topic:hover,.topic[aria-pressed="true"] { color:#fff; border-bottom-color:#d9a8b2; }
+    .support-copy { min-height:38px; margin:10px 0 0; color:rgba(255,255,255,.82); font-size:11px; line-height:1.6; }
     .lineage { display:grid; grid-template-columns:1fr 1fr; gap:5px 8px; margin-top:18px; }
     .lineage[hidden] { display:none; }
-    .lineage button { min-height:44px; display:flex; align-items:center; gap:10px; padding:8px 9px; border:1px solid transparent; border-bottom-color:var(--line); background:transparent; text-align:left; cursor:pointer; }
+    .lineage button { min-height:44px; display:flex; align-items:center; gap:10px; padding:8px 9px; border:1px solid transparent; border-bottom-color:rgba(255,255,255,.22); background:transparent; color:#fff; text-align:left; cursor:pointer; }
     .lineage button:last-of-type { grid-column:1 / -1; }
-    .lineage button[aria-pressed="true"] { border-color:rgba(125,38,57,.3); background:rgba(247,245,239,.38); }
-    .lineage-number { color:var(--burgundy); font:italic 16px var(--serif); }
+    .lineage button[aria-pressed="true"] { border-color:rgba(217,168,178,.72); background:rgba(255,255,255,.1); }
+    .lineage-number { color:#d9a8b2; font:italic 16px var(--serif); }
     .lineage-name { font-size:10px; font-weight:630; }
-    .layer-explanation { grid-column:1 / -1; min-height:42px; margin:6px 0 0; padding:9px 0 0; border-top:1px solid var(--line); color:#4d5b65; font-size:10px; line-height:1.6; }
+    .layer-explanation { grid-column:1 / -1; min-height:42px; margin:6px 0 0; padding:9px 0 0; border-top:1px solid rgba(255,255,255,.22); color:rgba(255,255,255,.82); font-size:10px; line-height:1.6; }
     .footer { display:flex; justify-content:space-between; gap:16px; margin-top:24px; padding-top:14px; border-top:1px solid var(--line); color:var(--muted); font-size:8px; letter-spacing:.12em; text-transform:uppercase; }
     @media (max-width:980px) {
       .bento { grid-template-columns:repeat(6,minmax(0,1fr)); }
@@ -90,8 +90,8 @@
       .card--marine,.card--bmms,.card--contact { grid-column:span 2; grid-row:span 2; }
       .card-trigger { padding:19px 18px 22px; } .card h2 { font-size:18px; } .card--marine h2,.card--bmms h2 { font-size:24px; }
       .card-note { font-size:10px; } .plus { right:12px; bottom:12px; width:21px; height:21px; }
-      .detail-layer { position:fixed; z-index:20; inset:0; grid-template-columns:1fr; align-content:start; gap:18px; padding:52px 22px 30px; }
-      .detail-layer::before { background:rgba(241,239,233,.66); }
+      .detail-layer { grid-template-columns:1fr; align-content:center; gap:18px; padding:32px 22px; }
+      .detail-copy,.detail-media { transform:none; }
       .detail-copy h2 { font-size:28px; } .detail-copy>p { font-size:12px; }
       .detail-media { order:2; width:100%; } .detail-media .slot { height:clamp(190px,58vw,300px); }
       .lineage { grid-template-columns:1fr; } .lineage button:last-of-type { grid-column:auto; }
@@ -121,7 +121,6 @@
         <article class="card card--contact" id="contact" data-card="contact"><button class="card-trigger" type="button" aria-expanded="false" aria-controls="detail-layer"><span class="card-label">09 / Connect</span><h2>Contact</h2><p class="card-note">Start a useful conversation.</p><span class="plus" aria-hidden="true">+</span></button></article>
       </section>
       <section class="detail-layer" id="detail-layer" aria-labelledby="detail-title" aria-hidden="true" inert>
-        <button class="close-layer" type="button" aria-label="Close section">×</button>
         <div class="detail-copy"><p class="overline" id="detail-kicker"></p><h2 id="detail-title" tabindex="-1"></h2><p id="detail-description"></p><ul class="facts" id="detail-facts"></ul><div class="topics" id="detail-topics" aria-label="Related topics"></div><p class="support-copy" id="support-copy" aria-live="polite"></p><div class="lineage" id="lineage" hidden aria-label="BMMS evidence lineage"><button type="button" data-layer="source" aria-pressed="true"><span class="lineage-number">01</span><span class="lineage-name">Source</span></button><button type="button" data-layer="version" aria-pressed="false"><span class="lineage-number">02</span><span class="lineage-name">SourceVersion</span></button><button type="button" data-layer="passage" aria-pressed="false"><span class="lineage-number">03</span><span class="lineage-name">Passage</span></button><button type="button" data-layer="evidence" aria-pressed="false"><span class="lineage-number">04</span><span class="lineage-name">Evidence</span></button><button type="button" data-layer="review" aria-pressed="false"><span class="lineage-number">05</span><span class="lineage-name">Review / Decision Support</span></button><p class="layer-explanation" aria-live="polite"></p></div></div>
         <div class="detail-media" id="detail-media"></div>
       </section>
@@ -132,7 +131,6 @@
     const stage = document.querySelector('#stage');
     const layer = document.querySelector('#detail-layer');
     const cards = [...document.querySelectorAll('.card')];
-    const closeButton = layer.querySelector('.close-layer');
     const title = document.querySelector('#detail-title');
     const layerCopy = {
       source:'A defined document or admitted information source anchors the evidence trail.',
@@ -163,6 +161,9 @@
     }
     function openSection(card) {
       const data = sections[card.dataset.card];
+      const rect = card.getBoundingClientRect();
+      const anchor = Math.max(innerHeight * .32, Math.min(innerHeight * .68, rect.top + rect.height / 2));
+      layer.style.setProperty('--anchor-y', `${anchor}px`);
       cards.forEach(item => item.querySelector('.card-trigger').setAttribute('aria-expanded', String(item === card)));
       document.querySelector('#detail-kicker').textContent = data.kicker;
       title.textContent = data.title;
@@ -175,8 +176,7 @@
       if (!lineage.hidden) { lineage.querySelectorAll('[data-layer]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.layer==='source'))); lineage.querySelector('.layer-explanation').textContent=layerCopy.source; }
       setImage(card);
       layer.inert=false; layer.setAttribute('aria-hidden','false'); layer.classList.add('is-visible'); stage.classList.add('is-open');
-      if (window.innerWidth > 650) stage.scrollIntoView({block:'start',behavior:'auto'});
-      closeButton.focus({preventScroll:true});
+      title.focus({preventScroll:true});
     }
     function closeSection() {
       const active=cards.find(card=>card.querySelector('.card-trigger').getAttribute('aria-expanded')==='true');
@@ -186,7 +186,7 @@
       active.querySelector('.card-trigger').focus({preventScroll:true});
     }
     cards.forEach(card=>card.querySelector('.card-trigger').addEventListener('click',()=>openSection(card)));
-    closeButton.addEventListener('click',closeSection);
+    layer.addEventListener('click',event=>{ if(!event.target.closest('button')) closeSection(); });
     document.querySelectorAll('[data-layer]').forEach(button=>button.addEventListener('click',()=>{
       document.querySelectorAll('[data-layer]').forEach(item=>item.setAttribute('aria-pressed',String(item===button)));
       document.querySelector('.layer-explanation').textContent=layerCopy[button.dataset.layer];

@@ -39,6 +39,17 @@ test("BMMS layers update in place", async ({ page }) => {
   }
 });
 
+test("open layer has no close button and closes from the artwork or backdrop", async ({ page }) => {
+  await page.goto("/");
+  await page.locator(".card--marine .card-trigger").click();
+  await expect(page.locator(".close-layer")).toHaveCount(0);
+  await page.locator("#detail-layer img").click();
+  await expect(page.locator("#detail-layer")).toBeHidden();
+  await page.locator(".card--marine .card-trigger").click();
+  await page.locator("#detail-layer").click({ position: { x: 5, y: 5 } });
+  await expect(page.locator("#detail-layer")).toBeHidden();
+});
+
 test("mobile layout has no horizontal overflow", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
