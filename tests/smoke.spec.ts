@@ -18,7 +18,7 @@ test("each card opens above unchanged Bento geometry with its approved visual", 
   const original = await boxes();
   const visuals = [
     "profile-systems",
-    "marine-engineering-digital-twin",
+    "marine-technology",
     "fleet-operational-field",
     "bmms-evidence-lineage",
     "team-duo",
@@ -35,7 +35,7 @@ test("each card opens above unchanged Bento geometry with its approved visual", 
       await expect(page.locator("#detail-team")).toBeVisible();
       await expect(page.locator(".team-portraits-duo img")).toHaveAttribute("src", "assets/bskn/team-duo.png");
     } else {
-      await expect(page.locator("#detail-media picture img")).toHaveAttribute("src", `assets/bskn/${visuals[i]}.png`);
+      await expect(page.locator("#detail-media .slot img")).toHaveAttribute("src", `assets/bskn/${visuals[i]}.png`);
     }
     expect(await boxes()).toEqual(original);
     await page.keyboard.press("Escape");
@@ -46,6 +46,11 @@ test("each card opens above unchanged Bento geometry with its approved visual", 
 test("BMMS layers update in place", async ({ page }) => {
   await page.goto("/");
   await page.locator(".card--bmms .card-trigger").click();
+  await expect(page.locator("#detail-title")).toHaveText("BMMS");
+  await expect(page.locator("#detail-description")).toContainText("authoritative source material");
+  const visual = page.locator('#detail-media img[src="assets/bskn/bmms-evidence-lineage.png"]');
+  await expect(visual).toBeVisible();
+  expect(await visual.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
   const layers = ["source", "version", "passage", "evidence", "review"];
   for (const name of layers) {
     const layer = page.locator(`#lineage button[data-layer="${name}"]`);
@@ -56,6 +61,18 @@ test("BMMS layers update in place", async ({ page }) => {
   }
 });
 
+for (const [label, width, height] of [["desktop", 1440, 960], ["tablet", 768, 1024], ["mobile", 390, 844]] as const) {
+  test(`BMMS is complete on ${label}`, async ({ page }) => {
+    await page.setViewportSize({ width, height });
+    await page.goto("/");
+    await page.locator(".card--bmms .card-trigger").click();
+    await expect(page.locator("#detail-title")).toBeVisible();
+    await expect(page.locator("#detail-description")).toBeVisible();
+    await expect(page.locator('#detail-media img[src="assets/bskn/bmms-evidence-lineage.png"]')).toBeVisible();
+    await expect(page.locator("#lineage")).toBeVisible();
+  });
+}
+
 test("mobile layout has no horizontal overflow", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
@@ -64,3 +81,4 @@ test("mobile layout has no horizontal overflow", async ({ page }) => {
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   expect(overflow).toBeLessThanOrEqual(0);
 });
+
