@@ -32,6 +32,9 @@ function staticContent(): Plugin {
       order: "pre",
       handler(html, ctx) {
         const lang = langOf(ctx.filename);
+        // The approved BSKN homepage is a standalone document. Keep the
+        // existing template transform for the separate English BMMS page.
+        if (lang === "tr" && html.includes('id="detail-layer"')) return html;
         const content = JSON.parse(readFileSync(contentPath[lang], "utf8")) as Content;
         const out = html
           .replace(
