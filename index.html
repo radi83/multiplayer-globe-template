@@ -34,7 +34,8 @@
     .card--marine { grid-column:span 5; grid-row:span 3; --tone:#e8e7df; }
     .card--fleet { grid-column:span 3; grid-row:span 2; }
     .card--bmms { grid-column:span 5; grid-row:span 2; --tone:#e9e6dd; }
-    .card--venture { grid-column:span 4; grid-row:span 2; }
+    .card--team { grid-column:span 4; grid-row:span 2; --tone:#ece9e1; }
+    .card--venture { grid-column:span 3; grid-row:span 2; }
     .card--members { grid-column:span 3; grid-row:span 2; }
     .card--certs { grid-column:span 3; grid-row:span 2; }
     .card--projects { grid-column:span 4; grid-row:span 2; }
@@ -49,36 +50,144 @@
     .card-trigger:hover .plus { transform:translateY(-2px); }
     .card-trigger[aria-expanded="true"] .plus { font-size:0; }
     .card-trigger[aria-expanded="true"] .plus::after { content:"×"; font-size:16px; }
-    .detail-layer { --anchor-y:50vh; position:fixed; z-index:40; inset:0; display:grid; grid-template-columns:minmax(0,1fr) minmax(280px,.9fr); align-items:center; gap:clamp(28px,5vw,72px); padding:clamp(32px,6vw,90px); overflow:auto; background:rgba(12,27,40,.84); color:#fff; opacity:0; visibility:hidden; pointer-events:none; cursor:zoom-out; transition:opacity 360ms var(--ease),visibility 0s linear 360ms; }
-    .detail-layer.is-visible { opacity:1; visibility:visible; pointer-events:auto; transition:opacity 360ms var(--ease),visibility 0s; }
+    .detail-layer { position:absolute; z-index:4; inset:0; display:grid; grid-template-columns:minmax(0,1fr) minmax(220px,.82fr); align-items:center; gap:clamp(20px,4vw,54px); padding:clamp(24px,4vw,54px); overflow:auto; opacity:0; transform:translateY(8px); visibility:hidden; pointer-events:none; transition:opacity 360ms var(--ease),transform 360ms var(--ease),visibility 0s linear 360ms; }
+    .detail-layer::before { content:""; position:absolute; z-index:-1; inset:0; background:rgba(241,239,233,.58); pointer-events:none; }
+    .detail-layer.is-visible { opacity:1; transform:translateY(0); visibility:visible; pointer-events:auto; transition:opacity 360ms var(--ease),transform 360ms var(--ease),visibility 0s; }
     .stage.is-open .bento { pointer-events:none; }
-    .detail-copy,.detail-media { transform:translateY(calc(var(--anchor-y) - 50vh)); transition:transform 360ms var(--ease); }
-    .detail-copy { max-width:610px; cursor:default; }
+    .detail-copy { max-width:580px; }
     .detail-copy h2 { margin:9px 40px 12px 0; font-size:clamp(25px,3vw,40px); font-weight:540; letter-spacing:-.05em; line-height:1.08; }
-    .detail-copy>p { max-width:580px; margin:0; color:rgba(255,255,255,.86); font-size:14px; line-height:1.75; }
-    .detail-layer .overline { color:#d9a8b2; }
-    .facts { display:flex; flex-wrap:wrap; gap:10px 24px; margin:21px 0 0; padding:14px 0 0; border-top:1px solid rgba(255,255,255,.25); list-style:none; }
-    .facts li { min-width:95px; } .facts span { display:block; color:rgba(255,255,255,.62); font-size:8px; letter-spacing:.13em; text-transform:uppercase; }
+    .detail-copy>p { max-width:560px; margin:0; color:#465560; font-size:13px; line-height:1.75; }
+    .facts { display:flex; flex-wrap:wrap; gap:10px 24px; margin:21px 0 0; padding:14px 0 0; border-top:1px solid var(--line); list-style:none; }
+    .facts li { min-width:95px; } .facts span { display:block; color:var(--muted); font-size:8px; letter-spacing:.13em; text-transform:uppercase; }
     .facts strong { display:block; margin-top:5px; font-size:11px; font-weight:600; }
+    .close-layer { position:absolute; z-index:2; top:16px; right:16px; width:27px; height:27px; display:grid; place-items:center; border:0; border-radius:5px; background:var(--burgundy); color:white; font-size:19px; line-height:1; cursor:pointer; }
     .detail-media { min-width:0; align-self:center; }
     .detail-media .slot { display:block; width:100%; height:clamp(220px,32vw,410px); margin:0; opacity:.96; }
     .detail-media .slot img { display:block; width:100%; height:100%; object-fit:contain; object-position:center; }
     .topics { display:flex; flex-wrap:wrap; gap:7px 16px; margin-top:18px; }
-    .topic { padding:3px 0; border:0; border-bottom:1px solid transparent; background:transparent; color:rgba(255,255,255,.65); font-size:10px; letter-spacing:.04em; cursor:pointer; }
-    .topic:hover,.topic[aria-pressed="true"] { color:#fff; border-bottom-color:#d9a8b2; }
-    .support-copy { min-height:38px; margin:10px 0 0; color:rgba(255,255,255,.82); font-size:11px; line-height:1.6; }
+    .topic { padding:3px 0; border:0; border-bottom:1px solid transparent; background:transparent; color:var(--muted); font-size:10px; letter-spacing:.04em; cursor:pointer; }
+    .topic:hover,.topic[aria-pressed="true"] { color:var(--burgundy); border-bottom-color:var(--burgundy); }
+    .support-copy { min-height:38px; margin:10px 0 0; color:#465560; font-size:11px; line-height:1.6; }
     .lineage { display:grid; grid-template-columns:1fr 1fr; gap:5px 8px; margin-top:18px; }
     .lineage[hidden] { display:none; }
-    .lineage button { min-height:44px; display:flex; align-items:center; gap:10px; padding:8px 9px; border:1px solid transparent; border-bottom-color:rgba(255,255,255,.22); background:transparent; color:#fff; text-align:left; cursor:pointer; }
+    .lineage button { min-height:44px; display:flex; align-items:center; gap:10px; padding:8px 9px; border:1px solid transparent; border-bottom-color:var(--line); background:transparent; text-align:left; cursor:pointer; }
     .lineage button:last-of-type { grid-column:1 / -1; }
-    .lineage button[aria-pressed="true"] { border-color:rgba(217,168,178,.72); background:rgba(255,255,255,.1); }
-    .lineage-number { color:#d9a8b2; font:italic 16px var(--serif); }
+    .lineage button[aria-pressed="true"] { border-color:rgba(125,38,57,.3); background:rgba(247,245,239,.38); }
+    .lineage-number { color:var(--burgundy); font:italic 16px var(--serif); }
     .lineage-name { font-size:10px; font-weight:630; }
-    .layer-explanation { grid-column:1 / -1; min-height:42px; margin:6px 0 0; padding:9px 0 0; border-top:1px solid rgba(255,255,255,.22); color:rgba(255,255,255,.82); font-size:10px; line-height:1.6; }
+    .layer-explanation { grid-column:1 / -1; min-height:42px; margin:6px 0 0; padding:9px 0 0; border-top:1px solid var(--line); color:#4d5b65; font-size:10px; line-height:1.6; }
+
+    /* Team Open State */
+    .detail-layer.is-team {
+      grid-template-columns:minmax(280px,1.05fr) minmax(320px,1.15fr);
+      align-items:center;
+      gap:clamp(24px,4vw,56px);
+      padding:clamp(28px,4vw,56px);
+    }
+    .detail-team {
+      display:contents;
+    }
+    .detail-team[hidden] {
+      display:none;
+    }
+    .team-media {
+      display:flex;
+      justify-content:center;
+      align-items:flex-end;
+      min-width:0;
+      height:100%;
+      max-height:clamp(400px,50vw,580px);
+    }
+    .team-portraits-duo {
+      display:flex;
+      align-items:flex-end;
+      justify-content:center;
+      width:100%;
+      height:100%;
+    }
+    .team-portraits-duo picture,
+    .team-portraits-duo img {
+      display:block;
+      max-width:100%;
+      max-height:clamp(400px,50vw,580px);
+      width:auto;
+      height:auto;
+      object-fit:contain;
+      object-position:bottom center;
+      filter:grayscale(100%) contrast(1.04);
+    }
+    .team-copy {
+      max-width:620px;
+    }
+    .team-copy h2 {
+      margin:9px 40px 14px 0;
+      font-size:clamp(26px,3.2vw,40px);
+      font-weight:540;
+      letter-spacing:-.05em;
+      line-height:1.1;
+    }
+    .team-intro {
+      margin:0 0 22px;
+      color:#465560;
+      font-size:13px;
+      line-height:1.75;
+    }
+    .team-members {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:22px 24px;
+      padding-top:18px;
+      border-top:1px solid var(--line);
+    }
+    .team-member {
+      display:flex;
+      flex-direction:column;
+    }
+    .team-member h3 {
+      margin:0 0 4px;
+      font-size:clamp(16px,1.7vw,20px);
+      font-weight:620;
+      letter-spacing:-.03em;
+      line-height:1.2;
+    }
+    .team-role {
+      margin:0 0 8px;
+      color:var(--burgundy);
+      font-size:9.5px;
+      font-weight:700;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    .team-tags {
+      display:flex;
+      flex-wrap:wrap;
+      gap:5px 7px;
+      margin:0 0 10px;
+    }
+    .team-tags span {
+      display:inline-block;
+      padding:2px 7px;
+      border:1px solid var(--line);
+      border-radius:3px;
+      color:var(--muted);
+      font-size:8px;
+      font-weight:600;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    .team-desc {
+      margin:0;
+      color:#465560;
+      font-size:11.5px;
+      line-height:1.64;
+    }
+    .team-member-portrait {
+      display:none;
+    }
     .footer { display:flex; justify-content:space-between; gap:16px; margin-top:24px; padding-top:14px; border-top:1px solid var(--line); color:var(--muted); font-size:8px; letter-spacing:.12em; text-transform:uppercase; }
     @media (max-width:980px) {
       .bento { grid-template-columns:repeat(6,minmax(0,1fr)); }
-      .card--about,.card--marine,.card--fleet,.card--bmms,.card--venture,.card--projects,.card--contact { grid-column:span 3; }
+      .card--about,.card--marine,.card--fleet,.card--bmms,.card--team,.card--venture,.card--projects,.card--contact { grid-column:span 3; }
       .card--members,.card--certs { grid-column:span 2; }
     }
     @media (max-width:650px) {
@@ -87,13 +196,64 @@
       .opening h1 { font-size:clamp(30px,8vw,42px); } .opening-aside { justify-self:start; font-size:11px; }
       .bento { grid-template-columns:repeat(2,minmax(0,1fr)); grid-auto-rows:minmax(108px,auto); gap:8px; }
       .card--about,.card--fleet,.card--venture,.card--members,.card--certs,.card--projects { grid-column:span 1; grid-row:span 2; }
-      .card--marine,.card--bmms,.card--contact { grid-column:span 2; grid-row:span 2; }
+      .card--marine,.card--bmms,.card--team,.card--contact { grid-column:span 2; grid-row:span 2; }
       .card-trigger { padding:19px 18px 22px; } .card h2 { font-size:18px; } .card--marine h2,.card--bmms h2 { font-size:24px; }
       .card-note { font-size:10px; } .plus { right:12px; bottom:12px; width:21px; height:21px; }
-      .detail-layer { grid-template-columns:1fr; align-content:center; gap:18px; padding:32px 22px; }
-      .detail-copy,.detail-media { transform:none; }
+      .detail-layer { position:fixed; z-index:20; inset:0; grid-template-columns:1fr; align-content:start; gap:18px; padding:52px 22px 30px; }
+      .detail-layer::before { background:rgba(241,239,233,.66); }
       .detail-copy h2 { font-size:28px; } .detail-copy>p { font-size:12px; }
       .detail-media { order:2; width:100%; } .detail-media .slot { height:clamp(190px,58vw,300px); }
+      .detail-layer.is-team {
+        position:fixed;
+        z-index:20;
+        inset:0;
+        display:block;
+        padding:54px 20px 36px;
+        overflow-y:auto;
+      }
+      .detail-layer.is-team .team-media {
+        display:none;
+      }
+      .team-copy {
+        max-width:100%;
+      }
+      .team-copy h2 {
+        font-size:26px;
+        margin-right:32px;
+      }
+      .team-intro {
+        font-size:12px;
+        line-height:1.65;
+        margin-bottom:20px;
+      }
+      .team-members {
+        display:flex;
+        flex-direction:column;
+        gap:28px;
+        padding-top:16px;
+      }
+      .team-member-portrait {
+        display:flex;
+        justify-content:center;
+        align-items:flex-end;
+        margin:0 0 14px;
+        height:clamp(220px,65vw,300px);
+      }
+      .team-member-portrait picture,
+      .team-member-portrait img {
+        display:block;
+        height:100%;
+        width:auto;
+        object-fit:contain;
+        filter:grayscale(100%) contrast(1.04);
+      }
+      .team-member h3 {
+        font-size:18px;
+      }
+      .team-desc {
+        font-size:11px;
+        line-height:1.6;
+      }
       .lineage { grid-template-columns:1fr; } .lineage button:last-of-type { grid-column:auto; }
       .footer { flex-direction:column; }
     }
@@ -104,7 +264,7 @@
   <header class="site-header">
     <a class="brand" href="#top" aria-label="BSKN, page top"><span class="brand-mark" aria-hidden="true"></span><span>BSKN</span></a>
     <span class="header-note">Engineering · Technology · Maritime intelligence</span>
-    <nav aria-label="Primary navigation"><a href="#profile">Profile</a><a href="#projects">Projects</a><a href="#contact">Contact</a></nav>
+    <nav aria-label="Primary navigation"><a href="#profile">Profile</a><a href="#team">Team</a><a href="#projects">Projects</a><a href="#contact">Contact</a></nav>
   </header>
   <main id="top">
     <section class="opening" aria-labelledby="page-title"><div><p class="overline">BSKN / Engineering practice</p><h1 id="page-title">Engineering. Technology.<br><span>Maritime intelligence.</span></h1></div><p class="opening-aside">Engineering experience at sea, presented through a systems view of maritime knowledge and technology.</p></section>
@@ -114,15 +274,58 @@
         <article class="card card--marine" data-card="marine"><button class="card-trigger" type="button" aria-expanded="false" aria-controls="detail-layer"><span class="card-label">02 / Practice</span><h2>Marine Technology</h2><p class="card-note">Advanced systems at sea.</p><span class="plus" aria-hidden="true">+</span></button></article>
         <article class="card card--fleet" data-card="fleet"><button class="card-trigger" type="button" aria-expanded="false" aria-controls="detail-layer"><span class="card-label">03 / At sea</span><h2>Fleet / Sea Experience</h2><p class="card-note">Operational context, in full.</p><span class="plus" aria-hidden="true">+</span></button></article>
         <article class="card card--bmms" data-card="bmms"><button class="card-trigger" type="button" aria-expanded="false" aria-controls="detail-layer"><span class="card-label">04 / Maritime intelligence</span><h2>BMMS</h2><p class="card-note">Evidence-first Maritime Engineering Intelligence.</p><span class="plus" aria-hidden="true">+</span></button></article>
-        <article class="card card--venture" data-card="venture"><button class="card-trigger" type="button" aria-expanded="false" aria-controls="detail-layer"><span class="card-label">05 / Venture</span><h2>Entrepreneurship &amp; Innovation</h2><p class="card-note">Engineering ideas into useful products.</p><span class="plus" aria-hidden="true">+</span></button></article>
-        <article class="card card--members" data-card="members"><button class="card-trigger" type="button" aria-expanded="false" aria-controls="detail-layer"><span class="card-label">06 / Network</span><h2>Professional memberships</h2><p class="card-note">Institutions and shared standards.</p><span class="plus" aria-hidden="true">+</span></button></article>
-        <article class="card card--certs" data-card="certs"><button class="card-trigger" type="button" aria-expanded="false" aria-controls="detail-layer"><span class="card-label">07 / Development</span><h2>Certifications / Expertise</h2><p class="card-note">A continuing record of professional learning.</p><span class="plus" aria-hidden="true">+</span></button></article>
-        <article class="card card--projects" id="projects" data-card="projects"><button class="card-trigger" type="button" aria-expanded="false" aria-controls="detail-layer"><span class="card-label">08 / Technology</span><h2>Projects &amp; Technology</h2><p class="card-note">Ideas tested against engineering reality.</p><span class="plus" aria-hidden="true">+</span></button></article>
-        <article class="card card--contact" id="contact" data-card="contact"><button class="card-trigger" type="button" aria-expanded="false" aria-controls="detail-layer"><span class="card-label">09 / Connect</span><h2>Contact</h2><p class="card-note">Start a useful conversation.</p><span class="plus" aria-hidden="true">+</span></button></article>
+        <article class="card card--team" id="team" data-card="team"><button class="card-trigger" type="button" aria-expanded="false" aria-controls="detail-layer"><span class="card-label">05 / Team</span><h2>Engineering meets architecture.</h2><p class="card-note">Two disciplines. One system view.</p><span class="plus" aria-hidden="true">+</span></button></article>
+        <article class="card card--venture" data-card="venture"><button class="card-trigger" type="button" aria-expanded="false" aria-controls="detail-layer"><span class="card-label">06 / Venture</span><h2>Entrepreneurship &amp; Innovation</h2><p class="card-note">Engineering ideas into useful products.</p><span class="plus" aria-hidden="true">+</span></button></article>
+        <article class="card card--members" data-card="members"><button class="card-trigger" type="button" aria-expanded="false" aria-controls="detail-layer"><span class="card-label">07 / Network</span><h2>Professional memberships</h2><p class="card-note">Institutions and shared standards.</p><span class="plus" aria-hidden="true">+</span></button></article>
+        <article class="card card--certs" data-card="certs"><button class="card-trigger" type="button" aria-expanded="false" aria-controls="detail-layer"><span class="card-label">08 / Development</span><h2>Certifications / Expertise</h2><p class="card-note">A continuing record of professional learning.</p><span class="plus" aria-hidden="true">+</span></button></article>
+        <article class="card card--projects" id="projects" data-card="projects"><button class="card-trigger" type="button" aria-expanded="false" aria-controls="detail-layer"><span class="card-label">09 / Technology</span><h2>Projects &amp; Technology</h2><p class="card-note">Ideas tested against engineering reality.</p><span class="plus" aria-hidden="true">+</span></button></article>
+        <article class="card card--contact" id="contact" data-card="contact"><button class="card-trigger" type="button" aria-expanded="false" aria-controls="detail-layer"><span class="card-label">10 / Connect</span><h2>Contact</h2><p class="card-note">Start a useful conversation.</p><span class="plus" aria-hidden="true">+</span></button></article>
       </section>
       <section class="detail-layer" id="detail-layer" aria-labelledby="detail-title" aria-hidden="true" inert>
+        <button class="close-layer" type="button" aria-label="Close section">×</button>
         <div class="detail-copy"><p class="overline" id="detail-kicker"></p><h2 id="detail-title" tabindex="-1"></h2><p id="detail-description"></p><ul class="facts" id="detail-facts"></ul><div class="topics" id="detail-topics" aria-label="Related topics"></div><p class="support-copy" id="support-copy" aria-live="polite"></p><div class="lineage" id="lineage" hidden aria-label="BMMS evidence lineage"><button type="button" data-layer="source" aria-pressed="true"><span class="lineage-number">01</span><span class="lineage-name">Source</span></button><button type="button" data-layer="version" aria-pressed="false"><span class="lineage-number">02</span><span class="lineage-name">SourceVersion</span></button><button type="button" data-layer="passage" aria-pressed="false"><span class="lineage-number">03</span><span class="lineage-name">Passage</span></button><button type="button" data-layer="evidence" aria-pressed="false"><span class="lineage-number">04</span><span class="lineage-name">Evidence</span></button><button type="button" data-layer="review" aria-pressed="false"><span class="lineage-number">05</span><span class="lineage-name">Review / Decision Support</span></button><p class="layer-explanation" aria-live="polite"></p></div></div>
         <div class="detail-media" id="detail-media"></div>
+        <div class="detail-team" id="detail-team" hidden>
+          <div class="team-media" aria-hidden="true">
+            <div class="team-portraits-duo">
+              <picture>
+                <source type="image/webp" srcset="assets/bskn/team-duo.webp">
+                <img src="assets/bskn/team-duo.png" alt="Murat Can Başkan and Cem Başar Başkan" class="team-cutout-duo">
+              </picture>
+            </div>
+          </div>
+          <div class="team-copy">
+            <p class="overline">05 / Team</p>
+            <h2>Two disciplines. One system view.</h2>
+            <p class="team-intro">BSKN brings maritime engineering experience and software architecture into the same working environment — connecting operational domain knowledge with the systems required to turn it into scalable technology.</p>
+            <div class="team-members">
+              <div class="team-member">
+                <div class="team-member-portrait">
+                  <picture>
+                    <source type="image/webp" srcset="assets/bskn/team-murat-can-baskan.webp">
+                    <img src="assets/bskn/team-murat-can-baskan.png" alt="Murat Can Başkan" class="team-portrait-single">
+                  </picture>
+                </div>
+                <h3>Murat Can Başkan</h3>
+                <p class="team-role">Marine Engineering · Maritime Domain</p>
+                <div class="team-tags" aria-label="Murat Can Başkan disciplines"><span>Maritime Domain</span><span>Engineering</span><span>Operations</span></div>
+                <p class="team-desc">Unlimited Chief Engineer with more than two decades of maritime engineering and operational experience, bringing the domain judgement behind BSKN's maritime technology and BMMS work.</p>
+              </div>
+              <div class="team-member">
+                <div class="team-member-portrait">
+                  <picture>
+                    <source type="image/webp" srcset="assets/bskn/team-cem-basar-baskan.webp">
+                    <img src="assets/bskn/team-cem-basar-baskan.png" alt="Cem Başar Başkan" class="team-portrait-single">
+                  </picture>
+                </div>
+                <h3>Cem Başar Başkan</h3>
+                <p class="team-role">Software Architecture · Technology</p>
+                <div class="team-tags" aria-label="Cem Başar Başkan disciplines"><span>Software Architecture</span><span>Systems</span><span>Technology</span></div>
+                <p class="team-desc">Software architect bringing system design, technical architecture and scalable software thinking to the technology foundation behind BSKN and its products.</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
     </div>
     <footer class="footer"><span>BSKN / Design proof V2</span><span>Engineering · Maritime · Technology</span></footer>
@@ -131,6 +334,7 @@
     const stage = document.querySelector('#stage');
     const layer = document.querySelector('#detail-layer');
     const cards = [...document.querySelectorAll('.card')];
+    const closeButton = layer.querySelector('.close-layer');
     const title = document.querySelector('#detail-title');
     const layerCopy = {
       source:'A defined document or admitted information source anchors the evidence trail.',
@@ -144,11 +348,12 @@
       marine:{kicker:'02 / Practice',title:'Marine Technology',description:'Technology for complex systems at sea connects machinery, controls, energy, maintenance and human judgement. This systems view links operational evidence with digital twin thinking.',facts:[['Lens','Systems intelligence'],['Method','Operational evidence'],['Direction','Digital twin thinking']],image:'marine-engineering-digital-twin',alt:'Marine technology digital twin visual',topics:{Systems:'Relationships across connected technical systems.',Operations:'Engineering decisions grounded in operating context.',Reliability:'Dependability, maintenance and performance over time.', 'Technical leadership':'Clear engineering judgement, coordination and accountability.'}},
       fleet:{kicker:'03 / At sea',title:'Fleet / Sea Experience',description:'Fleet experience brings vessel environments, operational demands and people into view. That context helps keep engineering assessments connected to how work is carried out at sea.',facts:[['Context','Fleet operations'],['Perspective','Crew and operating conditions']],image:'fleet-operational-field',alt:'Fleet and operational field experience',topics:{Operations:'The conditions and priorities shaping day-to-day operations.',Newbuilding:'Experience viewed across delivery and entry into service.', 'Dry-dock':'Maintenance, coordination and work planning context.', 'Crew / operational context':'People, procedures and operating realities inform sound engineering.'}},
       bmms:{kicker:'04 / Maritime intelligence',title:'BMMS',description:'An evidence-first maritime engineering knowledge and decision-support approach. BMMS supports provenance, traceability and reviewability, with human review at the decision point. It is not an autonomous decision-maker or chatbot.',facts:[['Basis','Source-linked evidence'],['Practice','Traceability and review']],image:'bmms-evidence-lineage',alt:'Evidence lineage and maritime engineering intelligence'},
-      venture:{kicker:'05 / Venture',title:'Entrepreneurship & Innovation',description:'A venture practice connecting domain understanding with research, product design and responsible validation.',facts:[['Focus','Useful products'],['Approach','Test and learn']],image:'entrepreneurship-innovation',alt:'Entrepreneurship and innovation',topics:{Research:'Questions and assumptions examined before implementation.',Validation:'Ideas checked against user needs and real constraints.',Products:'Solutions shaped around a clear practical purpose.'}},
-      members:{kicker:'06 / Network',title:'Professional memberships',description:'Professional communities connect engineering practice with shared knowledge, standards and continuing development.',facts:[['Value','Shared practice'],['Focus','Professional learning']],image:'professional-network',alt:'Professional network',topics:{Community:'Exchange and connection across professional practice.',Standards:'Common frameworks support consistent engineering work.',Learning:'Continuing development through shared knowledge.'}},
-      certs:{kicker:'07 / Development',title:'Certifications / Expertise',description:'A continuing professional learning record can be organised around practice areas and technical development.',facts:[['Approach','Continuing learning'],['Scope','Technical practice']],image:'certifications-expertise',alt:'Certifications and areas of expertise',topics:{Engineering:'Technical knowledge applied in practice.',Safety:'A focus on safe, considered working methods.',Technology:'Learning across evolving tools and systems.'}},
-      projects:{kicker:'08 / Technology',title:'Projects & Technology',description:'Technology work focuses on maritime systems, traceable information and tools that support sound decisions.',facts:[['Focus','Maritime systems'],['Principle','Useful, reviewable tools']],image:'projects-technology',alt:'Technology projects',topics:{Maritime:'Technology grounded in seagoing operations.',Information:'Structured information with clear provenance.','Decision support':'Tools that help people evaluate and act.'}},
-      contact:{kicker:'09 / Connect',title:'Contact',description:'For engineering, technology and collaboration enquiries, start a direct conversation.',facts:[['Email','c@bskn.tr']],image:'contact-signal',alt:'Contact BSKN'}
+      team:{kicker:'05 / Team',title:'Two disciplines. One system view.'},
+      venture:{kicker:'06 / Venture',title:'Entrepreneurship & Innovation',description:'A venture practice connecting domain understanding with research, product design and responsible validation.',facts:[['Focus','Useful products'],['Approach','Test and learn']],image:'entrepreneurship-innovation',alt:'Entrepreneurship and innovation',topics:{Research:'Questions and assumptions examined before implementation.',Validation:'Ideas checked against user needs and real constraints.',Products:'Solutions shaped around a clear practical purpose.'}},
+      members:{kicker:'07 / Network',title:'Professional memberships',description:'Professional communities connect engineering practice with shared knowledge, standards and continuing development.',facts:[['Value','Shared practice'],['Focus','Professional learning']],image:'professional-network',alt:'Professional network',topics:{Community:'Exchange and connection across professional practice.',Standards:'Common frameworks support consistent engineering work.',Learning:'Continuing development through shared knowledge.'}},
+      certs:{kicker:'08 / Development',title:'Certifications / Expertise',description:'A continuing professional learning record can be organised around practice areas and technical development.',facts:[['Approach','Continuing learning'],['Scope','Technical practice']],image:'certifications-expertise',alt:'Certifications and areas of expertise',topics:{Engineering:'Technical knowledge applied in practice.',Safety:'A focus on safe, considered working methods.',Technology:'Learning across evolving tools and systems.'}},
+      projects:{kicker:'09 / Technology',title:'Projects & Technology',description:'Technology work focuses on maritime systems, traceable information and tools that support sound decisions.',facts:[['Focus','Maritime systems'],['Principle','Useful, reviewable tools']],image:'projects-technology',alt:'Technology projects',topics:{Maritime:'Technology grounded in seagoing operations.',Information:'Structured information with clear provenance.','Decision support':'Tools that help people evaluate and act.'}},
+      contact:{kicker:'10 / Connect',title:'Contact',description:'For engineering, technology and collaboration enquiries, start a direct conversation.',facts:[['Email','c@bskn.tr']],image:'contact-signal',alt:'Contact BSKN'}
     };
     function setImage(card) {
       const data = sections[card.dataset.card];
@@ -160,33 +365,52 @@
       slot.append(source,img); document.querySelector('#detail-media').replaceChildren(slot);
     }
     function openSection(card) {
-      const data = sections[card.dataset.card];
-      const rect = card.getBoundingClientRect();
-      const anchor = Math.max(innerHeight * .32, Math.min(innerHeight * .68, rect.top + rect.height / 2));
-      layer.style.setProperty('--anchor-y', `${anchor}px`);
+      const isTeam = card.dataset.card === 'team';
+      const detailTeam = document.querySelector('#detail-team');
+      const detailCopy = document.querySelector('.detail-copy');
+      const detailMedia = document.querySelector('#detail-media');
+
       cards.forEach(item => item.querySelector('.card-trigger').setAttribute('aria-expanded', String(item === card)));
-      document.querySelector('#detail-kicker').textContent = data.kicker;
-      title.textContent = data.title;
-      document.querySelector('#detail-description').textContent = data.description;
-      document.querySelector('#detail-facts').replaceChildren(...data.facts.map(([label,value]) => { const li=document.createElement('li'); li.innerHTML=`<span>${label}</span><strong>${value}</strong>`; return li; }));
-      const topicHost=document.querySelector('#detail-topics'); topicHost.replaceChildren();
-      document.querySelector('#support-copy').textContent='';
-      if (data.topics) Object.entries(data.topics).forEach(([name,copy],index) => { const button=document.createElement('button'); button.type='button'; button.className='topic'; button.textContent=name; button.setAttribute('aria-pressed',String(index===0)); button.addEventListener('click',()=>{ topicHost.querySelectorAll('.topic').forEach(item=>item.setAttribute('aria-pressed',String(item===button))); document.querySelector('#support-copy').textContent=copy; }); topicHost.append(button); if(index===0) document.querySelector('#support-copy').textContent=copy; });
-      const lineage=document.querySelector('#lineage'); lineage.hidden=card.dataset.card!=='bmms';
-      if (!lineage.hidden) { lineage.querySelectorAll('[data-layer]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.layer==='source'))); lineage.querySelector('.layer-explanation').textContent=layerCopy.source; }
-      setImage(card);
+
+      if (isTeam) {
+        layer.classList.add('is-team');
+        detailCopy.hidden = true;
+        detailMedia.hidden = true;
+        detailTeam.hidden = false;
+      } else {
+        layer.classList.remove('is-team');
+        detailCopy.hidden = false;
+        detailMedia.hidden = false;
+        detailTeam.hidden = true;
+
+        const data = sections[card.dataset.card];
+        document.querySelector('#detail-kicker').textContent = data.kicker;
+        title.textContent = data.title;
+        document.querySelector('#detail-description').textContent = data.description;
+        document.querySelector('#detail-facts').replaceChildren(...data.facts.map(([label,value]) => { const li=document.createElement('li'); li.innerHTML=`<span>${label}</span><strong>${value}</strong>`; return li; }));
+        const topicHost=document.querySelector('#detail-topics'); topicHost.replaceChildren();
+        document.querySelector('#support-copy').textContent='';
+        if (data.topics) Object.entries(data.topics).forEach(([name,copy],index) => { const button=document.createElement('button'); button.type='button'; button.className='topic'; button.textContent=name; button.setAttribute('aria-pressed',String(index===0)); button.addEventListener('click',()=>{ topicHost.querySelectorAll('.topic').forEach(item=>item.setAttribute('aria-pressed',String(item===button))); document.querySelector('#support-copy').textContent=copy; }); topicHost.append(button); if(index===0) document.querySelector('#support-copy').textContent=copy; });
+        const lineage=document.querySelector('#lineage'); lineage.hidden=card.dataset.card!=='bmms';
+        if (!lineage.hidden) { lineage.querySelectorAll('[data-layer]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.layer==='source'))); lineage.querySelector('.layer-explanation').textContent=layerCopy.source; }
+        setImage(card);
+      }
+
       layer.inert=false; layer.setAttribute('aria-hidden','false'); layer.classList.add('is-visible'); stage.classList.add('is-open');
-      title.focus({preventScroll:true});
+      if (window.innerWidth > 650) stage.scrollIntoView({block:'start',behavior:'auto'});
+      closeButton.focus({preventScroll:true});
     }
     function closeSection() {
       const active=cards.find(card=>card.querySelector('.card-trigger').getAttribute('aria-expanded')==='true');
       if(!active) return;
-      layer.classList.remove('is-visible'); layer.setAttribute('aria-hidden','true'); layer.inert=true; stage.classList.remove('is-open');
+      layer.classList.remove('is-visible'); layer.classList.remove('is-team'); layer.setAttribute('aria-hidden','true'); layer.inert=true; stage.classList.remove('is-open');
+      const detailTeam = document.querySelector('#detail-team');
+      if (detailTeam) detailTeam.hidden = true;
       cards.forEach(card=>card.querySelector('.card-trigger').setAttribute('aria-expanded','false'));
       active.querySelector('.card-trigger').focus({preventScroll:true});
     }
     cards.forEach(card=>card.querySelector('.card-trigger').addEventListener('click',()=>openSection(card)));
-    layer.addEventListener('click',event=>{ if(!event.target.closest('button')) closeSection(); });
+    closeButton.addEventListener('click',closeSection);
     document.querySelectorAll('[data-layer]').forEach(button=>button.addEventListener('click',()=>{
       document.querySelectorAll('[data-layer]').forEach(item=>item.setAttribute('aria-pressed',String(item===button)));
       document.querySelector('.layer-explanation').textContent=layerCopy[button.dataset.layer];
