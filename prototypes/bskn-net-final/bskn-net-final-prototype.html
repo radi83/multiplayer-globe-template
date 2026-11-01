@@ -414,14 +414,14 @@
       cards.forEach(card=>card.querySelector('.card-trigger').setAttribute('aria-expanded','false'));
       active.querySelector('.card-trigger').focus({preventScroll:true});
     }
-    function handleOutsideClick(event) {
+    function handleOpenSectionClick(event) {
       if (!stage.classList.contains('is-open')) return;
-      if (event.target.closest('.detail-copy, .detail-media, #detail-team, .card-trigger')) return;
+      if (event.target.closest('button, a, input, textarea, select, [role="button"], [data-interactive]')) return;
       closeSection();
     }
     cards.forEach(card=>card.querySelector('.card-trigger').addEventListener('click',()=>openSection(card)));
-    layer.addEventListener('click',handleOutsideClick);
-    document.addEventListener('click',handleOutsideClick);
+    layer.addEventListener('click',handleOpenSectionClick);
+    document.addEventListener('click',handleOpenSectionClick);
     document.querySelectorAll('[data-layer]').forEach(button=>button.addEventListener('click',()=>{
       document.querySelectorAll('[data-layer]').forEach(item=>item.setAttribute('aria-pressed',String(item===button)));
       document.querySelector('.layer-explanation').textContent=layerCopy[button.dataset.layer];
