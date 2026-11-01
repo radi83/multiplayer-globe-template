@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="BSKN — marine technology and maritime intelligence.">
   <title>BSKN — Engineering. Technology. Maritime Intelligence.</title>
+  <link rel="preload" as="image" href="assets/bskn/bmms-evidence-lineage.png">
   <style>
     :root {
       color-scheme: light;
@@ -807,12 +808,13 @@
     };
     function setImage(card) {
       const data = sections[card.dataset.card];
-      const slot = document.createElement('picture');
+      const slot = document.createElement('div');
       slot.className = 'slot';
-      const source = document.createElement('source'); source.type = 'image/webp'; source.srcset = `assets/bskn/${data.image}.webp`;
-      const img = document.createElement('img'); img.src = `assets/bskn/${data.image}.png`; img.alt = data.alt;
-      img.addEventListener('error', () => { img.hidden = true; }, {once:true});
-      slot.append(source,img); document.querySelector('#detail-media').replaceChildren(slot);
+      const img = document.createElement('img');
+      img.src = `assets/bskn/${data.image}.png`;
+      img.alt = data.alt;
+      slot.append(img);
+      document.querySelector('#detail-media').replaceChildren(slot);
     }
     function openSection(card) {
       const isTeam = card.dataset.card === 'team';

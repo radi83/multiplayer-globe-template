@@ -35,7 +35,7 @@ test("each card opens above unchanged Bento geometry with its approved visual", 
       await expect(page.locator("#detail-team")).toBeVisible();
       await expect(page.locator(".team-portraits-duo img")).toHaveAttribute("src", "assets/bskn/team-duo.png");
     } else {
-      await expect(page.locator("#detail-media picture img")).toHaveAttribute("src", `assets/bskn/${visuals[i]}.png`);
+      await expect(page.locator("#detail-media .slot img")).toHaveAttribute("src", `assets/bskn/${visuals[i]}.png`);
     }
     expect(await boxes()).toEqual(original);
     await page.keyboard.press("Escape");
