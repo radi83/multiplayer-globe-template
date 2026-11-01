@@ -1,11 +1,12 @@
 import { expect, test } from "@playwright/test";
 
-test("closed Bento cards are text only and all nine are expandable", async ({ page }) => {
+test("closed Bento cards are text only and all ten are expandable", async ({ page }) => {
   await page.goto("/");
-  await expect(page.locator(".card-trigger")).toHaveCount(9);
+  await expect(page.locator(".card-trigger")).toHaveCount(10);
   await expect(page.locator(".card img, .card picture, .card svg")).toHaveCount(0);
   await expect(page.locator(".card--marine h2")).toHaveText("Marine Technology");
-  await expect(page.locator(".card .plus")).toHaveCount(9);
+  await expect(page.locator(".card--team h2")).toHaveText("Engineering meets architecture.");
+  await expect(page.locator(".card .plus")).toHaveCount(10);
 });
 
 test("each card opens above unchanged Bento geometry with its approved visual", async ({ page }) => {
@@ -15,11 +16,27 @@ test("each card opens above unchanged Bento geometry with its approved visual", 
     return [el.offsetLeft, el.offsetTop, r.width, r.height];
   }));
   const original = await boxes();
-  const visuals = ["profile-systems", "marine-engineering-digital-twin", "fleet-operational-field", "bmms-evidence-lineage", "entrepreneurship-innovation", "professional-network", "certifications-expertise", "projects-technology", "contact-signal"];
+  const visuals = [
+    "profile-systems",
+    "marine-engineering-digital-twin",
+    "fleet-operational-field",
+    "bmms-evidence-lineage",
+    "team-duo",
+    "entrepreneurship-innovation",
+    "professional-network",
+    "certifications-expertise",
+    "projects-technology",
+    "contact-signal",
+  ];
   for (let i = 0; i < visuals.length; i++) {
     await page.locator(".card-trigger").nth(i).click();
     await expect(page.locator("#detail-layer")).toBeVisible();
-    await expect(page.locator("#detail-layer picture img")).toHaveAttribute("src", `assets/bskn/${visuals[i]}.png`);
+    if (visuals[i] === "team-duo") {
+      await expect(page.locator("#detail-team")).toBeVisible();
+      await expect(page.locator(".team-portraits-duo img")).toHaveAttribute("src", "assets/bskn/team-duo.png");
+    } else {
+      await expect(page.locator("#detail-media picture img")).toHaveAttribute("src", `assets/bskn/${visuals[i]}.png`);
+    }
     expect(await boxes()).toEqual(original);
     await page.keyboard.press("Escape");
     await expect(page.locator("#detail-layer")).toBeHidden();
