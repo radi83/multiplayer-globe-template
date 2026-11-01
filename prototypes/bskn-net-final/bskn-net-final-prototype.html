@@ -99,6 +99,7 @@
 
     /* Stage & Compact Puzzle Bento */
     .stage { position: relative; isolation: isolate; }
+    .stage.is-open { min-height: 600px; }
     .bento {
       display: grid;
       grid-template-columns: repeat(12, minmax(0, 1fr));
@@ -231,10 +232,10 @@
       z-index: 4;
       inset: 0;
       display: grid;
-      grid-template-columns: minmax(0, 1.12fr) minmax(260px, 0.88fr);
+      grid-template-columns: minmax(0, 1.15fr) minmax(260px, 0.85fr);
       align-items: center;
-      gap: clamp(24px, 4vw, 56px);
-      padding: clamp(28px, 4.5vw, 60px);
+      gap: clamp(20px, 3.5vw, 48px);
+      padding: clamp(20px, 3vw, 36px);
       overflow: auto;
       opacity: 0;
       transform: translateY(8px);
@@ -261,9 +262,9 @@
       transition: opacity 360ms var(--ease), transform 360ms var(--ease), visibility 0s;
     }
 
-    .detail-copy { max-width: 600px; }
+    .detail-copy { max-width: 600px; cursor: default; }
     .detail-copy .overline {
-      margin: 0 0 14px;
+      margin: 0 0 10px;
       color: var(--burgundy);
       font-size: 9.5px;
       font-weight: 700;
@@ -271,11 +272,11 @@
       text-transform: uppercase;
     }
     .detail-copy h2 {
-      margin: 0 0 16px;
-      font-size: clamp(38px, 4vw, 52px);
+      margin: 0 0 12px;
+      font-size: clamp(30px, 3.2vw, 42px);
       font-weight: 520;
       letter-spacing: -.045em;
-      line-height: 1.08;
+      line-height: 1.1;
       color: var(--ink);
     }
     .detail-copy h2::after {
@@ -284,28 +285,28 @@
       width: 28px;
       height: 1.5px;
       background: var(--burgundy);
-      margin-top: 15px;
+      margin-top: 12px;
     }
     .detail-copy>p {
       max-width: 580px;
-      margin: 0 0 24px;
+      margin: 0 0 16px;
       color: #2b3a47;
-      font-size: 17px;
-      line-height: 1.58;
+      font-size: 15px;
+      line-height: 1.52;
       font-weight: 420;
     }
 
-    /* Flat Editorial Secondary Information (No Boxes / No Panels) */
+    /* Flat Editorial Secondary Information */
     .facts {
       display: flex;
       flex-wrap: wrap;
-      gap: 16px 36px;
+      gap: 12px 28px;
       margin: 0;
-      padding: 20px 0 0;
+      padding: 14px 0 0;
       border-top: 1px solid var(--line);
       list-style: none;
     }
-    .facts li { min-width: 105px; }
+    .facts li { min-width: 95px; }
     .facts span {
       display: block;
       color: var(--muted);
@@ -313,12 +314,12 @@
       font-weight: 700;
       letter-spacing: .16em;
       text-transform: uppercase;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
     }
     .facts strong {
       display: block;
       color: var(--ink);
-      font-size: 13.5px;
+      font-size: 13px;
       font-weight: 600;
       letter-spacing: -.015em;
     }
@@ -328,6 +329,7 @@
       align-self: center;
       display: flex;
       justify-content: center;
+      cursor: default;
     }
     .detail-media .slot {
       display: block;
@@ -347,11 +349,11 @@
     .topics {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px 18px;
-      margin-top: 20px;
+      gap: 6px 14px;
+      margin-top: 14px;
     }
     .topic {
-      padding: 4px 0;
+      padding: 3px 0;
       border: 0;
       border-bottom: 1.5px solid transparent;
       background: transparent;
@@ -367,30 +369,30 @@
       border-bottom-color: var(--burgundy);
     }
     .support-copy {
-      min-height: 38px;
-      margin: 12px 0 0;
+      min-height: 32px;
+      margin: 10px 0 0;
       color: #3d4f5d;
-      font-size: 13px;
-      line-height: 1.62;
+      font-size: 12.5px;
+      line-height: 1.55;
     }
 
     /* BMMS Interactive Lineage Controls */
     .lineage {
       display: grid;
       grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 7px;
-      margin-top: 20px;
-      padding-top: 16px;
+      gap: 6px;
+      margin-top: 14px;
+      padding-top: 12px;
       border-top: 1px solid var(--line);
     }
     .lineage[hidden] { display: none; }
     .lineage button {
-      min-height: 48px;
+      min-height: 42px;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      gap: 3px;
-      padding: 8px 10px;
+      gap: 2px;
+      padding: 6px 8px;
       border: 1px solid var(--line);
       border-radius: 4px;
       background: rgba(255, 255, 255, 0.4);
@@ -403,25 +405,28 @@
       border-color: var(--burgundy);
       background: rgba(247, 245, 239, 0.95);
     }
-    .lineage-number { color: var(--burgundy); font: italic 13px var(--serif); line-height: 1; }
-    .lineage-name { font-size: 9.5px; font-weight: 650; color: var(--ink); line-height: 1.2; }
+    .lineage-number { color: var(--burgundy); font: italic 12px var(--serif); line-height: 1; }
+    .lineage-name { font-size: 9px; font-weight: 650; color: var(--ink); line-height: 1.2; }
     .layer-explanation {
       grid-column: 1 / -1;
-      min-height: 38px;
+      min-height: 42px;
       margin: 10px 0 0;
-      padding: 10px 0 0;
-      border-top: 1px dashed var(--line);
-      color: #3d4f5d;
-      font-size: 12px;
-      line-height: 1.6;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--burgundy);
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.65);
+      color: #1d2c38;
+      font-size: 12.5px;
+      line-height: 1.5;
     }
 
     /* Team Open State (Flat Editorial Composition) */
     .detail-layer.is-team {
-      grid-template-columns: minmax(280px, 1fr) minmax(320px, 1.15fr);
+      grid-template-columns: minmax(260px, 0.95fr) minmax(320px, 1.2fr);
       align-items: center;
-      gap: clamp(24px, 4vw, 56px);
-      padding: clamp(28px, 4.5vw, 60px);
+      gap: clamp(20px, 3.5vw, 48px);
+      padding: clamp(20px, 3vw, 36px);
     }
     .detail-team { display: contents; }
     .detail-team[hidden] { display: none; }
@@ -431,7 +436,8 @@
       align-items: flex-end;
       min-width: 0;
       height: 100%;
-      max-height: clamp(380px, 46vw, 540px);
+      max-height: clamp(340px, 42vw, 480px);
+      cursor: default;
     }
     .team-portraits-duo {
       display: flex;
@@ -444,16 +450,16 @@
     .team-portraits-duo img {
       display: block;
       max-width: 100%;
-      max-height: clamp(380px, 46vw, 540px);
+      max-height: clamp(340px, 42vw, 480px);
       width: auto;
       height: auto;
       object-fit: contain;
       object-position: bottom center;
       filter: grayscale(100%) contrast(1.04);
     }
-    .team-copy { max-width: 620px; }
+    .team-copy { max-width: 620px; cursor: default; }
     .team-copy .overline {
-      margin: 0 0 14px;
+      margin: 0 0 10px;
       color: var(--burgundy);
       font-size: 9.5px;
       font-weight: 700;
@@ -461,11 +467,11 @@
       text-transform: uppercase;
     }
     .team-copy h2 {
-      margin: 0 0 16px;
-      font-size: clamp(38px, 4vw, 52px);
+      margin: 0 0 12px;
+      font-size: clamp(30px, 3.2vw, 42px);
       font-weight: 520;
       letter-spacing: -.045em;
-      line-height: 1.08;
+      line-height: 1.1;
       color: var(--ink);
     }
     .team-copy h2::after {
@@ -474,35 +480,35 @@
       width: 28px;
       height: 1.5px;
       background: var(--burgundy);
-      margin-top: 15px;
+      margin-top: 12px;
     }
     .team-intro {
-      margin: 0 0 24px;
+      margin: 0 0 16px;
       color: #2b3a47;
-      font-size: 16px;
-      line-height: 1.6;
+      font-size: 14.5px;
+      line-height: 1.52;
       font-weight: 420;
     }
     .team-members {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 22px 28px;
-      padding-top: 18px;
+      gap: 14px 20px;
+      padding-top: 12px;
       border-top: 1px solid var(--line);
     }
     .team-member { display: flex; flex-direction: column; }
     .team-member h3 {
-      margin: 0 0 4px;
-      font-size: 18px;
+      margin: 0 0 3px;
+      font-size: 16.5px;
       font-weight: 600;
       letter-spacing: -.025em;
       line-height: 1.2;
       color: var(--ink);
     }
     .team-role {
-      margin: 0 0 8px;
+      margin: 0 0 6px;
       color: var(--burgundy);
-      font-size: 9px;
+      font-size: 8.5px;
       font-weight: 700;
       letter-spacing: .1em;
       text-transform: uppercase;
@@ -510,15 +516,15 @@
     .team-tags {
       display: flex;
       flex-wrap: wrap;
-      gap: 4px 6px;
-      margin: 0 0 10px;
+      gap: 3px 5px;
+      margin: 0 0 8px;
     }
     .team-tags span {
       display: inline-block;
       padding: 0;
       border: 0;
       color: var(--muted);
-      font-size: 8.5px;
+      font-size: 8px;
       font-weight: 650;
       letter-spacing: .08em;
       text-transform: uppercase;
@@ -526,13 +532,13 @@
     .team-tags span:not(:last-child)::after {
       content: " · ";
       color: var(--line);
-      margin-left: 5px;
+      margin-left: 4px;
     }
     .team-desc {
       margin: 0;
-      color: #465560;
-      font-size: 12px;
-      line-height: 1.62;
+      color: #384955;
+      font-size: 11.5px;
+      line-height: 1.52;
     }
     .team-member-portrait { display: none; }
 
@@ -623,38 +629,46 @@
         inset: 0;
         grid-template-columns: 1fr;
         align-content: start;
-        gap: 18px;
-        padding: 32px 18px 28px;
+        gap: 14px;
+        padding: 24px 16px 28px;
+        overflow-y: auto;
       }
       .detail-layer::before {
-        background: rgba(241, 239, 233, 0.94);
+        background: rgba(241, 239, 233, 0.95);
         backdrop-filter: blur(5px);
         -webkit-backdrop-filter: blur(5px);
       }
       .detail-copy h2,
       .team-copy h2 {
-        font-size: clamp(28px, 7vw, 34px);
-        margin-bottom: 12px;
+        font-size: clamp(24px, 6.5vw, 30px);
+        margin-bottom: 8px;
       }
       .detail-copy h2::after,
       .team-copy h2::after {
-        margin-top: 10px;
+        margin-top: 8px;
       }
       .detail-copy>p,
       .team-intro {
-        font-size: 14.5px;
-        line-height: 1.55;
-        margin-bottom: 18px;
+        font-size: 14px;
+        line-height: 1.5;
+        margin-bottom: 14px;
       }
-      .detail-media { order: 2; width: 100%; }
-      .detail-media .slot { max-height: clamp(200px, 55vw, 290px); }
-
+      .detail-media { order: 1; width: 100%; margin: 4px 0 10px; }
+      .detail-media .slot { max-height: clamp(170px, 46vw, 230px); }
+      .detail-copy { order: 2; }
+      .lineage {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+      }
+      .lineage button:last-of-type {
+        grid-column: span 2;
+      }
       .detail-layer.is-team {
         position: fixed;
         z-index: 20;
         inset: 0;
         display: block;
-        padding: 32px 18px 28px;
+        padding: 24px 16px 28px;
         overflow-y: auto;
       }
       .detail-layer.is-team .team-media {
@@ -666,15 +680,15 @@
       .team-members {
         display: flex;
         flex-direction: column;
-        gap: 22px;
-        padding-top: 16px;
+        gap: 18px;
+        padding-top: 14px;
       }
       .team-member-portrait {
         display: flex;
         justify-content: center;
         align-items: flex-end;
-        margin: 0 0 12px;
-        height: clamp(190px, 58vw, 270px);
+        margin: 0 0 10px;
+        height: clamp(170px, 50vw, 230px);
       }
       .team-member-portrait picture,
       .team-member-portrait img {
@@ -684,10 +698,8 @@
         object-fit: contain;
         filter: grayscale(100%) contrast(1.04);
       }
-      .team-member h3 { font-size: 17px; }
-      .team-desc { font-size: 11.5px; line-height: 1.58; }
-      .lineage { grid-template-columns: 1fr; }
-      .lineage button:last-of-type { grid-column: auto; }
+      .team-member h3 { font-size: 16px; }
+      .team-desc { font-size: 11px; line-height: 1.52; }
       .footer { flex-direction: column; }
     }
     @media (prefers-reduced-motion: reduce) {
@@ -736,7 +748,7 @@
           <div class="team-copy">
             <p class="overline">05 / Team</p>
             <h2>Two disciplines. One system view.</h2>
-            <p class="team-intro">BSKN brings maritime engineering experience and software architecture into the same working environment — connecting operational domain knowledge with the systems required to turn it into scalable technology.</p>
+            <p class="team-intro">BSKN brings more than two decades of commercial sea-going engineering practice and scalable software architecture into a unified engineering discipline — bridging operational vessel reality with modern, verifiable digital intelligence.</p>
             <div class="team-members">
               <div class="team-member">
                 <div class="team-member-portrait">
@@ -746,9 +758,9 @@
                   </picture>
                 </div>
                 <h3>Murat Can Başkan</h3>
-                <p class="team-role">Marine Engineering · Maritime Domain</p>
-                <div class="team-tags" aria-label="Murat Can Başkan disciplines"><span>Maritime Domain</span><span>Engineering</span><span>Operations</span></div>
-                <p class="team-desc">Unlimited Chief Engineer with more than two decades of maritime engineering and operational experience, bringing the domain judgement behind BSKN's maritime technology and BMMS work.</p>
+                <p class="team-role">Marine Engineering · Maritime Domain R&amp;D</p>
+                <div class="team-tags" aria-label="Murat Can Başkan disciplines"><span>Unlimited Chief Engineer</span><span>Fleet Operations</span><span>Marine Systems</span></div>
+                <p class="team-desc">Unlimited Chief Engineer with more than two decades of commercial fleet operations, technical superintendency, dry-docking, and newbuilding experience. Provides the deep maritime engineering authority behind BSKN and BMMS.</p>
               </div>
               <div class="team-member">
                 <div class="team-member-portrait">
@@ -758,9 +770,9 @@
                   </picture>
                 </div>
                 <h3>Cem Başar Başkan</h3>
-                <p class="team-role">Software Architecture · Technology</p>
-                <div class="team-tags" aria-label="Cem Başar Başkan disciplines"><span>Software Architecture</span><span>Systems</span><span>Technology</span></div>
-                <p class="team-desc">Software architect bringing system design, technical architecture and scalable software thinking to the technology foundation behind BSKN and its products.</p>
+                <p class="team-role">Software Architecture · Systems &amp; Technology</p>
+                <div class="team-tags" aria-label="Cem Başar Başkan disciplines"><span>Software Architecture</span><span>Deterministic Systems</span><span>Knowledge Platforms</span></div>
+                <p class="team-desc">Software architect specializing in distributed systems, formal data modeling, deterministic retrieval engines, and scalable platform infrastructure. Directs technical architecture and software foundations behind BSKN.</p>
               </div>
             </div>
           </div>
@@ -775,17 +787,17 @@
     const cards = [...document.querySelectorAll('.card')];
     const title = document.querySelector('#detail-title');
     const layerCopy = {
-      source:'A defined document or admitted information source anchors the evidence trail.',
-      version:'The exact source edition and effective context are retained for traceability.',
-      passage:'A stable, locatable passage identifies the specific content under review.',
-      evidence:'Evidence remains linked to its source passage so claims can be checked.',
-      review:'A qualified person reviews the evidence for decision support; BMMS is not an autonomous decision-maker.'
+      source:'01 / Authority & Baseline: Technical manuals, manufacturer service letters, and IMO/class conventions anchor the evidence trail.',
+      version:'02 / Edition & Context: Exact source editions, effective dates, and vessel-specific machinery configurations are preserved for strict traceability.',
+      passage:'03 / Locatable Passage: Stable, cited text passages and engineering parameters identify the specific evidence under review.',
+      evidence:'04 / Evidence Graph: Extracted specifications and procedural limits remain cryptographically linked to source passages without LLM interpolation.',
+      review:'05 / Decision Support: Structured evidence bundles are delivered to Chief Engineers and superintendents for informed, responsible evaluation.'
     };
     const sections = {
       profile:{kicker:'01 / Profile',title:'Engineering with a systems view.',description:'Engineering practice at sea informs a broader focus on dependable systems, evidence and technology shaped by operating conditions.',facts:[['Perspective','Engineering systems'],['Focus','Maritime technology']],image:'profile-systems',alt:'Systems perspective across engineering practice'},
       marine:{kicker:'02 / Practice',title:'Marine Technology',description:'Technology for complex systems at sea connects machinery, controls, energy, maintenance and human judgement. This systems view links operational evidence with digital twin thinking.',facts:[['Lens','Systems intelligence'],['Method','Operational evidence'],['Direction','Digital twin thinking']],image:'marine-engineering-digital-twin',alt:'Marine technology digital twin visual',topics:{Systems:'Relationships across connected technical systems.',Operations:'Engineering decisions grounded in operating context.',Reliability:'Dependability, maintenance and performance over time.', 'Technical leadership':'Clear engineering judgement, coordination and accountability.'}},
       fleet:{kicker:'03 / At sea',title:'Fleet / Sea Experience',description:'Fleet experience brings vessel environments, operational demands and people into view. That context helps keep engineering assessments connected to how work is carried out at sea.',facts:[['Context','Fleet operations'],['Perspective','Crew and operating conditions']],image:'fleet-operational-field',alt:'Fleet and operational field experience',topics:{Operations:'The conditions and priorities shaping day-to-day operations.',Newbuilding:'Experience viewed across delivery and entry into service.', 'Dry-dock':'Maintenance, coordination and work planning context.', 'Crew / operational context':'People, procedures and operating realities inform sound engineering.'}},
-      bmms:{kicker:'04 / Maritime intelligence',title:'BMMS',description:'An evidence-first maritime engineering knowledge and decision-support approach. BMMS supports provenance, traceability and reviewability, with human review at the decision point. It is not an autonomous decision-maker or chatbot.',facts:[['Basis','Source-linked evidence'],['Practice','Traceability and review']],image:'bmms-evidence-lineage',alt:'Evidence lineage and maritime engineering intelligence'},
+      bmms:{kicker:'04 / Maritime intelligence',title:'BMMS — Maritime Engineering Intelligence',description:'An evidence-first knowledge architecture and decision-support system for complex maritime engineering. BMMS links vessel machinery manuals, classification rules, regulatory standards and operational logs into an unbroken, auditable chain of evidence — ensuring human engineering judgement remains informed, verifiable, and authoritative.',facts:[['Basis','Source-linked evidence'],['Architecture','Deterministic knowledge graph'],['Review','Qualified engineer in the loop']],image:'bmms-evidence-lineage',alt:'Evidence lineage and maritime engineering intelligence architecture',topics:{'Evidence Lineage':'Every engineering claim links directly to immutable source passages and classification standards.','Deterministic Engine':'Mathematical provenance replaces generative hallucinations in mission-critical marine operations.','Operational Context':'Connects shipyard records, dry-dock logs, and onboard telemetry into verifiable knowledge.','Human In The Loop':'Decision-support for Chief Engineers and technical superintendents, not an autonomous chatbot.'}},
       team:{kicker:'05 / Team',title:'Two disciplines. One system view.'},
       venture:{kicker:'06 / Venture',title:'Entrepreneurship & Innovation',description:'A venture practice connecting domain understanding with research, product design and responsible validation.',facts:[['Focus','Useful products'],['Approach','Test and learn']],image:'entrepreneurship-innovation',alt:'Entrepreneurship and innovation',topics:{Research:'Questions and assumptions examined before implementation.',Validation:'Ideas checked against user needs and real constraints.',Products:'Solutions shaped around a clear practical purpose.'}},
       members:{kicker:'07 / Network',title:'Professional memberships',description:'Professional communities connect engineering practice with shared knowledge, standards and continuing development.',facts:[['Value','Shared practice'],['Focus','Professional learning']],image:'professional-network',alt:'Professional network',topics:{Community:'Exchange and connection across professional practice.',Standards:'Common frameworks support consistent engineering work.',Learning:'Continuing development through shared knowledge.'}},
@@ -855,7 +867,7 @@
     }
     function handleOpenSectionClick(event) {
       if (!stage.classList.contains('is-open')) return;
-      if (event.target.closest('button, a, input, textarea, select, [role="button"], [data-interactive]')) return;
+      if (event.target.closest('button, a, input, textarea, select, [role="button"], [data-interactive], .detail-copy, .detail-team, .detail-media')) return;
       closeSection();
     }
     cards.forEach(card=>card.querySelector('.card-trigger').addEventListener('click',()=>openSection(card)));
