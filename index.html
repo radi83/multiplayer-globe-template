@@ -21,13 +21,15 @@
     .site-header nav a { color:var(--muted); font-size:10px; letter-spacing:.12em; text-transform:uppercase; }
     .site-header nav a:hover { color:var(--burgundy); }
     main { width:min(1480px,100%); margin:auto; padding:34px clamp(20px,5vw,72px) 58px; }
+    .opening { transition:opacity 360ms var(--ease); }
+    .stage-is-open .opening { opacity:.48; }
     .opening { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(220px,.85fr); align-items:end; gap:28px; margin-bottom:22px; }
     .overline,.card-label { color:var(--burgundy); font-size:9px; font-weight:700; letter-spacing:.17em; text-transform:uppercase; }
     .opening h1 { max-width:700px; margin:10px 0 0; font-size:clamp(30px,4vw,52px); font-weight:540; letter-spacing:-.055em; line-height:1.06; }
     .opening h1 span { font-family:var(--serif); font-style:italic; font-weight:400; }
     .opening-aside { max-width:380px; justify-self:end; margin:0 0 2px; color:var(--muted); font-size:12px; line-height:1.65; }
     .stage { position:relative; isolation:isolate; }
-    .bento { display:grid; grid-template-columns:repeat(12,minmax(0,1fr)); grid-auto-rows:minmax(118px,auto); gap:11px; align-items:stretch; }
+    .bento { display:grid; grid-template-columns:repeat(12,minmax(0,1fr)); grid-auto-rows:minmax(118px,auto); gap:11px; align-items:stretch; transition:opacity 360ms var(--ease),filter 360ms var(--ease); }
     .card { --tone:var(--soft); position:relative; min-width:0; overflow:hidden; border:1px solid rgba(21,40,58,.08); border-radius:26px; background:var(--tone); box-shadow:0 8px 24px rgba(21,40,58,.035); }
     .card:nth-child(3n) { --tone:#eeece5; } .card:nth-child(4n) { --tone:#eae8e0; }
     .card--about { grid-column:span 4; grid-row:span 2; }
@@ -51,16 +53,16 @@
     .card-trigger[aria-expanded="true"] .plus { font-size:0; }
     .card-trigger[aria-expanded="true"] .plus::after { content:"×"; font-size:16px; }
     .detail-layer { position:absolute; z-index:4; inset:0; display:grid; grid-template-columns:minmax(0,1fr) minmax(220px,.82fr); align-items:center; gap:clamp(20px,4vw,54px); padding:clamp(24px,4vw,54px); overflow:auto; opacity:0; transform:translateY(8px); visibility:hidden; pointer-events:none; transition:opacity 360ms var(--ease),transform 360ms var(--ease),visibility 0s linear 360ms; }
-    .detail-layer::before { content:""; position:absolute; z-index:-1; inset:0; background:rgba(241,239,233,.58); pointer-events:none; }
+    .detail-layer::before { content:""; position:absolute; z-index:-1; inset:0; background:rgba(241,239,233,.78); backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px); pointer-events:none; }
     .detail-layer.is-visible { opacity:1; transform:translateY(0); visibility:visible; pointer-events:auto; transition:opacity 360ms var(--ease),transform 360ms var(--ease),visibility 0s; }
-    .stage.is-open .bento { pointer-events:none; }
+    .stage.is-open .bento { opacity:.28; filter:blur(1px); pointer-events:none; }
     .detail-copy { max-width:580px; }
     .detail-copy h2 { margin:9px 40px 12px 0; font-size:clamp(25px,3vw,40px); font-weight:540; letter-spacing:-.05em; line-height:1.08; }
     .detail-copy>p { max-width:560px; margin:0; color:#465560; font-size:13px; line-height:1.75; }
     .facts { display:flex; flex-wrap:wrap; gap:10px 24px; margin:21px 0 0; padding:14px 0 0; border-top:1px solid var(--line); list-style:none; }
     .facts li { min-width:95px; } .facts span { display:block; color:var(--muted); font-size:8px; letter-spacing:.13em; text-transform:uppercase; }
     .facts strong { display:block; margin-top:5px; font-size:11px; font-weight:600; }
-    .close-layer { position:absolute; z-index:2; top:16px; right:16px; width:27px; height:27px; display:grid; place-items:center; border:0; border-radius:5px; background:var(--burgundy); color:white; font-size:19px; line-height:1; cursor:pointer; }
+    
     .detail-media { min-width:0; align-self:center; }
     .detail-media .slot { display:block; width:100%; height:clamp(220px,32vw,410px); margin:0; opacity:.96; }
     .detail-media .slot img { display:block; width:100%; height:100%; object-fit:contain; object-position:center; }
@@ -200,7 +202,7 @@
       .card-trigger { padding:19px 18px 22px; } .card h2 { font-size:18px; } .card--marine h2,.card--bmms h2 { font-size:24px; }
       .card-note { font-size:10px; } .plus { right:12px; bottom:12px; width:21px; height:21px; }
       .detail-layer { position:fixed; z-index:20; inset:0; grid-template-columns:1fr; align-content:start; gap:18px; padding:52px 22px 30px; }
-      .detail-layer::before { background:rgba(241,239,233,.66); }
+      .detail-layer::before { background:rgba(241,239,233,.82); backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px); }
       .detail-copy h2 { font-size:28px; } .detail-copy>p { font-size:12px; }
       .detail-media { order:2; width:100%; } .detail-media .slot { height:clamp(190px,58vw,300px); }
       .detail-layer.is-team {
@@ -282,7 +284,6 @@
         <article class="card card--contact" id="contact" data-card="contact"><button class="card-trigger" type="button" aria-expanded="false" aria-controls="detail-layer"><span class="card-label">10 / Connect</span><h2>Contact</h2><p class="card-note">Start a useful conversation.</p><span class="plus" aria-hidden="true">+</span></button></article>
       </section>
       <section class="detail-layer" id="detail-layer" aria-labelledby="detail-title" aria-hidden="true" inert>
-        <button class="close-layer" type="button" aria-label="Close section">×</button>
         <div class="detail-copy"><p class="overline" id="detail-kicker"></p><h2 id="detail-title" tabindex="-1"></h2><p id="detail-description"></p><ul class="facts" id="detail-facts"></ul><div class="topics" id="detail-topics" aria-label="Related topics"></div><p class="support-copy" id="support-copy" aria-live="polite"></p><div class="lineage" id="lineage" hidden aria-label="BMMS evidence lineage"><button type="button" data-layer="source" aria-pressed="true"><span class="lineage-number">01</span><span class="lineage-name">Source</span></button><button type="button" data-layer="version" aria-pressed="false"><span class="lineage-number">02</span><span class="lineage-name">SourceVersion</span></button><button type="button" data-layer="passage" aria-pressed="false"><span class="lineage-number">03</span><span class="lineage-name">Passage</span></button><button type="button" data-layer="evidence" aria-pressed="false"><span class="lineage-number">04</span><span class="lineage-name">Evidence</span></button><button type="button" data-layer="review" aria-pressed="false"><span class="lineage-number">05</span><span class="lineage-name">Review / Decision Support</span></button><p class="layer-explanation" aria-live="polite"></p></div></div>
         <div class="detail-media" id="detail-media"></div>
         <div class="detail-team" id="detail-team" hidden>
@@ -334,7 +335,6 @@
     const stage = document.querySelector('#stage');
     const layer = document.querySelector('#detail-layer');
     const cards = [...document.querySelectorAll('.card')];
-    const closeButton = layer.querySelector('.close-layer');
     const title = document.querySelector('#detail-title');
     const layerCopy = {
       source:'A defined document or admitted information source anchors the evidence trail.',
@@ -396,21 +396,32 @@
         setImage(card);
       }
 
-      layer.inert=false; layer.setAttribute('aria-hidden','false'); layer.classList.add('is-visible'); stage.classList.add('is-open');
+      layer.inert=false; layer.setAttribute('aria-hidden','false'); layer.classList.add('is-visible'); stage.classList.add('is-open'); document.body.classList.add('stage-is-open');
       if (window.innerWidth > 650) stage.scrollIntoView({block:'start',behavior:'auto'});
-      closeButton.focus({preventScroll:true});
+      if (isTeam) {
+        const teamHeading = document.querySelector('#detail-team h2');
+        if (teamHeading) { teamHeading.tabIndex = -1; teamHeading.focus({preventScroll:true}); }
+      } else {
+        title.focus({preventScroll:true});
+      }
     }
     function closeSection() {
       const active=cards.find(card=>card.querySelector('.card-trigger').getAttribute('aria-expanded')==='true');
       if(!active) return;
-      layer.classList.remove('is-visible'); layer.classList.remove('is-team'); layer.setAttribute('aria-hidden','true'); layer.inert=true; stage.classList.remove('is-open');
+      layer.classList.remove('is-visible','is-team'); layer.setAttribute('aria-hidden','true'); layer.inert=true; stage.classList.remove('is-open'); document.body.classList.remove('stage-is-open');
       const detailTeam = document.querySelector('#detail-team');
       if (detailTeam) detailTeam.hidden = true;
       cards.forEach(card=>card.querySelector('.card-trigger').setAttribute('aria-expanded','false'));
       active.querySelector('.card-trigger').focus({preventScroll:true});
     }
+    function handleOutsideClick(event) {
+      if (!stage.classList.contains('is-open')) return;
+      if (event.target.closest('.detail-copy, .detail-media, #detail-team, .card-trigger')) return;
+      closeSection();
+    }
     cards.forEach(card=>card.querySelector('.card-trigger').addEventListener('click',()=>openSection(card)));
-    closeButton.addEventListener('click',closeSection);
+    layer.addEventListener('click',handleOutsideClick);
+    document.addEventListener('click',handleOutsideClick);
     document.querySelectorAll('[data-layer]').forEach(button=>button.addEventListener('click',()=>{
       document.querySelectorAll('[data-layer]').forEach(item=>item.setAttribute('aria-pressed',String(item===button)));
       document.querySelector('.layer-explanation').textContent=layerCopy[button.dataset.layer];
