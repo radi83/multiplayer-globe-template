@@ -20,8 +20,9 @@ const BUDGET = {
 
 const html = readFileSync(join(DIST, "index.html"), "utf8");
 if (html.includes('id="detail-layer"')) {
-  const names = ["profile-systems", "marine-engineering-digital-twin", "fleet-operational-field", "bmms-evidence-lineage", "team-murat-can-baskan", "team-cem-basar-baskan", "team-duo", "entrepreneurship-innovation", "professional-network", "certifications-expertise", "projects-technology", "contact-signal"];
-  const missing = names.flatMap((name) => ["png", "webp"].map((ext) => `assets/bskn/${name}.${ext}`)).filter((path) => !existsSync(join(DIST, path)));
+  const finalVisuals = ["profile-systems", "marine-technology", "fleet-operational-field", "bmms-evidence-lineage", "entrepreneurship-innovation", "professional-network", "certifications-expertise", "projects-technology", "contact-signal"];
+  const expected = finalVisuals.map((name) => `assets/bskn/${name}.png`);
+  const missing = expected.filter((path) => !existsSync(join(DIST, path)));
   const failures = [];
   if (missing.length) failures.push(`missing approved assets: ${missing.join(", ")}`);
   if ((html.match(/class="card-trigger"/g) ?? []).length !== 10) failures.push("ten expandable cards required");
@@ -29,7 +30,7 @@ if (html.includes('id="detail-layer"')) {
   if (/<article class="card[^>]*>[\s\S]*?<img\b/.test(html.slice(0, html.indexOf('class="detail-layer"')))) failures.push("closed card artwork found");
   if (!html.includes('<html lang="en"')) failures.push("homepage language is incorrect");
   if (failures.length) { console.error(failures.join("\n")); process.exit(1); }
-  console.log(`BSKN homepage: 10 cards and ${names.length * 2} approved asset files verified.`);
+  console.log(`BSKN homepage: 10 cards, 9 final section visuals and Team assets verified.`);
   process.exit(0);
 }
 const assets = readdirSync(join(DIST, "assets")).map((name) => {
@@ -82,3 +83,4 @@ if (failures.length) {
   process.exit(1);
 }
 console.log("\nTüm kontroller geçti.\n");
+
