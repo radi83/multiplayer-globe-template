@@ -575,6 +575,22 @@
       .card--team     { grid-column: 1 / span 3; grid-row: 7 / span 2; }
       .card--projects { grid-column: 4 / span 3; grid-row: 7 / span 2; }
 
+      .stage.is-open {
+        min-height: 840px;
+      }
+      .detail-layer {
+        align-items: start;
+        padding: 24px 20px;
+      }
+      .detail-media {
+        align-self: start;
+        margin-top: 16px;
+      }
+      .detail-media .slot {
+        max-width: 320px;
+        max-height: 320px;
+      }
+
       .detail-copy h2,
       .team-copy h2 {
         font-size: clamp(32px, 4.2vw, 40px);
@@ -735,7 +751,7 @@
         <article class="card card--contact" id="contact" data-card="contact"><button class="card-trigger" type="button" aria-expanded="false" aria-controls="detail-layer"><span class="card-label">10 / Connect</span><h2>Contact</h2><p class="card-note">Start a useful conversation.</p><span class="plus" aria-hidden="true">+</span></button></article>
       </section>
       <section class="detail-layer" id="detail-layer" aria-labelledby="detail-title" aria-hidden="true" inert>
-        <div class="detail-copy"><p class="overline" id="detail-kicker"></p><h2 id="detail-title" tabindex="-1"></h2><p id="detail-description"></p><ul class="facts" id="detail-facts"></ul><div class="topics" id="detail-topics" aria-label="Related topics"></div><p class="support-copy" id="support-copy" aria-live="polite"></p><div class="lineage" id="lineage" hidden aria-label="BMMS evidence lineage"><button type="button" data-layer="source" aria-pressed="true"><span class="lineage-number">01</span><span class="lineage-name">Source</span></button><button type="button" data-layer="version" aria-pressed="false"><span class="lineage-number">02</span><span class="lineage-name">SourceVersion</span></button><button type="button" data-layer="passage" aria-pressed="false"><span class="lineage-number">03</span><span class="lineage-name">Passage</span></button><button type="button" data-layer="evidence" aria-pressed="false"><span class="lineage-number">04</span><span class="lineage-name">Evidence</span></button><button type="button" data-layer="review" aria-pressed="false"><span class="lineage-number">05</span><span class="lineage-name">Review / Decision Support</span></button><p class="layer-explanation" aria-live="polite"></p></div></div>
+        <div class="detail-copy"><p class="overline" id="detail-kicker"></p><h2 id="detail-title" tabindex="-1"></h2><p id="detail-description"></p><ul class="facts" id="detail-facts"></ul><div class="topics" id="detail-topics" aria-label="Related topics"></div><p class="support-copy" id="support-copy" aria-live="polite"></p><div class="lineage" id="lineage" hidden aria-label="BMMS evidence lineage"><button type="button" data-layer="source" aria-pressed="true"><span class="lineage-number">01</span><span class="lineage-name">Source</span></button><button type="button" data-layer="version" aria-pressed="false"><span class="lineage-number">02</span><span class="lineage-name">SourceVersion</span></button><button type="button" data-layer="passage" aria-pressed="false"><span class="lineage-number">03</span><span class="lineage-name">Passage</span></button><button type="button" data-layer="evidence" aria-pressed="false"><span class="lineage-number">04</span><span class="lineage-name">Evidence</span></button><button type="button" data-layer="review" aria-pressed="false"><span class="lineage-number">05</span><span class="lineage-name">Review / Decision Support</span></button><p class="layer-explanation" aria-live="polite">01 / Authority &amp; Baseline: Technical manuals, manufacturer service letters, and IMO/class conventions anchor the evidence trail.</p></div></div>
         <div class="detail-media" id="detail-media"></div>
         <div class="detail-team" id="detail-team" hidden>
           <div class="team-media" aria-hidden="true">
@@ -813,6 +829,7 @@
       const img = document.createElement('img');
       img.src = `assets/bskn/${data.image}.png`;
       img.alt = data.alt;
+      img.decoding = 'async';
       slot.append(img);
       document.querySelector('#detail-media').replaceChildren(slot);
     }
