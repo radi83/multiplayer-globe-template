@@ -5,7 +5,7 @@
  * - Three.js ayrı, sonradan yüklenen bir parça olmalı.
  * - Metin statik HTML'de olmalı; şablon işareti kalmamalı.
  */
-import { readFileSync, readdirSync, statSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { gzipSync } from "node:zlib";
 
@@ -19,6 +19,19 @@ const BUDGET = {
 };
 
 const html = readFileSync(join(DIST, "index.html"), "utf8");
+if (html.includes('id="detail-layer"')) {
+  const names = ["profile-systems", "marine-engineering-digital-twin", "fleet-operational-field", "bmms-evidence-lineage", "entrepreneurship-innovation", "professional-network", "certifications-expertise", "projects-technology", "contact-signal"];
+  const missing = names.flatMap((name) => ["png", "webp"].map((ext) => `assets/bskn/${name}.${ext}`)).filter((path) => !existsSync(join(DIST, path)));
+  const failures = [];
+  if (missing.length) failures.push(`missing approved assets: ${missing.join(", ")}`);
+  if ((html.match(/class="card-trigger"/g) ?? []).length !== 9) failures.push("nine expandable cards required");
+  if (!html.includes("SourceVersion") || !html.includes("aria-pressed") || !html.includes("event.key==='Escape'")) failures.push("interactive evidence lineage or Escape missing");
+  if (/<article class="card[^>]*>[\s\S]*?<img\b/.test(html.slice(0, html.indexOf('class="detail-layer"')))) failures.push("closed card artwork found");
+  if (!html.includes('<html lang="en"')) failures.push("homepage language is incorrect");
+  if (failures.length) { console.error(failures.join("\n")); process.exit(1); }
+  console.log(`BSKN homepage: 9 cards and ${names.length * 2} approved asset files verified.`);
+  process.exit(0);
+}
 const assets = readdirSync(join(DIST, "assets")).map((name) => {
   const path = join(DIST, "assets", name);
   const buf = readFileSync(path);
