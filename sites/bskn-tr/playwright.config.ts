@@ -1,6 +1,8 @@
 import { defineConfig, devices } from "@playwright/test";
 
-const executablePath = process.env.PW_CHROMIUM_PATH || undefined;
+import { existsSync } from "node:fs";
+const defaultChrome = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
+const executablePath = process.env.PW_CHROMIUM_PATH || (existsSync(defaultChrome) ? defaultChrome : undefined);
 
 export default defineConfig({
   testDir: "tests",

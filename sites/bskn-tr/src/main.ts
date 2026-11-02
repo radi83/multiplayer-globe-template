@@ -1,13 +1,4 @@
-import "./styles/modernist.css";
-import "./styles/page.css";
-import "./styles/fixes.css";
-import { bootShip } from "./ship/boot.ts";
-
-/*
- * Eski sitenin (Claude Design) davranışları, React çalışma zamanı olmadan:
- * tema, kariyer süzgeci, tıklayınca açılan kartlar, belirme, sayaçlar,
- * ilerleme çubuğu, paralaks, zaman çizgisi ve belge büyütme.
- */
+import "./styles/bento.css";
 
 declare global {
   interface Window {
@@ -17,9 +8,10 @@ declare global {
 window.__bskn = true;
 
 const body = document.body;
-const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-/* ---------- Tema (eski sitedeki "mcb.prefs" anahtarı korunur) ---------- */
+/* ==========================================================================
+   Theme Management (Persists to mcb.prefs, respects system preference)
+   ========================================================================== */
 
 function readPrefs(): Record<string, unknown> {
   try {
@@ -31,316 +23,232 @@ function readPrefs(): Record<string, unknown> {
 
 function initTheme(): void {
   const btn = document.querySelector<HTMLButtonElement>("[data-theme-toggle]");
-  const glyph = document.querySelector<HTMLElement>("[data-theme-glyph]");
+  const label = document.querySelector<HTMLElement>("[data-theme-label]");
+  const isEn = body.dataset.lang === "en";
+
   const sync = (): void => {
-    const dark = body.getAttribute("data-theme") === "dark";
-    if (glyph) glyph.textContent = dark ? "☀" : "☾";
-    btn?.setAttribute("aria-pressed", String(dark));
-  };
-  sync();
-  btn?.addEventListener("click", () => {
-    const dark = body.getAttribute("data-theme") !== "dark";
-    body.setAttribute("data-theme", dark ? "dark" : "light");
-    try {
-      localStorage.setItem("mcb.prefs", JSON.stringify({ ...readPrefs(), dark, lang: body.dataset.lang }));
-    } catch {
-      /* depolama kapalı */
+    const isDark = body.getAttribute("data-theme") === "dark";
+    if (label) {
+      if (isEn) {
+        label.textContent = isDark ? "Light" : "Dark";
+      } else {
+        label.textContent = isDark ? "Açık" : "Koyu";
+      }
     }
+    btn?.setAttribute("aria-pressed", String(isDark));
+  };
+
+  sync();
+
+  btn?.addEventListener("click", () => {
+    const currentlyDark = body.getAttribute("data-theme") === "dark";
+    const nextDark = !currentlyDark;
+    body.setAttribute("data-theme", nextDark ? "dark" : "light");
+
+    try {
+      localStorage.setItem("mcb.prefs", JSON.stringify({ ...readPrefs(), dark: nextDark, lang: body.dataset.lang }));
+    } catch {
+      /* local storage disabled */
+    }
+
     sync();
   });
 }
 
-/* ---------- Kariyer süzgeci ---------- */
+/* ==========================================================================
+   Editorial Open Layer Controller (10 Modules)
+   ========================================================================== */
 
-function chipStyle(active: boolean): string {
-  return (
-    "appearance: none; cursor: pointer; font-family: var(--font-heading); font-weight: 800; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; padding: 9px 14px; border: 1px solid " +
-    (active ? "var(--accent)" : "var(--rule)") +
-    "; background: " +
-    (active ? "var(--accent)" : "none") +
-    "; color: " +
-    (active ? "var(--color-bg)" : "var(--muted)") +
-    "; transition: 0.25s;"
-  );
-}
+function initOverlay(): void {
+  const grid = document.querySelector<HTMLElement>("#bento-grid");
+  const layer = document.querySelector<HTMLElement>("#detail-layer");
+  const container = document.querySelector<HTMLElement>("#overlay-container");
+  const backdrop = document.querySelector<HTMLElement>("#overlay-backdrop");
+  const dismissBtn = document.querySelector<HTMLElement>("#overlay-dismiss-btn");
+  const kicker = document.querySelector<HTMLElement>("#overlay-kicker");
+  const triggers = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-open-module]"));
+  const panes = Array.from(document.querySelectorAll<HTMLElement>(".module-open-pane"));
 
-function initFilters(): void {
-  const bar = document.querySelector<HTMLElement>("[data-filters]");
-  if (!bar) return;
-  const rows = Array.from(document.querySelectorAll<HTMLElement>("#kariyer [data-type]"));
-  const chips = Array.from(bar.querySelectorAll<HTMLButtonElement>("[data-filter]"));
-  bar.addEventListener("click", (e) => {
-    const chip = (e.target as Element).closest<HTMLButtonElement>("[data-filter]");
-    if (!chip) return;
-    const key = chip.dataset.filter ?? "all";
-    chips.forEach((c) => {
-      const on = c === chip;
-      c.setAttribute("aria-pressed", String(on));
-      c.setAttribute("style", chipStyle(on));
-    });
-    rows.forEach((row) => {
-      const show = key === "all" || row.dataset.type === key;
-      row.hidden = !show;
-      if (show) reveal(row);
-    });
-    frame();
-  });
-}
+  if (!grid || !layer || !container || !backdrop) return;
 
-/* ---------- Belirme + sayaçlar ---------- */
+  let activeTrigger: HTMLButtonElement | null = null;
 
-function countUp(node: HTMLElement): void {
-  if (node.dataset.done) return;
-  node.dataset.done = "1";
-  const to = Number(node.dataset.count ?? "0");
-  if (reduced) {
-    node.textContent = String(to);
-    return;
-  }
-  const t0 = performance.now();
-  const step = (t: number): void => {
-    const p = Math.min(1, (t - t0) / 900);
-    node.textContent = String(Math.round(to * (1 - Math.pow(1 - p, 3))));
-    if (p < 1) requestAnimationFrame(step);
-  };
-  requestAnimationFrame(step);
-}
+  const openModule = (modId: string, triggerBtn?: HTMLButtonElement): void => {
+    activeTrigger = triggerBtn ?? triggers.find((t) => t.dataset.openModule === modId) ?? null;
+    triggers.forEach((t) => t.setAttribute("aria-expanded", t === activeTrigger ? "true" : "false"));
 
-function reveal(el: HTMLElement): void {
-  el.style.opacity = "1";
-  el.style.transform = "none";
-  el.querySelectorAll<HTMLElement>("[data-count]").forEach(countUp);
-}
+    // Find and update kicker label from trigger card
+    const cardNum = activeTrigger?.querySelector<HTMLElement>(".bento-card__num")?.textContent;
+    if (kicker && cardNum) kicker.textContent = cardNum;
 
-function initReveal(): void {
-  const els = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));
-  if (reduced || !("IntersectionObserver" in window)) {
-    els.forEach(reveal);
-    return;
-  }
-  const io = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((e) => {
-        if (!e.isIntersecting) return;
-        reveal(e.target as HTMLElement);
-        io.unobserve(e.target);
-      });
-    },
-    { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
-  );
-  els.forEach((el) => io.observe(el));
-}
-
-/* ---------- Kaydırmaya bağlı: ilerleme, paralaks, çizgi ---------- */
-
-const bar = document.querySelector<HTMLElement>("[data-progress]");
-const pars = Array.from(document.querySelectorAll<HTMLElement>("[data-par]"));
-const cards = Array.from(document.querySelectorAll<HTMLElement>('#kariyer [data-dc-tpl="67"]'));
-const line = document.querySelector<HTMLElement>("[data-line]");
-const bmmsBranch = document.querySelector<SVGSVGElement>("[data-bmms-branch]");
-const bmmsBranchRail = document.querySelector<SVGPathElement>("[data-bmms-branch-rail]");
-const bmmsBranchPath = document.querySelector<SVGPathElement>("[data-bmms-branch-path]");
-const bmmsOrigin = document.querySelector<SVGCircleElement>("[data-bmms-origin]");
-const bmmsTarget = document.querySelector<SVGCircleElement>("[data-bmms-target]");
-let queued = false;
-
-function updateBmmsBranch(): void {
-  if (!bmmsBranch || !bmmsBranchPath) return;
-  const wrap = bmmsBranch.parentElement;
-  const origin = document.querySelector<HTMLElement>('[data-post-id="bskn"]');
-  const target = document.querySelector<HTMLElement>('[data-post-id="bmms-current"]');
-  if (!wrap || !origin || !target || origin.hidden || target.hidden) {
-    bmmsBranch.style.display = "none";
-    return;
-  }
-  bmmsBranch.style.display = "block";
-  const wr = wrap.getBoundingClientRect();
-  const originY = origin.getBoundingClientRect().top - wr.top + 39;
-  const targetY = target.getBoundingClientRect().top - wr.top + 39;
-  const height = Math.max(1, wrap.offsetHeight);
-  bmmsBranch.setAttribute("viewBox", `0 0 18 ${height}`);
-  const route = `M 5 ${targetY.toFixed(1)} H 14 V ${originY.toFixed(1)} H 5`;
-  bmmsBranchRail?.setAttribute("d", route);
-  bmmsBranchPath.setAttribute("d", route);
-  for (const [node, y] of [[bmmsOrigin, originY], [bmmsTarget, targetY]] as const) {
-    node?.setAttribute("cx", "5");
-    node?.setAttribute("cy", y.toFixed(1));
-  }
-  const progress = reduced ? 1 : Math.max(0, Math.min(1, (innerHeight * .72 - (wr.top + targetY)) / Math.max(1, originY - targetY)));
-  bmmsBranchPath.style.strokeDashoffset = String(1 - progress);
-}
-
-function frame(): void {
-  queued = false;
-  const vh = innerHeight;
-  if (bar) {
-    const max = Math.max(1, document.documentElement.scrollHeight - vh);
-    bar.style.width = Math.max(0, Math.min(100, (scrollY / max) * 100)).toFixed(2) + "%";
-  }
-  if (!reduced) {
-    pars.forEach((el) => {
-      const f = parseFloat(el.dataset.par ?? "0") || 0;
-      const rc = el.getBoundingClientRect();
-      const off = rc.top + rc.height / 2 - vh / 2;
-      el.style.transform = `translate3d(0,${(-off * f).toFixed(1)}px,0)`;
-    });
-  }
-  if (line?.parentElement) {
-    const rc = line.parentElement.getBoundingClientRect();
-    const p = Math.max(0, Math.min(1, (vh * 0.72 - rc.top) / Math.max(1, rc.height)));
-    line.style.transform = `scaleY(${p.toFixed(3)})`;
-  }
-  updateBmmsBranch();
-}
-
-function onScroll(): void {
-  if (queued) return;
-  queued = true;
-  requestAnimationFrame(frame);
-}
-
-/* ---------- Deneyim kartları: tıklayınca arka yüz (dönme yok) ---------- */
-
-function initCards(): void {
-  const toggle = (card: HTMLElement): void => {
-    const open = card.getAttribute("data-open") !== "1";
-    card.setAttribute("data-open", open ? "1" : "0");
-    card.setAttribute("aria-expanded", String(open));
-  };
-  cards.forEach((card) => {
-    card.addEventListener("click", () => toggle(card));
-    card.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        toggle(card);
-      } else if (e.key === "Escape" && card.getAttribute("data-open") === "1") {
-        toggle(card);
+    // Show selected pane, hide others
+    panes.forEach((p) => {
+      if (p.dataset.pane === modId) {
+        p.hidden = false;
+      } else {
+        p.hidden = true;
       }
     });
+
+    grid.classList.add("is-receded");
+    layer.hidden = false;
+    layer.classList.add("is-active");
+
+    // Scroll container to top
+    const content = container.querySelector<HTMLElement>("#overlay-content");
+    if (content) content.scrollTop = 0;
+
+    container.focus();
+  };
+
+  const closeOverlay = (): void => {
+    if (layer.hidden) return;
+
+    layer.classList.remove("is-active");
+    layer.hidden = true;
+    grid.classList.remove("is-receded");
+
+    triggers.forEach((t) => t.setAttribute("aria-expanded", "false"));
+
+    if (activeTrigger) {
+      activeTrigger.focus();
+      activeTrigger = null;
+    }
+  };
+
+  triggers.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const modId = btn.dataset.openModule;
+      if (modId) openModule(modId, btn);
+    });
   });
-  // Bir kez ipucu: ilk kart göründüğünde "+" iki kez hafif halka yayar.
-  const first = cards[0]?.querySelector<HTMLElement>(".peek__plus");
-  if (!first || reduced || !("IntersectionObserver" in window)) return;
-  const io = new IntersectionObserver(
-    (entries) => {
-      if (!entries.some((e) => e.isIntersecting)) return;
-      io.disconnect();
-      setTimeout(() => first.classList.add("is-nudge"), 600);
-    },
-    { threshold: 0.6 },
-  );
-  io.observe(first);
+
+  backdrop.addEventListener("click", closeOverlay);
+  dismissBtn?.addEventListener("click", closeOverlay);
+  dismissBtn?.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      closeOverlay();
+    }
+  });
+
+  // Close on Escape anywhere
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !layer.hidden) {
+      closeOverlay();
+    }
+  });
 }
 
-/* ---------- Belge büyütme ---------- */
+/* ==========================================================================
+   Career Filters (Module 02)
+   ========================================================================== */
+
+function initCareerFilters(): void {
+  const chips = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-filter]"));
+  const posts = Array.from(document.querySelectorAll<HTMLElement>("[data-post-type]"));
+
+  if (chips.length === 0 || posts.length === 0) return;
+
+  chips.forEach((chip) => {
+    chip.addEventListener("click", () => {
+      const targetType = chip.dataset.filter ?? "all";
+
+      chips.forEach((c) => {
+        const isActive = c === chip;
+        c.classList.toggle("is-active", isActive);
+        c.setAttribute("aria-pressed", String(isActive));
+      });
+
+      posts.forEach((post) => {
+        const postType = post.dataset.postType;
+        const visible = targetType === "all" || postType === targetType;
+        post.style.display = visible ? "grid" : "none";
+      });
+    });
+  });
+}
+
+/* ==========================================================================
+   Marine Technology Tabs (Module 04)
+   ========================================================================== */
+
+function initSkillsTabs(): void {
+  const tabBtns = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-skill-tab]"));
+  const tabPanes = Array.from(document.querySelectorAll<HTMLElement>("[data-skill-content]"));
+
+  if (tabBtns.length === 0 || tabPanes.length === 0) return;
+
+  tabBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const targetKey = btn.dataset.skillTab;
+
+      tabBtns.forEach((b) => {
+        const active = b === btn;
+        b.classList.toggle("is-active", active);
+        b.setAttribute("aria-selected", String(active));
+      });
+
+      tabPanes.forEach((pane) => {
+        const matches = pane.dataset.skillContent === targetKey;
+        pane.classList.toggle("is-active", matches);
+        pane.style.display = matches ? "block" : "none";
+      });
+    });
+  });
+}
+
+/* ==========================================================================
+   Document & Certificate Zoom Modal
+   ========================================================================== */
 
 function initZoom(): void {
-  const box = document.querySelector<HTMLElement>("[data-zoom]");
-  const img = document.querySelector<HTMLImageElement>("[data-zoom-img]");
-  const title = document.querySelector<HTMLElement>("[data-zoom-title]");
-  const close = document.querySelector<HTMLButtonElement>("[data-zoom-close]");
-  if (!box || !img || !title || !close) return;
-  let opener: HTMLElement | null = null;
-  const hide = (): void => {
-    box.hidden = true;
-    opener?.focus();
-  };
-  document.querySelectorAll<HTMLElement>("[data-doc]").forEach((el) => {
-    el.addEventListener("click", () => {
-      opener = el;
-      img.src = el.dataset.doc ?? "";
-      img.alt = el.dataset.docTitle ?? "";
-      title.textContent = [el.dataset.docTitle, el.dataset.docMeta].filter(Boolean).join(" · ");
-      box.hidden = false;
-      close.focus();
-    });
-  });
-  close.addEventListener("click", hide);
-  box.addEventListener("click", (e) => {
-    if (e.target === box) hide();
-  });
-  addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && !box.hidden) hide();
-  });
-}
+  const modal = document.querySelector<HTMLElement>("#zoom-modal");
+  const img = document.querySelector<HTMLImageElement>("#zoom-modal-img");
+  const title = document.querySelector<HTMLElement>("#zoom-modal-title");
+  const closeBtn = document.querySelector<HTMLButtonElement>("#zoom-modal-close");
+  const triggers = Array.from(document.querySelectorAll<HTMLElement>("[data-zoom-trigger]"));
 
-/* ---------- Uzmanlık bilgi bannerı ---------- */
+  if (!modal || !img || !title) return;
 
-function initSkillBanner(): void {
-  const box = document.querySelector<HTMLElement>("[data-skill-modal]");
-  const title = document.querySelector<HTMLElement>("[data-skill-modal-title]");
-  const desc = document.querySelector<HTMLElement>("[data-skill-modal-desc]");
-  const close = document.querySelector<HTMLButtonElement>("[data-skill-close]");
-  if (!box || !title || !desc || !close) return;
-
-  let opener: HTMLElement | null = null;
-  const hide = (): void => {
-    box.hidden = true;
-    opener?.focus();
+  const show = (src: string, label: string): void => {
+    img.src = src;
+    img.alt = label;
+    title.textContent = label;
+    modal.hidden = false;
+    closeBtn?.focus();
   };
 
-  document.querySelectorAll<HTMLElement>("[data-skill]").forEach((el) => {
-    el.addEventListener("click", () => {
-      opener = el;
-      title.textContent = el.dataset.skillTitle ?? "";
-      desc.textContent = el.dataset.skillDesc ?? "";
-      box.hidden = false;
-      close.focus();
+  const hide = (): void => {
+    modal.hidden = true;
+    img.src = "data:,";
+  };
+
+  triggers.forEach((t) => {
+    t.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const src = t.dataset.zoomTrigger;
+      const label = t.dataset.zoomTitle ?? "";
+      if (src) show(src, label);
     });
   });
 
-  close.addEventListener("click", hide);
-  box.addEventListener("click", (event) => {
-    if (event.target === box) hide();
-  });
-  addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && !box.hidden) hide();
-  });
-}
-
-/* ---------- Çalışılan gemi tipleri: bordo blueprint galerisi ---------- */
-
-function initFleetGallery(): void {
-  const box = document.querySelector<HTMLElement>("[data-fleet-modal]");
-  const image = document.querySelector<HTMLImageElement>("[data-fleet-modal-image]");
-  const close = document.querySelector<HTMLButtonElement>("[data-fleet-close]");
-  if (!box || !image || !close) return;
-
-  let opener: HTMLElement | null = null;
-  const hide = (): void => {
-    box.hidden = true;
-    opener?.focus();
-  };
-
-  document.querySelectorAll<HTMLElement>("[data-fleet-card]").forEach((card) => {
-    card.addEventListener("click", () => {
-      opener = card;
-      image.src = card.dataset.fleetImage ?? "data:,";
-      image.alt = card.dataset.fleetTitle ?? "";
-      box.hidden = false;
-      close.focus();
-    });
+  closeBtn?.addEventListener("click", hide);
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) hide();
   });
 
-  close.addEventListener("click", hide);
-  box.addEventListener("click", (event) => {
-    if (event.target === box) hide();
-  });
-  addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && !box.hidden) hide();
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !modal.hidden) hide();
   });
 }
+
+/* ==========================================================================
+   Bootstrap
+   ========================================================================== */
 
 initTheme();
-initFilters();
-initReveal();
-initCards();
+initOverlay();
+initCareerFilters();
+initSkillsTabs();
 initZoom();
-initSkillBanner();
-initFleetGallery();
-bootShip();
-frame();
-addEventListener("scroll", onScroll, { passive: true });
-addEventListener("resize", onScroll, { passive: true });
-addEventListener("load", onScroll, { once: true });
-addEventListener("orientationchange", () => setTimeout(onScroll, 180), { passive: true });
