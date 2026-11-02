@@ -1,556 +1,728 @@
 /**
  * data.ts + copy.ts → statik HTML (derleme anında).
- *
- * İşaretleme ve satır içi stiller eski bskn.tr sitesiyle (Claude Design, 59d204b7)
- * birebir aynıdır; `data-dc-tpl` öznitelikleri de korunur, çünkü eski sitenin
- * stil dosyaları (styles/page.css) bu özniteliklere göre yazılmıştır.
+ * BSKN.tr 10-Modüllü Bento Portfolyo Sistemi.
  */
-import { existsSync } from "node:fs";
-import { fileURLToPath } from "node:url";
 import {
   CAREER,
-  BMMS_CONTINUATION,
   CERTIFICATES,
-  FLEET_NAME,
   MEMBERSHIPS,
   PERSON,
   SKILLS,
-  START_YEAR,
   STATS,
   TYPE_LABEL,
-  fleetRanges,
   type Lang,
-  type Post,
   type VesselType,
 } from "../data.ts";
-import { NUMBER_WORDS, copyFor, type Copy } from "../copy.ts";
+import { copyFor, type Copy } from "../copy.ts";
 
 export const LANG_PATH: Record<Lang, string> = { tr: "/", en: "/en/" };
 
-const PUBLIC = fileURLToPath(new URL("../../public/", import.meta.url));
-const hasUpload = (f?: string): f is string => !!f && existsSync(PUBLIC + "uploads/" + f.split("?", 1)[0]);
-
 const esc = (s: string): string =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-const i = (s: string): string => `<span class="sc-interp">${esc(s)}</span>`;
+
 const r = (lang: Lang): string => (lang === "tr" ? "" : "../");
-
-/** WebGL yoksa görünen sabit blueprint gemi (yandan). Canlı sahne yüklenince gizlenir. */
-const SHIP_SVG = `<svg class="ship__fallback" viewBox="0 0 480 300" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.2">
-<path d="M40 170 L412 170 L446 150 L452 136 L60 136 L40 150 Z"/>
-<path d="M58 170 L60 196 L410 196 L440 172" stroke-opacity=".45"/>
-<path d="M50 160 L430 160" stroke-width="1.8"/>
-<g stroke-opacity=".8">${Array.from({ length: 7 }, (_, i) => `<rect x="${130 + i * 40}" y="128" width="28" height="8"/>`).join("")}</g>
-<path d="M66 136 L66 96 L104 96 L104 136 M60 96 L112 96 M60 90 L112 90 L112 96 M74 96 L74 72 L88 72 L88 96 M420 136 L420 108 M412 116 L428 116"/>
-<g stroke-opacity=".35">${Array.from({ length: 9 }, (_, i) => `<path d="M${10 + i * 8} ${206 + i * 10} Q ${240} ${200 + i * 10 - 6} ${470 - i * 8} ${206 + i * 10}"/>`).join("")}</g>
-</svg>`;
-
-/** Filo galerisinde her kategori için kariyer kayıtlarındaki temsili görsel. */
-const FLEET_IMAGE: Record<Exclude<VesselType, "shore">, string> = {
-  tanker: "fleet-blueprints/tanker.webp",
-  bulk: "fleet-blueprints/bulk-carrier.webp",
-  capesize: "fleet-blueprints/capesize.webp",
-  roro: "fleet-blueprints/ro-ro.webp",
-  power: "fleet-blueprints/powership.webp",
-  yard: "fleet-blueprints/shipyard-drydock.webp",
-};
-
-/* ---------------- head ---------------- */
 
 export function renderHead(lang: Lang, siteUrl: string, verification: { google: string; bing: string }): string {
   const c = copyFor(lang);
-  const url = siteUrl + LANG_PATH[lang];
-  const img = `${siteUrl}/og-image.jpg`;
-  const data = {
+  const canonical = `${siteUrl}${LANG_PATH[lang]}`;
+    
+  const schema = {
     "@context": "https://schema.org",
     "@graph": [
-      { "@type": "WebSite", "@id": `${siteUrl}/#website`, url: siteUrl + "/", name: "bskn.tr", inLanguage: ["tr", "en"] },
       {
         "@type": "Person",
         "@id": `${siteUrl}/#person`,
         name: PERSON.name,
-        jobTitle: lang === "tr" ? "Uzakyol Baş Mühendisi" : "Ocean-Going Chief Engineer",
-        url: siteUrl + "/",
+        jobTitle: lang === "tr" ? "Uzakyol Gemi Baş Mühendisi" : "Ocean-Going Chief Engineer",
+        description: c.description,
         email: `mailto:${PERSON.email}`,
-        telephone: PERSON.phone.replace(/\s/g, ""),
-        address: { "@type": "PostalAddress", addressLocality: "Kadıköy, İstanbul", addressCountry: "TR" },
-        alumniOf: { "@type": "CollegeOrUniversity", name: "Istanbul Technical University" },
-        knowsLanguage: ["tr", "en"],
-        memberOf: MEMBERSHIPS.map((m) => ({ "@type": "Organization", name: m.short })),
+        telephone: PERSON.phone,
+        url: siteUrl,
+        sameAs: [PERSON.projectSite],
+        alumniOf: {
+          "@type": "EducationalOrganization",
+          name: "İstanbul Teknik Üniversitesi Denizcilik Fakültesi",
+        },
       },
       {
         "@type": "ProfilePage",
-        "@id": `${url}#page`,
-        url,
+        "@id": `${canonical}#webpage`,
+        url: canonical,
         name: c.htmlTitle,
-        description: c.description,
-        inLanguage: lang,
         isPartOf: { "@id": `${siteUrl}/#website` },
-        mainEntity: { "@id": `${siteUrl}/#person` },
+        about: { "@id": `${siteUrl}/#person` },
+        inLanguage: lang,
       },
     ],
   };
-  const verify = [
-    verification.google ? `<meta name="google-site-verification" content="${esc(verification.google)}">` : "",
-    verification.bing ? `<meta name="msvalidate.01" content="${esc(verification.bing)}">` : "",
-  ].join("");
+
   return `<title>${esc(c.htmlTitle)}</title>
-    <meta name="description" content="${esc(c.description)}">
-    <meta name="author" content="${esc(PERSON.name)}">
-    <link rel="canonical" href="${url}">
-    <link rel="alternate" hreflang="tr" href="${siteUrl}/">
-    <link rel="alternate" hreflang="en" href="${siteUrl}/en/">
-    <link rel="alternate" hreflang="x-default" href="${siteUrl}/">
-    <meta property="og:type" content="profile">
-    <meta property="og:site_name" content="bskn.tr">
-    <meta property="og:locale" content="${lang === "tr" ? "tr_TR" : "en_US"}">
-    <meta property="og:title" content="${esc(c.ogTitle)}">
-    <meta property="og:description" content="${esc(c.description)}">
-    <meta property="og:url" content="${url}">
-    <meta property="og:image" content="${img}">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="${esc(c.ogTitle)}">
-    <meta name="twitter:description" content="${esc(c.description)}">
-    <meta name="twitter:image" content="${img}">
-    ${verify}
-    <link rel="icon" href="${r(lang)}favicon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="${r(lang)}apple-touch-icon.png">
-    <link rel="manifest" href="${r(lang)}site.webmanifest">
-    <script type="application/ld+json">${JSON.stringify(data).replace(/</g, "\\u003c")}</script>`;
+<meta name="description" content="${esc(c.description)}">
+<link rel="canonical" href="${canonical}">
+<link rel="alternate" hreflang="tr" href="${siteUrl}/">
+<link rel="alternate" hreflang="en" href="${siteUrl}/en/">
+<link rel="alternate" hreflang="x-default" href="${siteUrl}/">
+<meta property="og:title" content="${esc(c.ogTitle)}">
+<meta property="og:description" content="${esc(c.description)}">
+<meta property="og:type" content="profile">
+<meta property="og:url" content="${canonical}">
+<meta property="og:image" content="${siteUrl}/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${esc(c.ogTitle)}">
+<meta name="twitter:description" content="${esc(c.description)}">
+<meta name="twitter:image" content="${siteUrl}/og-image.jpg">
+${verification?.google ? `<meta name="google-site-verification" content="${esc(verification.google)}">\n` : ""}${verification?.bing ? `<meta name="msvalidate.01" content="${esc(verification.bing)}">\n` : ""}
+<link rel="icon" type="image/svg+xml" href="${r(lang)}favicon.svg">
+<link rel="apple-touch-icon" href="${r(lang)}apple-touch-icon.png">
+<link rel="manifest" href="${r(lang)}site.webmanifest">
+<script type="application/ld+json">${JSON.stringify(schema)}</script>`;
 }
 
-/* ---------------- ortak parçalar ---------------- */
+/* ---------- Header ---------- */
 
-const KICKER =
-  "display: block; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 600; color: var(--accent-ink); margin-bottom: var(--half);";
-const H2 =
-  "font-family: var(--font-heading); font-weight: 800; font-size: clamp(28px, 3.2vw, 42px); line-height: 1.08; letter-spacing: -0.025em; margin: 0px 0px 0px -0.04em;";
+function renderHeader(lang: Lang, c: Copy): string {
+  const root = r(lang);
+  const cvPath = lang === "tr" ? `${root}cv/Murat_Can_Baskan_CV_Signature_White_TR.pdf` : `${root}cv/Murat_Can_Baskan_CV_EN.pdf`;
+  const otherPath = c.langSwitchPath;
 
-export function chipStyle(active: boolean): string {
-  return (
-    "appearance: none; cursor: pointer; font-family: var(--font-heading); font-weight: 800; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; padding: 9px 14px; border: 1px solid " +
-    (active ? "var(--accent)" : "var(--rule)") +
-    "; background: " +
-    (active ? "var(--accent)" : "none") +
-    "; color: " +
-    (active ? "var(--color-bg)" : "var(--muted)") +
-    "; transition: 0.25s;"
-  );
+  return `<header class="site-header">
+  <div class="header-container">
+    <div class="header-brand-wrap">
+      <a href="${LANG_PATH[lang]}" class="brand-link" aria-label="BSKN.tr">
+        <span class="brand-dot" aria-hidden="true"></span>
+        <span class="brand-text">BSKN.tr</span>
+      </a>
+      <div class="header-identity">
+        <span class="identity-name">${esc(PERSON.name)}</span>
+        <span class="identity-sep" aria-hidden="true">/</span>
+        <span class="identity-role">${esc(c.role)}</span>
+        <span class="identity-sep" aria-hidden="true">·</span>
+        <span class="identity-tagline">${esc(c.tagline)}</span>
+      </div>
+    </div>
+    <div class="header-controls">
+      <a href="${otherPath}" class="ctrl-btn" hreflang="${lang === "tr" ? "en" : "tr"}" title="${esc(c.langSwitchTitle)}">
+        ${esc(c.langSwitch)}
+      </a>
+      <button type="button" class="ctrl-btn" data-theme-toggle="" aria-label="${esc(c.themeToggle)}" aria-pressed="false">
+        <span data-theme-label="">${esc(c.themeToggle)}</span>
+      </button>
+      <a href="${cvPath}" class="ctrl-btn ctrl-btn--cv" data-cv-download="" target="_blank" rel="noopener noreferrer">
+        ${esc(c.cvBtn)}
+      </a>
+    </div>
+  </div>
+</header>`;
 }
 
-const pill = (active: boolean): string =>
-  "padding: 7px 9px; line-height: 1; " +
-  (active ? "background: var(--accent); color: var(--color-bg);" : "background: none; color: var(--muted);");
+/* ---------- Closed Bento Cards (Strictly Image-Free) ---------- */
 
-/* ---------------- bölümler ---------------- */
+function renderClosedCards(_lang: Lang, c: Copy): string {
+  return `<div class="bento-grid" id="bento-grid">
+    <!-- 01 PROFILE -->
+    <div class="bento-card bento-card--01" data-card="01">
+      <button type="button" class="bento-card__trigger" data-open-module="01" aria-expanded="false" aria-controls="detail-layer">
+        <div class="bento-card__head">
+          <span class="bento-card__num">${esc(c.cards.c01.num)}</span>
+          <span class="bento-card__plus" aria-hidden="true">+</span>
+        </div>
+        <div class="bento-card__body">
+          <h2 class="bento-card__title">${esc(c.cards.c01.title)}</h2>
+          <p class="bento-card__sub">${esc(c.cards.c01.sub)}</p>
+        </div>
+      </button>
+    </div>
 
-function nav(lang: Lang, c: Copy): string {
-  const href = (l: Lang): string => (l === lang ? "./" : lang === "tr" ? "en/" : "../");
-  const lk = (l: Lang): string =>
-    `<a href="${href(l)}" hreflang="${l}" lang="${l}"${l === lang ? ' aria-current="true"' : ""} style="${pill(
-      l === lang,
-    )}">${l.toUpperCase()}</a>`;
-  return `<div aria-hidden="true" data-dc-tpl="5" style="position: fixed; left: 0px; top: 0px; right: 0px; height: 3px; z-index: 70; pointer-events: none;">
-<div data-dc-tpl="6" data-progress="" style="height: 100%; width: 0%; background: var(--accent); transition: width 0.12s linear;"></div></div><nav class="nav" data-dc-tpl="7" style="position: sticky; top: 0px; z-index: 40; background: color-mix(in srgb,var(--paper) 88%,transparent); backdrop-filter: blur(10px); border-bottom: 2px solid var(--rule); padding-inline: var(--edge); gap: clamp(12px, 3vw, 32px);">
-<a class="nav-brand" data-dc-tpl="8" href="#hero" style="display: flex; align-items: center; gap: 10px; letter-spacing: -0.01em;">
-<span data-dc-tpl="9" style="width: 10px; height: 10px; background: var(--accent); flex: 0 0 auto;"></span>
-<span data-dc-tpl="10">${esc(PERSON.name)}</span>
-</a>
-<span data-dc-tpl="11" data-navlinks="" style="display: flex; align-items: center; gap: clamp(14px, 2.4vw, 28px); font-size: 12px; letter-spacing: 0.09em; text-transform: uppercase; font-weight: 600;">
-<a class="scp0" data-dc-tpl="12" href="#kariyer" style="color: var(--muted);">${i(c.navCareer)}</a>
-<a class="scp0" data-dc-tpl="13" href="#filo" style="color: var(--muted);">${i(c.navFleet)}</a>
-<a class="scp0" data-dc-tpl="14" href="#uzmanlik" style="color: var(--muted);">${i(c.navSkills)}</a>
-<a class="scp0" data-dc-tpl="15" href="#belgeler" style="color: var(--muted);">${i(c.navCerts)}</a>
-</span>
-<span data-dc-tpl="16" style="display: flex; align-items: center; gap: 8px; margin-left: auto;">
-<span data-lang-switch="" role="group" aria-label="${c.langTitle}" data-dc-tpl="17" style="display: flex; align-items: center; border: 1px solid var(--rule); background: none; padding: 0px; font-family: var(--font-heading); font-weight: 800; font-size: 11px; letter-spacing: 0.08em;">${lk(
-    "tr",
-  )}${lk("en")}</span>
-<button class="scp1" data-dc-tpl="20" data-theme-toggle="" style="width: 34px; height: 34px; display: grid; place-items: center; border: 1px solid var(--rule); background: none; color: var(--ink); cursor: pointer; font-size: 14px; line-height: 1;" title="${c.theme}" aria-label="${c.theme}" type="button"><span class="sc-interp" data-theme-glyph="">☾</span></button>
-<a class="btn btn-primary" data-cv-download="1" data-dc-tpl="21" download="" href="${r(lang)}cv/Murat_Can_Baskan_CV_Signature_White_${lang === "tr" ? "TR" : "EN"}.pdf" style="white-space: nowrap;"><span class="sc-interp cv-long">${esc(
-    c.ctaCv,
-  )}</span><span class="cv-short" aria-hidden="true">CV</span></a>
-</span></nav>`;
+    <!-- 02 CAREER / SEA EXPERIENCE -->
+    <div class="bento-card bento-card--02" data-card="02">
+      <button type="button" class="bento-card__trigger" data-open-module="02" aria-expanded="false" aria-controls="detail-layer">
+        <div class="bento-card__head">
+          <span class="bento-card__num">${esc(c.cards.c02.num)}</span>
+          <span class="bento-card__plus" aria-hidden="true">+</span>
+        </div>
+        <div class="bento-card__body">
+          <h2 class="bento-card__title">${esc(c.cards.c02.title)}</h2>
+          <p class="bento-card__sub">${esc(c.cards.c02.sub)}</p>
+        </div>
+      </button>
+    </div>
+
+    <!-- 03 PROFESSIONAL REGISTRATION -->
+    <div class="bento-card bento-card--03" data-card="03">
+      <button type="button" class="bento-card__trigger" data-open-module="03" aria-expanded="false" aria-controls="detail-layer">
+        <div class="bento-card__head">
+          <span class="bento-card__num">${esc(c.cards.c03.num)}</span>
+          <span class="bento-card__plus" aria-hidden="true">+</span>
+        </div>
+        <div class="bento-card__body">
+          <h2 class="bento-card__title">${esc(c.cards.c03.title)}</h2>
+          <p class="bento-card__sub">${esc(c.cards.c03.sub)}</p>
+        </div>
+      </button>
+    </div>
+
+    <!-- 06 EDUCATION -->
+    <div class="bento-card bento-card--06" data-card="06">
+      <button type="button" class="bento-card__trigger" data-open-module="06" aria-expanded="false" aria-controls="detail-layer">
+        <div class="bento-card__head">
+          <span class="bento-card__num">${esc(c.cards.c06.num)}</span>
+          <span class="bento-card__plus" aria-hidden="true">+</span>
+        </div>
+        <div class="bento-card__body">
+          <h2 class="bento-card__title">${esc(c.cards.c06.title)}</h2>
+          <p class="bento-card__sub">${esc(c.cards.c06.sub)}</p>
+        </div>
+      </button>
+    </div>
+
+    <!-- 08 MEMBERSHIPS -->
+    <div class="bento-card bento-card--08" data-card="08">
+      <button type="button" class="bento-card__trigger" data-open-module="08" aria-expanded="false" aria-controls="detail-layer">
+        <div class="bento-card__head">
+          <span class="bento-card__num">${esc(c.cards.c08.num)}</span>
+          <span class="bento-card__plus" aria-hidden="true">+</span>
+        </div>
+        <div class="bento-card__body">
+          <h2 class="bento-card__title">${esc(c.cards.c08.title)}</h2>
+          <p class="bento-card__sub">${esc(c.cards.c08.sub)}</p>
+        </div>
+      </button>
+    </div>
+
+    <!-- 07 CERTIFICATIONS -->
+    <div class="bento-card bento-card--07" data-card="07">
+      <button type="button" class="bento-card__trigger" data-open-module="07" aria-expanded="false" aria-controls="detail-layer">
+        <div class="bento-card__head">
+          <span class="bento-card__num">${esc(c.cards.c07.num)}</span>
+          <span class="bento-card__plus" aria-hidden="true">+</span>
+        </div>
+        <div class="bento-card__body">
+          <h2 class="bento-card__title">${esc(c.cards.c07.title)}</h2>
+          <p class="bento-card__sub">${esc(c.cards.c07.sub)}</p>
+        </div>
+      </button>
+    </div>
+
+    <!-- 05 BMMS / ENTREPRENEURSHIP -->
+    <div class="bento-card bento-card--05" data-card="05">
+      <button type="button" class="bento-card__trigger" data-open-module="05" aria-expanded="false" aria-controls="detail-layer">
+        <div class="bento-card__head">
+          <span class="bento-card__num">${esc(c.cards.c05.num)}</span>
+          <span class="bento-card__plus" aria-hidden="true">+</span>
+        </div>
+        <div class="bento-card__body">
+          <h2 class="bento-card__title">${esc(c.cards.c05.title)}</h2>
+          <p class="bento-card__sub">${esc(c.cards.c05.sub)}</p>
+        </div>
+      </button>
+    </div>
+
+    <!-- 04 MARINE TECHNOLOGY -->
+    <div class="bento-card bento-card--04" data-card="04">
+      <button type="button" class="bento-card__trigger" data-open-module="04" aria-expanded="false" aria-controls="detail-layer">
+        <div class="bento-card__head">
+          <span class="bento-card__num">${esc(c.cards.c04.num)}</span>
+          <span class="bento-card__plus" aria-hidden="true">+</span>
+        </div>
+        <div class="bento-card__body">
+          <h2 class="bento-card__title">${esc(c.cards.c04.title)}</h2>
+          <p class="bento-card__sub">${esc(c.cards.c04.sub)}</p>
+        </div>
+      </button>
+    </div>
+
+    <!-- 09 PROJECTS & TECHNOLOGY -->
+    <div class="bento-card bento-card--09" data-card="09">
+      <button type="button" class="bento-card__trigger" data-open-module="09" aria-expanded="false" aria-controls="detail-layer">
+        <div class="bento-card__head">
+          <span class="bento-card__num">${esc(c.cards.c09.num)}</span>
+          <span class="bento-card__plus" aria-hidden="true">+</span>
+        </div>
+        <div class="bento-card__body">
+          <h2 class="bento-card__title">${esc(c.cards.c09.title)}</h2>
+          <p class="bento-card__sub">${esc(c.cards.c09.sub)}</p>
+        </div>
+      </button>
+    </div>
+
+    <!-- 10 CONTACT -->
+    <div class="bento-card bento-card--10" data-card="10">
+      <button type="button" class="bento-card__trigger" data-open-module="10" aria-expanded="false" aria-controls="detail-layer">
+        <div class="bento-card__head">
+          <span class="bento-card__num">${esc(c.cards.c10.num)}</span>
+          <span class="bento-card__plus" aria-hidden="true">+</span>
+        </div>
+        <div class="bento-card__body">
+          <h2 class="bento-card__title">${esc(c.cards.c10.title)}</h2>
+          <p class="bento-card__sub">${esc(c.cards.c10.sub)}</p>
+        </div>
+      </button>
+    </div>
+  </div>`;
 }
 
-function hero(lang: Lang, c: Copy): string {
-  const n = NUMBER_WORDS[lang][CAREER.length] ?? String(CAREER.length);
-  return `<section data-dc-tpl="24" id="hero" style="position: relative; max-width: 1440px; margin: 0px auto; padding: calc(var(--leading)*2.5) var(--edge) calc(var(--leading)*2); overflow: hidden;">
-<div aria-hidden="true" data-dc-tpl="25" data-par="0.14" style="position: absolute; right: -2vw; top: 8%; font-family: var(--font-heading); font-weight: 800; font-size: clamp(120px, 22vw, 340px); line-height: 0.8; letter-spacing: -0.04em; color: var(--faint); pointer-events: none; white-space: nowrap;">${START_YEAR}</div>
-<div data-dc-tpl="26" style="position: relative; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); gap: calc(var(--leading)*1.5) clamp(24px,5vw,72px); align-items: end;">
-<div data-dc-tpl="27" style="min-width: 0px;">
-<div data-dc-tpl="28" style="display: flex; align-items: center; gap: 12px; margin-bottom: var(--leading);">
-<span data-dc-tpl="29" style="width: 56px; height: 2px; background: var(--accent); flex: 0 0 auto; transform-origin: left center; animation: 0.85s cubic-bezier(0.2, 0.8, 0.2, 1) 0.05s both mcbGrowX;"></span>
-<span data-dc-tpl="30" style="font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 600; color: var(--accent-ink); animation: 0.8s cubic-bezier(0.16, 0.8, 0.24, 1) 0.18s both mcbRise;">${i(
-    c.heroKicker,
-  )}</span>
-</div>
-<h1 data-dc-tpl="31" style="font-family: var(--font-heading); font-weight: 800; font-size: clamp(46px, 7.2vw, 104px); line-height: 1.02; letter-spacing: -0.035em; margin: 0 0 var(--leading) -0.058em;">
-<span data-dc-tpl="32" style="display: block; overflow: hidden; padding-bottom: 0.04em;"><span data-dc-tpl="33" style="display: block; animation: 1.05s cubic-bezier(0.16, 0.85, 0.25, 1) 0.12s both mcbWipeUp;">Murat Can</span></span>
-<span data-dc-tpl="34" style="display: block; overflow: hidden; padding-bottom: 0.04em;"><span data-dc-tpl="35" style="display: block; animation: 1.05s cubic-bezier(0.16, 0.85, 0.25, 1) 0.26s both mcbWipeUp;">Başkan</span></span>
-</h1>
-<p data-dc-tpl="36" style="font-size: clamp(16px, 1.5vw, 19px); line-height: var(--leading); max-width: 46ch; margin: 0 0 var(--leading); color: var(--ink); animation: 0.9s cubic-bezier(0.16, 0.8, 0.24, 1) 0.46s both mcbRise;">${esc(
-    c.heroLead(n),
-  )}</p>
-<div data-dc-tpl="38" style="animation: 0.9s cubic-bezier(0.16, 0.8, 0.24, 1) 0.58s both mcbRise; display: flex; flex-wrap: wrap; gap: 10px; align-items: center;">
-<a class="btn btn-primary" data-dc-tpl="39" href="#kariyer">${i(c.ctaCareer)}</a>
-<a class="btn btn-secondary" data-cv-download="1" data-dc-tpl="40" download="" href="${r(lang)}cv/Murat_Can_Baskan_CV_Signature_White_${lang === "tr" ? "TR" : "EN"}.pdf">${i(
-    c.ctaCv,
-  )} — PDF</a>
-</div>
-<div data-dc-tpl="41" style="display: flex; align-items: center; gap: 10px; margin-top: calc(var(--leading)*1.5); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);">
-<span data-dc-tpl="42" style="width: 8px; height: 8px; background: var(--accent); animation: 2.4s ease-in-out infinite mcbPulse; flex: 0 0 auto;"></span>
-<span data-dc-tpl="43">${i(c.heroStatus)}</span>
-</div>
-</div>
-<figure data-dc-tpl="44" style="margin: 0px; min-width: 0px; animation: 1s cubic-bezier(0.16, 0.8, 0.24, 1) 0.34s both mcbRise;">
-<div class="ship" data-ship="" data-callouts="${esc(JSON.stringify(c.shipCallouts))}">
-<div class="ship__stage" data-ship-stage="" role="img" aria-label="${esc(c.shipLabel)}">${SHIP_SVG}</div>
-<div class="ship__hud" data-ship-hud=""></div>
-<span class="ship__note" aria-hidden="true">${esc(c.shipNote)}</span>
-<a class="ship__cta" href="${PERSON.projectSite}${lang === "en" ? "/en/" : "/"}" hreflang="${lang}">${esc(c.shipCta)}</a>
-</div>
-</figure>
-</div>
-</section>`;
+/* ---------- Open Module Templates (01 to 10) ---------- */
+
+function renderOpenModule01(_lang: Lang, c: Copy): string {
+  return `<section class="module-open-pane" data-pane="01" hidden>
+    <div class="profile-open-hero">
+      <h2 class="profile-open-title">${esc(PERSON.name)}</h2>
+      <p class="profile-open-sub">${esc(c.role)}</p>
+      <p class="profile-open-tagline">${esc(c.tagline)}</p>
+    </div>
+
+    <div class="profile-narrative-grid">
+      <article class="narrative-card">
+        <h3>${esc(c.profile.seaTitle)}</h3>
+        <p>${esc(c.profile.seaDesc)}</p>
+      </article>
+      <article class="narrative-card">
+        <h3>${esc(c.profile.systemsTitle)}</h3>
+        <p>${esc(c.profile.systemsDesc)}</p>
+      </article>
+      <article class="narrative-card">
+        <h3>${esc(c.profile.techTitle)}</h3>
+        <p>${esc(c.profile.techDesc)}</p>
+      </article>
+    </div>
+
+    <div class="profile-highlights-row">
+      ${c.profile.highlights
+        .map(
+          (h) => `<div class="highlight-box">
+            <div class="hl-val">${esc(h.val)}</div>
+            <div class="hl-lbl">${esc(h.label)}</div>
+          </div>`,
+        )
+        .join("")}
+    </div>
+  </section>`;
 }
 
-function stats(lang: Lang, c: Copy): string {
-  const items = STATS.map(
-    (s) => `<div data-dc-tpl="51" style="min-width: 0px;">
-<p data-count="${s.value}" data-dc-tpl="52" style="font-family: var(--font-heading); font-weight: 800; font-size: clamp(38px, 4.4vw, 64px); line-height: 1; letter-spacing: -0.04em; color: var(--accent); margin: 0px 0px 12px -0.045em;">${s.value}</p>
-<p data-dc-tpl="53" style="font-size: 11px; line-height: var(--half); letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin: 0px; max-width: 22ch;">${i(
-      s.label[lang],
-    )}</p>
-</div>`,
-  ).join("\n");
-  return `<section aria-label="${c.statsKicker}" data-dc-tpl="47" style="border-top: 2px solid var(--rule); border-bottom: 2px solid var(--rule);">
-<div data-dc-tpl="48" style="max-width: 1440px; margin: 0px auto; padding: calc(var(--leading)*1.6) var(--edge);">
-<div data-dc-tpl="49" data-reveal="" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(190px, 40%), 1fr)); gap: var(--leading) clamp(20px,4vw,64px);">
-${items}
-</div>
-</div>
-</section>`;
+function renderOpenModule02(lang: Lang, c: Copy): string {
+  const root = r(lang);
+  const filterKeys: (VesselType | "all")[] = ["all", "tanker", "bulk", "capesize", "roro", "power", "yard", "shore"];
+
+  return `<section class="module-open-pane" data-pane="02" hidden>
+    <div class="career-stats-row">
+      <div class="career-stat-card">
+        <span class="career-stat-val">${STATS[0]?.value ?? 0}</span>
+        <span class="career-stat-lbl">${esc(c.career.statsYears)}</span>
+      </div>
+      <div class="career-stat-card">
+        <span class="career-stat-val">${STATS[1]?.value ?? 0}</span>
+        <span class="career-stat-lbl">${esc(c.career.statsPosts)}</span>
+      </div>
+      <div class="career-stat-card">
+        <span class="career-stat-val">${STATS[2]?.value ?? 0}+</span>
+        <span class="career-stat-lbl">${esc(c.career.statsCompanies)}</span>
+      </div>
+      <div class="career-stat-card">
+        <span class="career-stat-val">${STATS[3]?.value ?? 0}</span>
+        <span class="career-stat-lbl">${esc(c.career.statsTypes)}</span>
+      </div>
+    </div>
+
+    <div class="career-filters" role="group" aria-label="Filters">
+      ${filterKeys
+        .map(
+          (k, i) => `<button type="button" class="career-chip${i === 0 ? " is-active" : ""}" data-filter="${k}" aria-pressed="${i === 0 ? "true" : "false"}">
+            ${esc(TYPE_LABEL[k][lang])}
+          </button>`,
+        )
+        .join("")}
+    </div>
+
+    <div class="career-posts-list">
+      ${CAREER.map((p) => {
+        const imgSrc = p.img ? `${root}img/${p.img}` : "";
+        return `<article class="career-post-entry" data-post-type="${p.type}">
+          <div class="post-content">
+            <div class="post-head">
+              <span class="post-year">${esc(p.years)}</span>
+              <span class="post-role">${esc(p.role[lang])}</span>
+              ${p.current ? `<span class="post-current-badge">${esc(c.career.currentBadge)}</span>` : ""}
+            </div>
+            <div class="post-org-ship">
+              ${p.org ? `<strong>${esc(p.org)}</strong> · ` : ""}
+              <span>${esc(p.ship)}</span>
+            </div>
+            <p class="post-short">${esc(p.short[lang])}</p>
+            <p class="post-long">${esc(p.long[lang])}</p>
+            <div class="post-tags">
+              ${p.tags.map((t) => `<span class="post-tag">${esc(t)}</span>`).join("")}
+            </div>
+          </div>
+          ${
+            imgSrc
+              ? `<div class="post-media">
+                  <img src="${imgSrc}" alt="${esc(p.ship)}" loading="lazy">
+                </div>`
+              : ""
+          }
+        </article>`;
+      }).join("")}
+    </div>
+  </section>`;
 }
 
-/** Şirket adı Türkçe mi? (büyük harfte "i/İ" doğru olsun diye) */
-const orgLang = (org: string): Lang =>
-  /[çğıöşüÇĞİÖŞÜ]|Denizcilik|Tersane|sektör|girişim/.test(org) ? "tr" : "en";
-
-function post(p: Post, lang: Lang, idx: number, c: Copy): string {
-  const ship = p.shipLabel?.[lang] ?? p.ship;
-  const org = p.orgLabel?.[lang] ?? p.org;
-  const shipTextLang = p.shipLabel ? lang : (p.shipLang ?? "en");
-  // Büyük harfe çevrilen satırlarda doğru "i/İ" için: şirket adı Türkçe, gemi adı İngilizce kuralla.
-  const orgLine = [
-    org ? `<span class="sc-interp" lang="${orgLang(org)}">${esc(org)}</span>` : "",
-    ship ? `<span class="sc-interp" lang="${shipTextLang}">${esc(ship)}</span>` : "",
-  ]
-    .filter(Boolean)
-    .join(" · ");
-  const yearLabel = p.status?.[lang] ?? p.years;
-  const yearSize = yearLabel.length > 5 ? "clamp(16px, 1.7vw, 22px)" : "clamp(23px, 2.5vw, 32px)";
-  const mediaStyle =
-    p.id === "gemak"
-      ? "display: block; width: 100%; aspect-ratio: 16 / 10; box-sizing: border-box; object-fit: contain; object-position: center; background: #fff; padding: clamp(10px, 1.5vw, 18px); filter: none; transform: none;"
-      : "display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; background: var(--surface); filter: grayscale(1) contrast(1.08); transform: scale(1.12); transition: transform 1.1s cubic-bezier(0.2, 0.7, 0.2, 1), filter 0.5s;";
-  const media = p.img
-    ? `<img alt="${esc(ship || p.org)}" data-dc-tpl="79" src="${r(lang)}img/${p.img}" loading="lazy" decoding="async" style="${mediaStyle}"/>`
-    : `<span data-dc-tpl="79" data-noimg="" style="display: grid; place-items: center; width: 100%; aspect-ratio: 16 / 10; background: var(--surface); font-family: var(--font-heading); font-weight: 800; font-size: clamp(22px, 2.4vw, 34px); letter-spacing: -0.02em; color: var(--muted);">${esc(
-        ship,
-      )}</span>`;
-  const tags = p.tags
-    .map(
-      (t) =>
-        `<span data-dc-tpl="87" style="display: inline-block; padding: 6px 10px; border: 1px solid var(--rule); font-size: 11px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted);" lang="tr">${i(
-          t,
-        )}</span>`,
-    )
-    .join("\n");
-  return `<div data-dc-tpl="66" data-reveal="" data-type="${p.type}" data-post-id="${esc(p.id)}" style="transition-delay: ${Math.min(0.5, idx * 0.075)}s;">
-<div class="scp2" data-dc-tpl="67" tabindex="0" role="button" aria-expanded="false" style="position: relative; display: block; width: 100%; text-align: left; border-top: 2px solid var(--rule); background: none; padding: calc(var(--leading)*0.9) 0 calc(var(--leading)*0.9) clamp(16px,3vw,40px);">
-<span aria-hidden="true" data-dc-tpl="68" style="position: absolute; left: 0px; top: calc(var(--leading)*0.9 + 6px); width: 10px; height: 10px; background: var(--accent); transform: scale(1) rotate(0deg); transition: transform 0.55s cubic-bezier(0.2, 0.7, 0.2, 1);"></span>
-<span data-dc-tpl="69" style="display: grid; grid-template-columns: minmax(128px, 13%) minmax(0px, 1fr); gap: clamp(12px, 2.4vw, 36px); align-items: start;">
-<span data-dc-tpl="70" style='font-family: var(--font-heading); font-weight: 800; font-size: ${yearSize}; line-height: 1.05; letter-spacing: -0.03em; color: var(--ink); white-space: nowrap; font-feature-settings: "tnum";'>${i(yearLabel)}</span>
-<span data-dc-tpl="71" style="display: block; min-width: 0px;">
-<span data-dc-tpl="72" style="display: block; font-family: var(--font-heading); font-weight: 800; font-size: clamp(19px, 1.8vw, 24px); line-height: 1.14; letter-spacing: -0.02em; color: var(--ink);">${i(
-    p.role[lang],
-  )}</span>
-<span data-dc-tpl="73" style="display: block; margin-top: 7px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-ink);">${orgLine}</span>
-<span data-dc-tpl="74" style="display: block; margin-top: 9px; font-size: 15px; line-height: var(--leading); color: var(--muted); max-width: 62ch;">${i(
-    p.short[lang],
-  )}</span>
-</span>
-<span class="peek__plus" aria-hidden="true">+</span>
-</span>
-<span data-dc-tpl="75" style="display: grid; grid-template-rows: 0fr;">
-<span class="peek-close" aria-hidden="true">× ${esc(c.closeCard)}</span>
-<span data-dc-tpl="76" style="display: block; overflow: hidden; min-height: 0px;">
-<span data-dc-tpl="77" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: var(--leading) clamp(20px,3vw,48px); padding: var(--leading) 0 var(--half);">
-<span data-dc-tpl="78" style="display: block; min-width: 0px;">
-${media}
-<span data-dc-tpl="80" style="display: flex; justify-content: space-between; gap: 12px; margin-top: 10px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);">
-<span data-dc-tpl="81" lang="${shipTextLang}">${i(ship || org)}</span>
-<span data-dc-tpl="82">${i(TYPE_LABEL[p.type][lang])}</span>
-</span>
-</span>
-<span data-dc-tpl="83" style="display: block; min-width: 0px;">
-<span data-dc-tpl="84" style="display: block; font-size: 16px; line-height: var(--leading); color: var(--ink); max-width: 54ch;">${i(
-    p.long[lang],
-  )}</span>
-<span data-dc-tpl="85" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: var(--leading);">
-${tags}
-</span>
-</span>
-</span>
-</span>
-</span>
-</div>
-</div>`;
+function renderOpenModule03(lang: Lang, c: Copy): string {
+  const root = r(lang);
+  return `<section class="module-open-pane" data-pane="03" hidden>
+    <div class="reg-layout">
+      <div class="reg-info">
+        <div class="reg-status-pill">${esc(c.reg.statusBadge)} · ${esc(c.reg.statusLabel)}</div>
+        <h2 style="font-size: clamp(22px, 2.4vw, 32px); font-weight: 700; color: #ffffff; margin: 0 0 8px;">
+          ${esc(c.reg.title)}
+        </h2>
+        <p style="font-size: 15px; font-weight: 600; color: var(--burgundy-bright); margin: 0 0 16px;">
+          ${esc(c.reg.grade)}
+        </p>
+        <p class="reg-body">${esc(c.reg.body)}</p>
+        <ul class="reg-notes-list">
+          ${c.reg.notes.map((n) => `<li>${esc(n)}</li>`).join("")}
+        </ul>
+      </div>
+      <div class="reg-asset-box">
+        <img src="${root}uploads/imarest.jpg" alt="IMarEST" loading="lazy">
+        <p style="font-size: 12px; color: var(--card-text-muted); margin: 0;">
+          ${esc(c.reg.institution)}
+        </p>
+      </div>
+    </div>
+  </section>`;
 }
 
-function career(lang: Lang, c: Copy): string {
-  const used = new Set(CAREER.map((p) => p.type));
-  const keys: (VesselType | "all")[] = ["all", "tanker", "bulk", "capesize", "roro", "power", "yard", "shore"];
-  const chips = keys
-    .filter((k) => k === "all" || used.has(k))
-    .map(
-      (k) =>
-        `<button data-dc-tpl="62" data-filter="${k}" aria-pressed="${k === "all"}" style="${chipStyle(
-          k === "all",
-        )}" type="button">${i(TYPE_LABEL[k][lang])}</button>`,
-    )
-    .join("\n");
-  return `<section data-dc-tpl="54" id="kariyer" style="max-width: 1440px; margin: 0px auto; padding: calc(var(--leading)*3) var(--edge) calc(var(--leading)*2);">
-<div data-dc-tpl="55" data-reveal="" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: var(--leading) clamp(24px,4vw,64px); align-items: end; margin-bottom: calc(var(--leading)*1.5);">
-<div data-dc-tpl="56" style="min-width: 0px;">
-<span data-dc-tpl="57" style="${KICKER}">${i(c.careerKicker)}</span>
-<h2 data-dc-tpl="58" style="font-family: var(--font-heading); font-weight: 800; font-size: clamp(32px, 4vw, 56px); line-height: 1.06; letter-spacing: -0.03em; margin: 0px 0px 0px -0.04em;">${i(
-    c.careerTitle,
-  )}</h2>
-</div>
-<p data-dc-tpl="59" style="font-size: 14px; line-height: var(--leading); color: var(--muted); margin: 0px; max-width: 34ch;">${i(
-    c.careerHint,
-  )}</p>
-</div>
-<div data-dc-tpl="60" data-reveal="" data-filters="" role="group" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: calc(var(--leading)*1.2);">
-${chips}
-</div>
-<div data-dc-tpl="63" style="position: relative; padding-left: 0px;">
-<svg aria-hidden="true" data-bmms-branch="" preserveAspectRatio="none"><path data-bmms-branch-rail=""></path><path data-bmms-branch-path="" pathLength="1"></path><circle data-bmms-target="" r="2.8"></circle><circle data-bmms-origin="" r="3.4"></circle></svg>
-<div aria-hidden="true" data-dc-tpl="64" data-line="" style="position: absolute; left: 4px; top: 0px; bottom: 0px; width: 2px; background: var(--accent); transform-origin: center top; transform: scaleY(0);"></div>
-${post(BMMS_CONTINUATION, lang, 0, c)}
-${CAREER.map((p, n) => post(p, lang, n, c)).join("\n")}
-<div data-dc-tpl="88" style="border-top: 2px solid var(--rule);"></div>
-</div>
-<p style="margin: var(--half) 0 0; font-size: 11px; letter-spacing: 0.06em; color: var(--muted);">${esc(c.photoNote)}</p>
-</section>`;
+function renderOpenModule04(lang: Lang, c: Copy): string {
+  // Map 13 canonical skills into the 6 progressive disclosure categories
+  const categorySkills: Record<string, { title: string; desc: string }[]> = {
+    systems: [
+      { title: SKILLS[0]!.items[0]!.title[lang], desc: SKILLS[0]!.items[0]!.desc[lang] },
+      { title: SKILLS[2]!.items[3]!.title[lang], desc: SKILLS[2]!.items[3]!.desc[lang] },
+    ],
+    operations: [
+      { title: SKILLS[0]!.items[2]!.title[lang], desc: SKILLS[0]!.items[2]!.desc[lang] },
+      { title: SKILLS[0]!.items[3]!.title[lang], desc: SKILLS[0]!.items[3]!.desc[lang] },
+      { title: SKILLS[0]!.items[4]!.title[lang], desc: SKILLS[0]!.items[4]!.desc[lang] },
+    ],
+    reliability: [
+      { title: SKILLS[0]!.items[1]!.title[lang], desc: SKILLS[0]!.items[1]!.desc[lang] },
+      { title: SKILLS[2]!.items[1]!.title[lang], desc: SKILLS[2]!.items[1]!.desc[lang] },
+    ],
+    energy: [
+      { title: SKILLS[1]!.items[0]!.title[lang], desc: SKILLS[1]!.items[0]!.desc[lang] },
+      { title: SKILLS[1]!.items[1]!.title[lang], desc: SKILLS[1]!.items[1]!.desc[lang] },
+      { title: SKILLS[1]!.items[2]!.title[lang], desc: SKILLS[1]!.items[2]!.desc[lang] },
+    ],
+    assurance: [
+      { title: SKILLS[2]!.items[0]!.title[lang], desc: SKILLS[2]!.items[0]!.desc[lang] },
+    ],
+    leadership: [
+      { title: SKILLS[1]!.items[3]!.title[lang], desc: SKILLS[1]!.items[3]!.desc[lang] },
+      { title: SKILLS[2]!.items[2]!.title[lang], desc: SKILLS[2]!.items[2]!.desc[lang] },
+    ],
+  };
+
+  return `<section class="module-open-pane" data-pane="04" hidden>
+    <div style="margin-bottom: 24px;">
+      <h2 style="font-size: clamp(22px, 2.4vw, 32px); font-weight: 700; color: #ffffff; margin: 0 0 6px;">
+        ${esc(c.skills.title)}
+      </h2>
+      <p style="font-size: 13px; color: var(--card-text-muted); margin: 0;">
+        ${esc(c.skills.sub)}
+      </p>
+    </div>
+
+    <div class="skills-tabs-bar" role="tablist">
+      <button type="button" class="skills-tab-btn is-active" data-skill-tab="systems" role="tab" aria-selected="true">
+        ${esc(c.skills.tabs.systems)}
+      </button>
+      <button type="button" class="skills-tab-btn" data-skill-tab="operations" role="tab" aria-selected="false">
+        ${esc(c.skills.tabs.operations)}
+      </button>
+      <button type="button" class="skills-tab-btn" data-skill-tab="reliability" role="tab" aria-selected="false">
+        ${esc(c.skills.tabs.reliability)}
+      </button>
+      <button type="button" class="skills-tab-btn" data-skill-tab="energy" role="tab" aria-selected="false">
+        ${esc(c.skills.tabs.energy)}
+      </button>
+      <button type="button" class="skills-tab-btn" data-skill-tab="assurance" role="tab" aria-selected="false">
+        ${esc(c.skills.tabs.assurance)}
+      </button>
+      <button type="button" class="skills-tab-btn" data-skill-tab="leadership" role="tab" aria-selected="false">
+        ${esc(c.skills.tabs.leadership)}
+      </button>
+    </div>
+
+    ${Object.entries(categorySkills)
+      .map(
+        ([tabKey, items]) => `<div class="skills-tab-content${tabKey === "systems" ? " is-active" : ""}" data-skill-content="${tabKey}" ${
+          tabKey === "systems" ? "" : 'style="display: none;"'
+        }>
+          <div class="skills-grid-container">
+            ${items
+              .map(
+                (item) => `<div class="skill-card-item">
+                  <h3 class="skill-card-title">${esc(item.title)}</h3>
+                  <p class="skill-card-desc">${esc(item.desc)}</p>
+                </div>`,
+              )
+              .join("")}
+          </div>
+        </div>`,
+      )
+      .join("")}
+  </section>`;
 }
 
-function fleet(lang: Lang, c: Copy): string {
-  const rows = fleetRanges()
-    .map((f) => {
-      const title = FLEET_NAME[f.type][lang];
-      const image = `${r(lang)}img/${FLEET_IMAGE[f.type]}`;
-      return `<button type="button" data-fleet-card="" data-fleet-title="${esc(title)}" data-fleet-range="${esc(
-        f.range,
-      )}" data-fleet-image="${image}" aria-haspopup="dialog" data-dc-tpl="97">
-<span class="fleet-card__dot" aria-hidden="true"></span>
-<span class="fleet-card__copy">
-<span data-dc-tpl="99">${i(title)}</span>
-<span data-dc-tpl="100">${i(f.range)}</span>
-</span>
-<span class="open-cue fleet-card__open" aria-hidden="true">+</span>
-</button>`;
-    })
-    .join("\n");
-  return `<section data-dc-tpl="89" id="filo" style="border-top: 2px solid var(--rule);">
-<div data-dc-tpl="90" style="max-width: 1440px; margin: 0px auto; padding: calc(var(--leading)*2.4) var(--edge);">
-<div data-dc-tpl="91" data-reveal="" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: var(--leading) clamp(24px,5vw,80px); align-items: start;">
-<div data-dc-tpl="92" style="min-width: 0px;">
-<span data-dc-tpl="93" style="${KICKER}">${i(c.fleetKicker)}</span>
-<h2 data-dc-tpl="94" style="${H2} max-width: 16ch;">${i(c.fleetTitle)}</h2>
-</div>
-<div data-dc-tpl="95" style="min-width: 0px;">
-${rows}
-</div>
-</div>
-</div>
-</section>`;
+function renderOpenModule05(lang: Lang, c: Copy): string {
+  const root = r(lang);
+  return `<section class="module-open-pane" data-pane="05" hidden>
+    <div class="bmms-open-grid">
+      <div>
+        <div style="display: inline-block; padding: 3px 8px; font-size: 10px; font-weight: 700; letter-spacing: 0.12em; background: var(--burgundy); color: #ffffff; border-radius: 4px; margin-bottom: 12px;">
+          ${esc(c.bmms.badge)}
+        </div>
+        <h2 style="font-size: clamp(24px, 2.6vw, 36px); font-weight: 700; color: #ffffff; margin: 0 0 12px;">
+          ${esc(c.bmms.title)}
+        </h2>
+        <p class="bmms-lead">${esc(c.bmms.lead)}</p>
+        <p class="bmms-body">${esc(c.bmms.body)}</p>
+        <div class="bmms-programs-row">
+          ${c.bmms.programs.map((p) => `<span class="bmms-program-tag">${esc(p)}</span>`).join("")}
+        </div>
+        <div>
+          <a href="${c.bmms.ctaUrl}" target="_blank" rel="noopener noreferrer" class="bmms-cta-btn">
+            ${esc(c.bmms.cta)}
+          </a>
+        </div>
+      </div>
+      <div class="bmms-media-box">
+        <img src="${root}img/bskn-net.webp" alt="BMMS Maritime Technology" loading="lazy">
+      </div>
+    </div>
+  </section>`;
 }
 
-function skills(lang: Lang, c: Copy): string {
-  const groups = SKILLS.map(
-    (g) => `<div data-dc-tpl="109" data-reveal="" style="min-width: 0px; border-top: 2px solid var(--rule); padding-top: var(--half);">
-<h3 data-dc-tpl="110" style="font-family: var(--font-heading); font-weight: 800; font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; margin: 0 0 var(--half); color: var(--ink);">${i(
-      g.title[lang],
-    )}</h3>
-${g.items
-  .map(
-    (it) => `<button type="button" data-skill="" data-skill-title="${esc(it.title[lang])}" data-skill-desc="${esc(
-      it.desc[lang],
-    )}" aria-haspopup="dialog" data-dc-tpl="112" style="appearance: none; width: 100%; display: flex; gap: 10px; align-items: baseline; margin: 0px; padding: 9px 0px; border: 0px; border-top: 1px solid var(--rule); background: transparent; font: inherit; font-size: 15px; line-height: var(--leading); text-align: left; color: var(--muted); cursor: pointer;">
-<span aria-hidden="true" data-dc-tpl="113" style="width: 6px; height: 6px; background: var(--accent); flex: 0 0 auto; transform: translateY(-2px);"></span>
-<span data-dc-tpl="114">${i(it.title[lang])}</span>
-<span class="open-cue skill-open-cue" aria-hidden="true">+</span>
-</button>`,
-  )
-  .join("\n")}
-</div>`,
-  ).join("\n");
-  return `<section data-dc-tpl="102" id="uzmanlik" style="border-top: 2px solid var(--rule);">
-<div data-dc-tpl="103" style="max-width: 1440px; margin: 0px auto; padding: calc(var(--leading)*2.4) var(--edge);">
-<div data-dc-tpl="104" data-reveal="" style="margin-bottom: calc(var(--leading)*1.4);">
-<span data-dc-tpl="105" style="${KICKER}">${i(c.skillsKicker)}</span>
-<h2 data-dc-tpl="106" style="${H2}">${i(c.skillsTitle)}</h2>
-</div>
-<div data-dc-tpl="107" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: calc(var(--leading)*1.2) clamp(24px,4vw,64px);">
-${groups}
-</div>
-</div>
-</section>`;
+function renderOpenModule06(_lang: Lang, c: Copy): string {
+  return `<section class="module-open-pane" data-pane="06" hidden>
+    <div class="edu-container">
+      <div>
+        <h2 class="edu-inst">${esc(c.edu.institution)}</h2>
+        <div class="edu-dept">${esc(c.edu.department)} · ${esc(c.edu.degree)}</div>
+        <p style="font-size: 11.5px; color: var(--card-text-dim); margin: 0 0 16px;">
+          ${esc(c.edu.facultyOld)}
+        </p>
+        <p class="edu-desc">${esc(c.edu.details)}</p>
+      </div>
+      <div class="edu-topics-grid">
+        ${c.edu.topics
+          .map(
+            (t) => `<div class="edu-topic-item">
+              ${esc(t)}
+            </div>`,
+          )
+          .join("")}
+      </div>
+    </div>
+  </section>`;
 }
 
-function credentials(lang: Lang, c: Copy): string {
-  const anyDoc = CERTIFICATES.some((x) => hasUpload(x.img)) || MEMBERSHIPS.some((m) => hasUpload(m.img));
-  const orderedCertificates = CERTIFICATES.map((certificate, index) => ({ certificate, index })).sort((a, b) => {
-    const previewDifference = Number(hasUpload(b.certificate.img)) - Number(hasUpload(a.certificate.img));
-    return previewDifference || a.index - b.index;
-  });
-  const certs = orderedCertificates.map(({ certificate: x }) => {
-    const doc = hasUpload(x.img);
-    const tag = doc ? "button" : "div";
-    const attrs = doc
-      ? ` type="button" data-doc="${r(lang)}uploads/${esc(x.img ?? "")}" data-doc-title="${esc(x.title)}" data-doc-meta="${esc(
-          x.when[lang],
-        )}"`
-      : "";
-    return `<${tag} class="scp2" data-dc-tpl="124" data-reveal=""${attrs} style="appearance: none; cursor: pointer; border: 0px; text-align: left; background: var(--paper); padding: 20px 18px 18px; display: flex; flex-direction: column; gap: 8px; min-height: 172px;">
-<span data-dc-tpl="125" style="display: block; font-family: var(--font-heading); font-weight: 800; font-size: 17px; line-height: 1.2; letter-spacing: -0.015em; color: var(--ink);">${i(
-      x.title,
-    )}</span>
-<span data-dc-tpl="126" style="display: block; font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-ink);">${i(
-      x.when[lang],
-    )}</span>
-<span data-dc-tpl="127" style="display: block; font-size: 13.5px; line-height: 1.5; color: var(--muted);">${i(x.desc[lang])}</span>
-${
-  doc
-    ? `<span class="scp0" data-dc-tpl="128" style="display: flex; align-items: center; gap: 8px; margin-top: auto; padding-top: 12px; font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); transition: color 0.3s;">
-<span data-dc-tpl="130">${i(c.seeDoc)}</span>
-<span class="open-cue certificate-open-cue" aria-hidden="true">+</span>
-</span>`
-    : ""
-}
-</${tag}>`;
-  }).join("\n");
-  const members = MEMBERSHIPS.map((m) => {
-    const doc = hasUpload(m.img);
-    const tag = doc ? "button" : "div";
-    const attrs = doc
-      ? ` type="button" data-doc="${r(lang)}uploads/${esc(m.img ?? "")}" data-doc-title="${esc(m.short)}" data-doc-meta="${esc(
-          m.role[lang],
-        )}"`
-      : "";
-    return `<${tag} class="scp2 membership-card" data-dc-tpl="134" data-reveal=""${attrs} style="appearance: none; cursor: pointer; border: 0px; text-align: left; background: var(--paper); padding: 18px 16px; display: flex; flex-direction: column; gap: 6px;">
-<span data-dc-tpl="135" style="display: flex; align-items: center; gap: 9px;">
-<span aria-hidden="true" data-dc-tpl="136" style="width: 8px; height: 8px; background: var(--accent); flex: 0 0 auto;"></span>
-<span data-dc-tpl="137" style="font-family: var(--font-heading); font-weight: 800; font-size: 16px; letter-spacing: -0.01em; color: var(--ink);">${i(
-      m.short,
-    )}</span>
-</span>
-<span data-dc-tpl="138" style="display: block; font-size: 10.5px; letter-spacing: 0.12em; text-transform: ${
-      /[a-z][A-Z]/.test(m.role[lang]) ? "none" : "uppercase"
-    }; color: var(--accent-ink);">${i(m.role[lang])}</span>
-<span data-dc-tpl="139" style="display: block; font-size: 13px; line-height: 1.45; color: var(--muted);">${i(m.name[lang])}</span>
-${doc ? `<span class="open-cue membership-open-cue" aria-hidden="true">+</span>` : ""}
-</${tag}>`;
-  }).join("\n");
-  return `<section data-dc-tpl="115" id="belgeler" style="border-top: 2px solid var(--rule);">
-<div data-dc-tpl="116" style="max-width: 1440px; margin: 0px auto; padding: calc(var(--leading)*2.4) var(--edge);">
-<div data-dc-tpl="117" data-reveal="" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: var(--half) 24px; margin-bottom: calc(var(--leading)*1.2);">
-<div data-dc-tpl="118">
-<span data-dc-tpl="119" style="${KICKER}">${i(c.certsKicker)}</span>
-<h2 data-dc-tpl="120" style="${H2}">${i(c.certsTitle)}</h2>
-</div>
-${
-  anyDoc
-    ? `<span data-dc-tpl="121" style="font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);">${i(c.zoomHint)}</span>`
-    : ""
-}
-</div>
-<div data-dc-tpl="122" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 2px; background: var(--rule); border: 2px solid var(--rule);">
-${certs}
-</div>
-<h3 data-dc-tpl="131" data-reveal="" style="font-family: var(--font-heading); font-weight: 800; font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; margin: calc(var(--leading)*1.8) 0 var(--half); color: var(--ink);">${i(
-    c.memberTitle,
-  )}</h3>
-<div data-dc-tpl="132" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2px; background: var(--rule); border: 2px solid var(--rule);">
-${members}
-</div>
-</div>
-</section>`;
+function renderOpenModule07(lang: Lang, c: Copy): string {
+  const root = r(lang);
+  return `<section class="module-open-pane" data-pane="07" hidden>
+    <div style="margin-bottom: 24px;">
+      <h2 style="font-size: clamp(22px, 2.4vw, 32px); font-weight: 700; color: #ffffff; margin: 0 0 6px;">
+        ${esc(c.certs.title)}
+      </h2>
+      <p style="font-size: 13px; color: var(--card-text-muted); margin: 0;">
+        ${esc(c.certs.sub)}
+      </p>
+    </div>
+
+    <div class="certs-grid">
+      ${CERTIFICATES.map((cert) => {
+        const thumb = cert.img ? `${root}uploads/${cert.img}` : "";
+        return `<div class="cert-card">
+          <div>
+            <h3 class="cert-card-title">${esc(cert.title)}</h3>
+            <div class="cert-card-issuer">${esc(cert.when[lang])}</div>
+            <p class="cert-card-desc">${esc(cert.desc[lang])}</p>
+          </div>
+          ${
+            thumb
+              ? `<div class="cert-preview-thumb" data-zoom-trigger="${thumb}" data-zoom-title="${esc(cert.title)}" title="${esc(c.zoomHint)}">
+                  <img src="${thumb}" alt="${esc(cert.title)}" loading="lazy">
+                </div>`
+              : ""
+          }
+        </div>`;
+      }).join("")}
+    </div>
+  </section>`;
 }
 
-function contact(lang: Lang, c: Copy): string {
-  const btn =
-    "display: inline-flex; align-items: center; padding: 13px 18px; border: 2px solid var(--color-bg); color: var(--color-bg); font-family: var(--font-heading); font-weight: 800; font-size: 14px; letter-spacing: 0.02em; transition: background 0.3s, color 0.3s;";
-  return `<section data-dc-tpl="140" id="iletisim" style="background: var(--accent); color: var(--color-bg);">
-<div data-dc-tpl="141" style="max-width: 1440px; margin: 0px auto; padding: calc(var(--leading)*3) var(--edge);">
-<h2 data-dc-tpl="142" data-reveal="" style="font-family: var(--font-heading); font-weight: 800; font-size: clamp(34px, 5vw, 72px); line-height: 1.05; letter-spacing: -0.03em; margin: 0 0 var(--leading) -0.058em; max-width: 18ch; color: var(--color-bg);">${i(
-    c.closeTitle,
-  )}</h2>
-<p data-dc-tpl="143" data-reveal="" style="transition-delay: 0.06s; font-size: 16px; line-height: var(--leading); margin: 0 0 calc(var(--leading)*1.2); max-width: 44ch; color: var(--color-bg); opacity: 0.92;">${i(
-    c.closeSub,
-  )}</p>
-<div data-dc-tpl="144" data-reveal="" style="transition-delay: 0.12s; display: flex; flex-wrap: wrap; gap: 10px;">
-<a class="scp3" data-dc-tpl="145" href="mailto:${PERSON.email}" style="${btn}">${PERSON.email}</a>
-<a class="scp3" data-dc-tpl="146" href="tel:${PERSON.phone.replace(/[^\d+]/g, "")}" style="${btn}">${esc(PERSON.phone)}</a>
-<a class="scp3" data-dc-tpl="147" href="${PERSON.projectSite}${lang === "en" ? "/en/" : "/"}" style="${btn}">bskn.net</a>
-<a data-cv-download="1" data-dc-tpl="148" download="" href="${r(
-    lang,
-  )}cv/Murat_Can_Baskan_CV_Signature_White_${lang === "tr" ? "TR" : "EN"}.pdf" style="display: inline-flex; align-items: center; padding: 13px 18px; background: var(--color-bg); color: var(--accent); font-family: var(--font-heading); font-weight: 800; font-size: 14px; letter-spacing: 0.02em;">${i(
-    c.ctaCv,
-  )} — PDF</a>
-</div>
-</div>
-</section>`;
+function renderOpenModule08(lang: Lang, c: Copy): string {
+  const root = r(lang);
+  return `<section class="module-open-pane" data-pane="08" hidden>
+    <div style="margin-bottom: 24px;">
+      <h2 style="font-size: clamp(22px, 2.4vw, 32px); font-weight: 700; color: #ffffff; margin: 0 0 6px;">
+        ${esc(c.memberships.title)}
+      </h2>
+      <p style="font-size: 13px; color: var(--card-text-muted); margin: 0;">
+        ${esc(c.memberships.sub)}
+      </p>
+    </div>
+
+    <div class="memberships-grid">
+      ${MEMBERSHIPS.map((m) => {
+        const logoSrc = m.img ? `${root}uploads/${m.img}` : "";
+        return `<div class="member-card">
+          <div class="member-logo-wrap">
+            ${logoSrc ? `<img src="${logoSrc}" alt="${esc(m.short)}" loading="lazy">` : ""}
+          </div>
+          <h3 class="member-acronym">${esc(m.short)}</h3>
+          <div class="member-role">${esc(m.role[lang])}</div>
+          <p class="member-full-name">${esc(m.name[lang])}</p>
+        </div>`;
+      }).join("")}
+    </div>
+  </section>`;
 }
+
+function renderOpenModule09(_lang: Lang, c: Copy): string {
+  return `<section class="module-open-pane" data-pane="09" hidden>
+    <div style="margin-bottom: 24px;">
+      <h2 style="font-size: clamp(22px, 2.4vw, 32px); font-weight: 700; color: #ffffff; margin: 0 0 6px;">
+        ${esc(c.projects.title)}
+      </h2>
+      <p style="font-size: 13px; color: var(--card-text-muted); margin: 0;">
+        ${esc(c.projects.sub)}
+      </p>
+    </div>
+
+    <div class="projects-grid">
+      ${c.projects.items
+        .map(
+          (p) => `<div class="project-card">
+            <div class="project-num">${esc(p.num)}</div>
+            <h3 class="project-title">${esc(p.title)}</h3>
+            <p class="project-desc">${esc(p.desc)}</p>
+          </div>`,
+        )
+        .join("")}
+    </div>
+  </section>`;
+}
+
+function renderOpenModule10(lang: Lang, c: Copy): string {
+  const root = r(lang);
+  const cvTr = `${root}cv/Murat_Can_Baskan_CV_Signature_White_TR.pdf`;
+  const cvEn = `${root}cv/Murat_Can_Baskan_CV_EN.pdf`;
+
+  return `<section class="module-open-pane" data-pane="10" hidden>
+    <div class="contact-layout">
+      <div>
+        <h2 style="font-size: clamp(22px, 2.4vw, 32px); font-weight: 700; color: #ffffff; margin: 0 0 8px;">
+          ${esc(c.contact.title)}
+        </h2>
+        <p style="font-size: 13px; color: var(--card-text-muted); margin: 0 0 24px;">
+          ${esc(c.contact.sub)}
+        </p>
+
+        <div class="contact-channels-list">
+          <div class="contact-channel-item">
+            <div class="channel-label">${esc(c.contact.emailLabel)}</div>
+            <div class="channel-val"><a href="mailto:${PERSON.email}">${esc(PERSON.email)}</a></div>
+          </div>
+          <div class="contact-channel-item">
+            <div class="channel-label">${esc(c.contact.phoneLabel)}</div>
+            <div class="channel-val"><a href="tel:+905326591923">${esc(PERSON.phone)}</a></div>
+          </div>
+          <div class="contact-channel-item">
+            <div class="channel-label">${esc(c.contact.webLabel)}</div>
+            <div class="channel-val">
+              <a href="https://bskn.tr" target="_blank" rel="noopener">bskn.tr</a> · 
+              <a href="https://bskn.net" target="_blank" rel="noopener">bskn.net</a>
+            </div>
+          </div>
+          <div class="contact-channel-item">
+            <div class="channel-label">${esc(c.contact.cvLabel)}</div>
+            <div class="contact-cv-links">
+              <a href="${cvTr}" target="_blank" rel="noopener" class="cv-download-btn">
+                <span>📄</span> ${esc(c.contact.cvTr)}
+              </a>
+              <a href="${cvEn}" target="_blank" rel="noopener" class="cv-download-btn">
+                <span>📄</span> ${esc(c.contact.cvEn)}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-areas-box">
+        <h3>${esc(c.contact.areasTitle)}</h3>
+        <ul class="contact-areas-list">
+          ${c.contact.areas.map((a) => `<li>${esc(a)}</li>`).join("")}
+        </ul>
+      </div>
+    </div>
+  </section>`;
+}
+
+/* ---------- Master Body Renderer ---------- */
 
 export function renderBody(lang: Lang): string {
   const c = copyFor(lang);
-  return `<div id="dc-root"><div class="sc-host">
-${nav(lang, c)}<main data-dc-tpl="23" style="display: block;">
-${hero(lang, c)}
-${stats(lang, c)}
-${career(lang, c)}
-${fleet(lang, c)}
-${skills(lang, c)}
-${credentials(lang, c)}
-${contact(lang, c)}
-<footer data-dc-tpl="149" style="max-width: 1440px; margin: 0px auto; padding: calc(var(--leading)*1.5) var(--edge); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);">
-<span data-dc-tpl="150">${i(c.footer)}</span>
-<span data-dc-tpl="151">© ${new Date().getFullYear()} · bskn.tr</span>
-</footer></main></div></div>
-<div data-zoom="" hidden role="dialog" aria-modal="true" aria-label="${c.seeDoc}"><figure><img alt="" src="data:," data-zoom-img=""><figcaption><span data-zoom-title=""></span><button type="button" data-zoom-close="">${
-    c.close
-  }</button></figcaption></figure></div>
-<div data-skill-modal="" hidden role="dialog" aria-modal="true" aria-labelledby="skill-banner-title" aria-describedby="skill-banner-desc">
-<article data-skill-banner="">
-<span data-skill-kicker="">${i(c.skillsKicker)}</span>
-<h2 id="skill-banner-title" data-skill-modal-title=""></h2>
-<p id="skill-banner-desc" data-skill-modal-desc=""></p>
-<button type="button" data-skill-close="" aria-label="${esc(c.close)}">${esc(c.close)}</button>
-</article>
+
+  return `${renderHeader(lang, c)}
+<main class="site-main" id="site-main">
+  <div class="stage-wrapper" id="stage">
+    ${renderClosedCards(lang, c)}
+
+    <!-- Editorial Open Layer -->
+    <div class="editorial-overlay" id="detail-layer" hidden role="dialog" aria-modal="true" aria-label="Module Detail">
+      <div class="overlay-backdrop" id="overlay-backdrop" aria-hidden="true"></div>
+      <div class="overlay-container" id="overlay-container">
+        <div class="overlay-header">
+          <span class="overlay-kicker" id="overlay-kicker">01 · PROFILE</span>
+          <div class="overlay-dismiss-bar" id="overlay-dismiss-btn" role="button" tabindex="0" aria-label="${esc(c.close)}">
+            <span>${esc(c.dismissHint)}</span>
+            <span class="overlay-dismiss-badge">ESC</span>
+          </div>
+        </div>
+        <div class="overlay-content" id="overlay-content">
+          ${renderOpenModule01(lang, c)}
+          ${renderOpenModule02(lang, c)}
+          ${renderOpenModule03(lang, c)}
+          ${renderOpenModule04(lang, c)}
+          ${renderOpenModule05(lang, c)}
+          ${renderOpenModule06(lang, c)}
+          ${renderOpenModule07(lang, c)}
+          ${renderOpenModule08(lang, c)}
+          ${renderOpenModule09(lang, c)}
+          ${renderOpenModule10(lang, c)}
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Certificate & Document Zoom Modal -->
+<div class="zoom-modal" id="zoom-modal" hidden role="dialog" aria-modal="true" aria-label="${esc(c.seeDoc)}">
+  <figure>
+    <img id="zoom-modal-img" src="data:," alt="">
+    <figcaption>
+      <span id="zoom-modal-title"></span>
+      <button type="button" class="zoom-close-btn" id="zoom-modal-close">${esc(c.close)}</button>
+    </figcaption>
+  </figure>
 </div>
-<div data-fleet-modal="" hidden role="dialog" aria-modal="true" aria-label="${esc(c.fleetTitle)}">
-<article data-fleet-blueprint="">
-<img data-fleet-modal-image="" src="data:," alt="">
-<span class="fleet-blueprint__grid" aria-hidden="true"></span>
-<span class="fleet-blueprint__line fleet-blueprint__line--top" aria-hidden="true"></span>
-<span class="fleet-blueprint__line fleet-blueprint__line--bottom" aria-hidden="true"></span>
-<button type="button" data-fleet-close="" aria-label="${esc(c.close)}">${esc(c.close)}</button>
-</article>
-</div>`;
+
+<footer class="site-footer">
+  <div class="footer-container">
+    <span>${esc(c.footerText)}</span>
+    <span>© ${new Date().getFullYear()} · bskn.tr</span>
+  </div>
+</footer>`;
 }

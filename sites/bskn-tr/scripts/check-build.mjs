@@ -3,7 +3,8 @@ import { readFileSync, readdirSync, statSync, existsSync } from "node:fs";
 import { gzipSync } from "node:zlib";
 import { join } from "node:path";
 
-const dist = new URL("../dist/", import.meta.url).pathname;
+import { fileURLToPath } from "node:url";
+const dist = fileURLToPath(new URL("../dist/", import.meta.url));
 const fail = [];
 const kb = (n) => (n / 1024).toFixed(1) + " KB";
 const gz = (f) => gzipSync(readFileSync(f)).length;
