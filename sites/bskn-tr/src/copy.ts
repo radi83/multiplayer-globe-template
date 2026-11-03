@@ -246,7 +246,7 @@ const COPY = {
     // Dismiss & UI
     dismissHint: "Press ESC or click outside to dismiss",
     close: "Close",
-    seeDoc: "View document",
+    seeDoc: "View Document",
     zoomHint: "Click to preview document",
     footerText: "Murat Can Başkan · Ocean-Going Chief Engineer · Maritime Technology Entrepreneur",
 
