@@ -896,6 +896,14 @@ button {
   height: 160px;
   object-fit: cover;
   display: block;
+  filter: grayscale(100%) contrast(1.08) brightness(0.96);
+  transition: filter 250ms var(--ease);
+}
+
+.post-media--flag img,
+.post-media img[src*="turkish-flag"],
+.post-media img[src*="flag"] {
+  filter: none !important;
 }
 
 /* ==========================================================================

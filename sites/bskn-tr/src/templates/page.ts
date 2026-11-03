@@ -342,6 +342,7 @@ function renderOpenModule02(lang: Lang, c: Copy): string {
     <div class="career-posts-list">
       ${CAREER.map((p) => {
         const imgSrc = p.img ? `${root}img/${p.img}` : "";
+        const isFlag = p.img?.includes("turkish") || p.img?.includes("flag");
         return `<article class="career-post-entry" data-post-type="${p.type}">
           <div class="post-content">
             <div class="post-head">
@@ -361,7 +362,7 @@ function renderOpenModule02(lang: Lang, c: Copy): string {
           </div>
           ${
             imgSrc
-              ? `<div class="post-media">
+              ? `<div class="post-media${isFlag ? " post-media--flag" : ""}">
                   <img src="${imgSrc}" alt="${esc(p.ship)}" loading="lazy">
                 </div>`
               : ""
