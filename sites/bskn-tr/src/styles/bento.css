@@ -1239,12 +1239,13 @@ button {
   background: var(--layer-surface);
   border: 1px solid var(--layer-surface-border);
   border-radius: var(--radius-sm);
-  padding: 16px;
+  padding: 18px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 12px;
-  transition: border-color 200ms var(--ease);
+  gap: 14px;
+  min-height: 140px;
+  transition: border-color 200ms var(--ease), box-shadow 200ms var(--ease);
 }
 
 .cert-card:hover {
@@ -1252,44 +1253,73 @@ button {
 }
 
 .cert-card-title {
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--layer-title);
   margin: 0 0 4px;
+  line-height: 1.35;
 }
 
 .cert-card-issuer {
   font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
   color: var(--burgundy-badge-text);
   margin: 0 0 8px;
 }
 
 .cert-card-desc {
   font-size: 11.5px;
-  line-height: 1.5;
+  line-height: 1.55;
   color: var(--card-text-muted);
   margin: 0;
 }
 
-.cert-preview-thumb {
-  margin-top: 8px;
-  border-radius: 4px;
-  overflow: hidden;
-  border: 1px solid var(--layer-surface-border);
+.cert-card-footer {
+  display: flex;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 4px;
+}
+
+.cert-view-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #ffffff;
+  background: var(--burgundy);
+  border: 1px solid var(--burgundy);
+  border-radius: var(--radius-xs);
   cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+  transition: background-color 160ms var(--ease), border-color 160ms var(--ease), transform 160ms var(--ease), box-shadow 160ms var(--ease);
 }
 
-.cert-preview-thumb img {
-  width: 100%;
-  height: 90px;
-  object-fit: cover;
-  display: block;
-  transition: transform 200ms var(--ease);
+.cert-view-btn:hover {
+  background: var(--burgundy-bright);
+  border-color: var(--burgundy-bright);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(139, 30, 45, 0.25);
 }
 
-.cert-preview-thumb:hover img {
-  transform: scale(1.05);
+.cert-view-btn:active {
+  transform: translateY(0);
 }
+
+.cert-view-btn:focus-visible {
+  outline: 2px solid var(--burgundy-bright);
+  outline-offset: 2px;
+}
+
+.cert-view-icon {
+  flex-shrink: 0;
+}
+
 
 /* ==========================================================================
    Module 08: Memberships Open State (Real Official Logos)

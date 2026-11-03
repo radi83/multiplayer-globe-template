@@ -550,17 +550,23 @@ function renderOpenModule07(lang: Lang, c: Copy): string {
     <div class="certs-grid">
       ${CERTIFICATES.map((cert) => {
         const hasDoc = hasUpload(cert.img);
-        const thumb = hasDoc && cert.img ? `${root}uploads/${cert.img}` : "";
-        return `<div class="cert-card${hasDoc ? " has-thumb" : ""}">
-          <div>
+        const docUrl = hasDoc && cert.img ? `${root}uploads/${cert.img}` : "";
+        return `<div class="cert-card">
+          <div class="cert-card-main">
             <h3 class="cert-card-title">${esc(cert.title)}</h3>
             <div class="cert-card-issuer">${esc(cert.when[lang])}</div>
             <p class="cert-card-desc">${esc(cert.desc[lang])}</p>
           </div>
           ${
-            thumb
-              ? `<div class="cert-preview-thumb" data-zoom-trigger="${thumb}" data-zoom-title="${esc(cert.title)}" title="${esc(c.zoomHint)}">
-                  <img src="${thumb}" alt="${esc(cert.title)}" loading="lazy" onerror="this.closest('.cert-preview-thumb')?.remove()">
+            docUrl
+              ? `<div class="cert-card-footer">
+                  <button type="button" class="cert-view-btn" data-zoom-trigger="${docUrl}" data-zoom-title="${esc(cert.title)}" aria-label="${esc(c.seeDoc)}: ${esc(cert.title)}">
+                    <svg class="cert-view-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                      <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                    <span>${esc(c.seeDoc)}</span>
+                  </button>
                 </div>`
               : ""
           }

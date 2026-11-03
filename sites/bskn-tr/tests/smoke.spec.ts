@@ -149,7 +149,7 @@ for (const p of PAGES) {
       await expect(certs).toHaveCount(12);
 
       // Test opening a certificate zoom preview
-      const thumb = page.locator(".cert-preview-thumb").first();
+      const thumb = page.locator(".cert-view-btn").first();
       await thumb.click();
       const zoomModal = page.locator("#zoom-modal");
       await expect(zoomModal).toBeVisible();

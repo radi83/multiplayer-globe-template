@@ -22,7 +22,7 @@ const COPY = {
     // Dismiss & UI
     dismissHint: "ESC veya dışarı tıklayarak kapatın",
     close: "Kapat",
-    seeDoc: "Belgeyi gör",
+    seeDoc: "Belgeyi Gör",
     zoomHint: "Büyütmek için tıklayın",
     footerText: "Murat Can Başkan · Uzakyol Gemi Baş Mühendisi · Denizcilik Teknolojisti",
 
