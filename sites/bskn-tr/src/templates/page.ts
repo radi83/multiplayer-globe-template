@@ -2,6 +2,9 @@
  * data.ts + copy.ts → statik HTML (derleme anında).
  * BSKN.tr 10-Modüllü Bento Portfolyo Sistemi.
  */
+import { existsSync } from "node:fs";
+import { resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import {
   CAREER,
   CERTIFICATES,
@@ -16,6 +19,9 @@ import {
 import { copyFor, type Copy } from "../copy.ts";
 
 export const LANG_PATH: Record<Lang, string> = { tr: "/", en: "/en/" };
+
+const UPLOADS_DIR = fileURLToPath(new URL("../../public/uploads/", import.meta.url));
+const hasUpload = (f?: string): boolean => !!f && existsSync(resolve(UPLOADS_DIR, f));
 
 const esc = (s: string): string =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -372,8 +378,8 @@ function renderOpenModule03(lang: Lang, c: Copy): string {
     <div class="reg-layout">
       <div class="reg-info">
         <div class="reg-status-pill">${esc(c.reg.statusBadge)} · ${esc(c.reg.statusLabel)}</div>
-        <h2 style="font-size: clamp(22px, 2.4vw, 32px); font-weight: 700; color: #ffffff; margin: 0 0 8px;">
-          ${esc(c.reg.title)}
+        <h2 style="font-size: clamp(22px, 2.4vw, 32px); font-weight: 700; color: var(--layer-title, var(--text-page)); margin: 0 0 8px;">
+        ${esc(c.reg.title)}
         </h2>
         <p style="font-size: 15px; font-weight: 600; color: var(--burgundy-bright); margin: 0 0 16px;">
           ${esc(c.reg.grade)}
@@ -425,7 +431,7 @@ function renderOpenModule04(lang: Lang, c: Copy): string {
 
   return `<section class="module-open-pane" data-pane="04" hidden>
     <div style="margin-bottom: 24px;">
-      <h2 style="font-size: clamp(22px, 2.4vw, 32px); font-weight: 700; color: #ffffff; margin: 0 0 6px;">
+      <h2 style="font-size: clamp(22px, 2.4vw, 32px); font-weight: 700; color: var(--layer-title, var(--text-page)); margin: 0 0 6px;">
         ${esc(c.skills.title)}
       </h2>
       <p style="font-size: 13px; color: var(--card-text-muted); margin: 0;">
@@ -483,8 +489,8 @@ function renderOpenModule05(lang: Lang, c: Copy): string {
         <div style="display: inline-block; padding: 3px 8px; font-size: 10px; font-weight: 700; letter-spacing: 0.12em; background: var(--burgundy); color: #ffffff; border-radius: 4px; margin-bottom: 12px;">
           ${esc(c.bmms.badge)}
         </div>
-        <h2 style="font-size: clamp(24px, 2.6vw, 36px); font-weight: 700; color: #ffffff; margin: 0 0 12px;">
-          ${esc(c.bmms.title)}
+        <h2 style="font-size: clamp(24px, 2.6vw, 36px); font-weight: 700; color: var(--layer-title, var(--text-page)); margin: 0 0 12px;">
+        ${esc(c.bmms.title)}
         </h2>
         <p class="bmms-lead">${esc(c.bmms.lead)}</p>
         <p class="bmms-body">${esc(c.bmms.body)}</p>
@@ -532,7 +538,7 @@ function renderOpenModule07(lang: Lang, c: Copy): string {
   const root = r(lang);
   return `<section class="module-open-pane" data-pane="07" hidden>
     <div style="margin-bottom: 24px;">
-      <h2 style="font-size: clamp(22px, 2.4vw, 32px); font-weight: 700; color: #ffffff; margin: 0 0 6px;">
+      <h2 style="font-size: clamp(22px, 2.4vw, 32px); font-weight: 700; color: var(--layer-title, var(--text-page)); margin: 0 0 6px;">
         ${esc(c.certs.title)}
       </h2>
       <p style="font-size: 13px; color: var(--card-text-muted); margin: 0;">
@@ -542,8 +548,9 @@ function renderOpenModule07(lang: Lang, c: Copy): string {
 
     <div class="certs-grid">
       ${CERTIFICATES.map((cert) => {
-        const thumb = cert.img ? `${root}uploads/${cert.img}` : "";
-        return `<div class="cert-card">
+        const hasDoc = hasUpload(cert.img);
+        const thumb = hasDoc && cert.img ? `${root}uploads/${cert.img}` : "";
+        return `<div class="cert-card${hasDoc ? " has-thumb" : ""}">
           <div>
             <h3 class="cert-card-title">${esc(cert.title)}</h3>
             <div class="cert-card-issuer">${esc(cert.when[lang])}</div>
@@ -552,7 +559,7 @@ function renderOpenModule07(lang: Lang, c: Copy): string {
           ${
             thumb
               ? `<div class="cert-preview-thumb" data-zoom-trigger="${thumb}" data-zoom-title="${esc(cert.title)}" title="${esc(c.zoomHint)}">
-                  <img src="${thumb}" alt="${esc(cert.title)}" loading="lazy">
+                  <img src="${thumb}" alt="${esc(cert.title)}" loading="lazy" onerror="this.closest('.cert-preview-thumb')?.remove()">
                 </div>`
               : ""
           }
@@ -566,7 +573,7 @@ function renderOpenModule08(lang: Lang, c: Copy): string {
   const root = r(lang);
   return `<section class="module-open-pane" data-pane="08" hidden>
     <div style="margin-bottom: 24px;">
-      <h2 style="font-size: clamp(22px, 2.4vw, 32px); font-weight: 700; color: #ffffff; margin: 0 0 6px;">
+      <h2 style="font-size: clamp(22px, 2.4vw, 32px); font-weight: 700; color: var(--layer-title, var(--text-page)); margin: 0 0 6px;">
         ${esc(c.memberships.title)}
       </h2>
       <p style="font-size: 13px; color: var(--card-text-muted); margin: 0;">
@@ -576,7 +583,8 @@ function renderOpenModule08(lang: Lang, c: Copy): string {
 
     <div class="memberships-grid">
       ${MEMBERSHIPS.map((m) => {
-        const logoSrc = m.img ? `${root}uploads/${m.img}` : "";
+        const hasDoc = hasUpload(m.img);
+        const logoSrc = hasDoc && m.img ? `${root}uploads/${m.img}` : "";
         return `<div class="member-card">
           <div class="member-logo-wrap">
             ${logoSrc ? `<img src="${logoSrc}" alt="${esc(m.short)}" loading="lazy">` : ""}
@@ -593,7 +601,7 @@ function renderOpenModule08(lang: Lang, c: Copy): string {
 function renderOpenModule09(_lang: Lang, c: Copy): string {
   return `<section class="module-open-pane" data-pane="09" hidden>
     <div style="margin-bottom: 24px;">
-      <h2 style="font-size: clamp(22px, 2.4vw, 32px); font-weight: 700; color: #ffffff; margin: 0 0 6px;">
+      <h2 style="font-size: clamp(22px, 2.4vw, 32px); font-weight: 700; color: var(--layer-title, var(--text-page)); margin: 0 0 6px;">
         ${esc(c.projects.title)}
       </h2>
       <p style="font-size: 13px; color: var(--card-text-muted); margin: 0;">
@@ -623,8 +631,8 @@ function renderOpenModule10(lang: Lang, c: Copy): string {
   return `<section class="module-open-pane" data-pane="10" hidden>
     <div class="contact-layout">
       <div>
-        <h2 style="font-size: clamp(22px, 2.4vw, 32px); font-weight: 700; color: #ffffff; margin: 0 0 8px;">
-          ${esc(c.contact.title)}
+        <h2 style="font-size: clamp(22px, 2.4vw, 32px); font-weight: 700; color: var(--layer-title, var(--text-page)); margin: 0 0 8px;">
+        ${esc(c.contact.title)}
         </h2>
         <p style="font-size: 13px; color: var(--card-text-muted); margin: 0 0 24px;">
           ${esc(c.contact.sub)}
